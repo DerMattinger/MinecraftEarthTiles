@@ -1,0 +1,76 @@
+﻿<Window x:Class="MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MinecraftEarthTiles_TileSelector"
+        mc:Ignorable="d"
+        Title="MinecraftEarthTiles TileSelector"
+        Height="880"
+        Width="1456"
+        MinHeight="830"
+        MinWidth="1456"
+        ResizeMode="NoResize">
+    <Window.Resources>
+        <Style TargetType="{x:Type CheckBox}" x:Key="EarthTilesCheckboxStyle">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image x:Name="checkboxImage" Source="MyResources/normal.png"/>
+                            <ContentPresenter/>
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="checkboxImage" Property="Source" Value="MyResources/checked.png"/>
+                            </Trigger>
+                            <MultiTrigger>
+                                <MultiTrigger.Conditions>
+                                    <Condition Property="IsMouseOver" Value="True"/>
+                                    <Condition Property="IsChecked" Value="False"/>
+                                </MultiTrigger.Conditions>
+                                <Setter TargetName="checkboxImage" Property="Source" Value="MyResources/hover.png"/>
+                            </MultiTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid Name="Tiles" Width="1440" Height="720" MinWidth="1440" MinHeight="720" Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <Image Source="MyResources/background.jpg" Width="1440" Height="720" MinWidth="1440" MinHeight="720"  Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+            <Grid Name="CheckBoxes" Width="1440" Height="720" MinWidth="1440" MinHeight="720" Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
+            </Grid>
+        </Grid>
+        <Grid Margin="0,720,0,0">
+            <Grid>
+                <Button x:Name="btn_SaveSelection" Content="Save selection" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="90" RenderTransformOrigin="-1.787,0.05" Height="20"/>
+                <Button x:Name="btn_LoadSelection" Content="Load selection" HorizontalAlignment="Left" Margin="105,10,0,0" VerticalAlignment="Top" Width="90  " RenderTransformOrigin="-1.787,0.05" Height="20"/>
+                <Button x:Name="btn_ClearSelection" Content="Clear selection" HorizontalAlignment="Left" Margin="200,10,0,0" VerticalAlignment="Top" Width="90"/>
+
+
+                <Label x:Name="lbl_PathToScriptsFolder" Content="Path to Scripts Folder" Margin="0,7,434,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="123"/>
+                <TextBox x:Name="txb_PathToScriptsFolder" Height="20" Margin="0,10,33,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" IsReadOnly="True" HorizontalAlignment="Right" Width="396" />
+                <Button x:Name="btn_PathToScriptsFolder" Content="..." Margin="0,10,10,0" VerticalAlignment="Top" RenderTransformOrigin="-13.542,0.8" HorizontalAlignment="Right" Width="24"/>
+                <Label x:Name="lbl_PathToWorldPainterFolder" Content="Path to wpscript.exe" Margin="0,32,434,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="116"/>
+                <TextBox x:Name="txb_PathToWorldPainterFile" HorizontalAlignment="Right" Height="20" Margin="0,35,33,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="396" IsReadOnly="True" />
+                <Button x:Name="btn_PathToWorldPainterFolder" Content="..." Margin="0,35,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="24"/>
+
+                <Label x:Name="lbl_BlocksPerTile" Content="Blocks per tile" HorizontalAlignment="Left" Margin="889,58,0,0" VerticalAlignment="Top"/>
+                <ComboBox  x:Name="cbb_BlocksPerTile" Margin="0,60,418,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="54">
+                    <ComboBoxItem>512</ComboBoxItem>
+                    <ComboBoxItem>1024</ComboBoxItem>
+                    <ComboBoxItem IsSelected="True">2048</ComboBoxItem>
+                    <ComboBoxItem>3072</ComboBoxItem>
+                    <ComboBoxItem>4096</ComboBoxItem>
+                    <ComboBoxItem>10240</ComboBoxItem>
+                </ComboBox>
+                
+                <Button x:Name="btn_osmbatExport" Content="Export 'osmconvert.bat'" Margin="0,60,262,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Right" Width="151"/>
+                <Button x:Name="btn_WPScriptExport" Content="Export 'wpscript.bat'" Margin="0,60,125,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Right" Width="132"/>
+                <Button x:Name="btn_QgisExport" Content="Export 'qgis.py'" Margin="0,60,10,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Right" Width="110"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>
