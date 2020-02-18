@@ -6,11 +6,11 @@
         xmlns:local="clr-namespace:MinecraftEarthTiles_TileSelector"
         mc:Ignorable="d"
         Title="MinecraftEarthTiles TileSelector"
-        Height="880"
+        Height="996.8"
         Width="1456"
         MinHeight="830"
         MinWidth="1456"
-        ResizeMode="NoResize">
+        ResizeMode="CanMinimize">
     <Window.Resources>
         <Style TargetType="{x:Type CheckBox}" x:Key="EarthTilesCheckboxStyle">
             <Setter Property="Template">
@@ -36,6 +36,61 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
+        <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#FFBEE6FD"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>
+        <SolidColorBrush x:Key="Button.Pressed.Background" Color="#FFC4E5F6"/>
+        <SolidColorBrush x:Key="Button.Pressed.Border" Color="#FF2C628B"/>
+        <SolidColorBrush x:Key="Button.Disabled.Background" Color="#FFF4F4F4"/>
+        <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5"/>
+        <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383"/>
+        <Style x:Key="Help_Button_Style" TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource Button.Static.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border CornerRadius="11" x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="true">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsDefaulted" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.MouseOver.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border}"/>
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <Grid>
         <Grid Name="Tiles" Width="1440" Height="720" MinWidth="1440" MinHeight="720" Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
@@ -46,30 +101,128 @@
         <Grid Margin="0,720,0,0">
             <Grid>
                 <Button x:Name="btn_SaveSelection" Content="Save selection" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="90" RenderTransformOrigin="-1.787,0.05" Height="20"/>
-                <Button x:Name="btn_LoadSelection" Content="Load selection" HorizontalAlignment="Left" Margin="105,10,0,0" VerticalAlignment="Top" Width="90  " RenderTransformOrigin="-1.787,0.05" Height="20"/>
-                <Button x:Name="btn_ClearSelection" Content="Clear selection" HorizontalAlignment="Left" Margin="200,10,0,0" VerticalAlignment="Top" Width="90"/>
+                <Button x:Name="btn_LoadSelection" Content="Load selection" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="90  " RenderTransformOrigin="-1.787,0.05" Height="20"/>
+                <Button x:Name="btn_ClearSelection" Content="Clear selection" HorizontalAlignment="Left" Margin="10,93,0,0" VerticalAlignment="Top" Width="90"/>
+                <Grid VerticalAlignment="Top" Height="122" Margin="122,10,815,0" RenderTransformOrigin="0.376,0.53">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="18*"></RowDefinition>
+                        <RowDefinition Height="18*"></RowDefinition>
+                        <RowDefinition Height="18*"></RowDefinition>
+                        <RowDefinition Height="18*"></RowDefinition>
+                        <RowDefinition Height="18*"></RowDefinition>
+                        <RowDefinition Height="18*"></RowDefinition>
+                        <RowDefinition Height="18*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="103*"></ColumnDefinition>
+                        <ColumnDefinition Width="101*"></ColumnDefinition>
+                        <ColumnDefinition Width="106*"></ColumnDefinition>
+                        <ColumnDefinition Width="203*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Blocks per tile" FontWeight="Bold"></TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="512"></TextBlock>
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="1024"></TextBlock>
+                    <TextBlock Grid.Row="3" Grid.Column="0" Text="2048"></TextBlock>
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="3072"></TextBlock>
+                    <TextBlock Grid.Row="5" Grid.Column="0" Text="4096"></TextBlock>
+                    <TextBlock Grid.Row="6" Grid.Column="0" Text="10240"></TextBlock>
+
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text="Scale (Equator)" FontWeight="Bold"/>
+                    <TextBlock Grid.Row="1" Grid.Column="1" Text="1:217"/>
+                    <TextBlock Grid.Row="2" Grid.Column="1" Text="1:109"/>
+                    <TextBlock Grid.Row="3" Grid.Column="1" Text="1:54"/>
+                    <TextBlock Grid.Row="4" Grid.Column="1" Text="1:36"/>
+                    <TextBlock Grid.Row="5" Grid.Column="1" Text="1:27"/>
+                    <TextBlock Grid.Row="6" Grid.Column="1" Text="1:11"/>
+
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Scale (23.5° N)" FontWeight="Bold"></TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="2" Text="1:200"></TextBlock>
+                    <TextBlock Grid.Row="2" Grid.Column="2" Text="1:100"></TextBlock>
+                    <TextBlock Grid.Row="3" Grid.Column="2" Text="1:50"></TextBlock>
+                    <TextBlock Grid.Row="4" Grid.Column="2" Text="1:33"></TextBlock>
+                    <TextBlock Grid.Row="5" Grid.Column="2" Text="1:25"></TextBlock>
+                    <TextBlock Grid.Row="6" Grid.Column="2" Text="1:10"></TextBlock>
+
+                    <TextBlock Grid.Row="0" Grid.Column="3" Text="Recommanded vertical scale" FontWeight="Bold"></TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="3" Text="1:100"></TextBlock>
+                    <TextBlock Grid.Row="2" Grid.Column="3" Text="1:50"></TextBlock>
+                    <TextBlock Grid.Row="3" Grid.Column="3" Text="1:25 (with Cubic Chunks)"></TextBlock>
+                    <TextBlock Grid.Row="4" Grid.Column="3" Text="1:10 (with Cubic Chunks)"></TextBlock>
+                    <TextBlock Grid.Row="5" Grid.Column="3" Text="1:10 (with Cubic Chunks)"></TextBlock>
+                    <TextBlock Grid.Row="6" Grid.Column="3" Text="1:10 (with Cubic Chunks)"></TextBlock>
+
+                </Grid>
+
+                <Label x:Name="lbl_PathToScriptsFolder" Content="Path to Scripts Folder" Margin="0,12,691,0" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+                <TextBox x:Name="txb_PathToScriptsFolder" Height="20" Margin="0,12,406,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" IsReadOnly="True" HorizontalAlignment="Right" Width="280" />
+                <Button x:Name="btn_PathToScriptsFolder" Content="..." Margin="0,12,382,0" VerticalAlignment="Top" RenderTransformOrigin="-13.542,0.8" HorizontalAlignment="Right" Width="24"/>
+                <Label x:Name="lbl_PathToWorldPainterFolder" Content="Path to wpscript.exe" Margin="0,35,691,0" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+                <TextBox x:Name="txb_PathToWorldPainterFile" HorizontalAlignment="Right" Height="20" Margin="0,37,406,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="280" IsReadOnly="True" />
+                <Button x:Name="btn_PathToWorldPainter" Content="..." Margin="0,37,382,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="24"/>
+                <Label x:Name="lbl_PathToGdal" Content="Path to gdal_translate.exe" Margin="0,59,691,0" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+                <TextBox x:Name="txb_PathToGdal" HorizontalAlignment="Right" Height="20" Margin="0,62,406,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="280" IsReadOnly="True" />
+                <Button x:Name="btn_PathToGdal" Content="..." Margin="0,62,382,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="24"/>
+                <Label x:Name="lbl_PathToMagick" Content="Path to magick.exe" Margin="0,84,691,0" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+                <TextBox x:Name="txb_PathToMagick" HorizontalAlignment="Right" Height="20" Margin="0,87,406,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="280" IsReadOnly="True" />
+                <Button x:Name="btn_PathToMagick" Content="..." Margin="0,87,382,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="24"/>
 
 
-                <Label x:Name="lbl_PathToScriptsFolder" Content="Path to Scripts Folder" Margin="0,7,434,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="123"/>
-                <TextBox x:Name="txb_PathToScriptsFolder" Height="20" Margin="0,10,33,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" IsReadOnly="True" HorizontalAlignment="Right" Width="396" />
-                <Button x:Name="btn_PathToScriptsFolder" Content="..." Margin="0,10,10,0" VerticalAlignment="Top" RenderTransformOrigin="-13.542,0.8" HorizontalAlignment="Right" Width="24"/>
-                <Label x:Name="lbl_PathToWorldPainterFolder" Content="Path to wpscript.exe" Margin="0,32,434,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="116"/>
-                <TextBox x:Name="txb_PathToWorldPainterFile" HorizontalAlignment="Right" Height="20" Margin="0,35,33,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="396" IsReadOnly="True" />
-                <Button x:Name="btn_PathToWorldPainterFolder" Content="..." Margin="0,35,10,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="24"/>
-
-                <Label x:Name="lbl_BlocksPerTile" Content="Blocks per tile" HorizontalAlignment="Left" Margin="889,58,0,0" VerticalAlignment="Top"/>
-                <ComboBox  x:Name="cbb_BlocksPerTile" Margin="0,60,418,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="54">
+                <Label x:Name="lbl_BlocksPerTile" Content="Blocks per Tile" HorizontalAlignment="Right" Margin="0,111,696,0" VerticalAlignment="Top"/>
+                <ComboBox  x:Name="cbb_BlocksPerTile" Margin="0,113,632,0" VerticalAlignment="Top" HorizontalAlignment="Right">
                     <ComboBoxItem>512</ComboBoxItem>
-                    <ComboBoxItem>1024</ComboBoxItem>
-                    <ComboBoxItem IsSelected="True">2048</ComboBoxItem>
+                    <ComboBoxItem IsSelected="True">1024</ComboBoxItem>
+                    <ComboBoxItem>2048</ComboBoxItem>
                     <ComboBoxItem>3072</ComboBoxItem>
                     <ComboBoxItem>4096</ComboBoxItem>
                     <ComboBoxItem>10240</ComboBoxItem>
                 </ComboBox>
-                
-                <Button x:Name="btn_osmbatExport" Content="Export 'osmconvert.bat'" Margin="0,60,262,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Right" Width="151"/>
-                <Button x:Name="btn_WPScriptExport" Content="Export 'wpscript.bat'" Margin="0,60,125,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Right" Width="132"/>
-                <Button x:Name="btn_QgisExport" Content="Export 'qgis.py'" Margin="0,60,10,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Right" Width="110"/>
+
+                <Label x:Name="lbl_verticalScale" Content="Vertical Scale: 1 :" HorizontalAlignment="Right" Margin="0,111,525,0" VerticalAlignment="Top"/>
+                <ComboBox  x:Name="cbb_verticalScale" Margin="0,113,479,0" VerticalAlignment="Top" HorizontalAlignment="Right">
+                    <ComboBoxItem>100</ComboBoxItem>
+                    <ComboBoxItem IsSelected="True">50</ComboBoxItem>
+                    <ComboBoxItem>25</ComboBoxItem>
+                    <ComboBoxItem>10</ComboBoxItem>
+                </ComboBox>
+                <CheckBox x:Name="chb_adjacentTiles" Content="Only adjacent Tiles" HorizontalAlignment="Right" Margin="0,117,355,0" VerticalAlignment="Top" />
+
+                <Label x:Name="lbl_SpawnTile" Content="Spawn Tile:" HorizontalAlignment="Right" Margin="0,137,696,0" VerticalAlignment="Top"/>
+                <ComboBox  x:Name="cbb_SpawnTile" Margin="0,140,594,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="92">
+                </ComboBox>
+
+                <CheckBox x:Name="chb_geofabrik" Content="&quot;download.osm.pbf&quot; file from Geofabrik" HorizontalAlignment="Right" Margin="0,143,355,0" VerticalAlignment="Top" />
+
+                <CheckBox x:Name="chb_highways" Content="Highways" HorizontalAlignment="Right" Margin="0,184,613,0" VerticalAlignment="Top" IsChecked="True" />
+                <CheckBox x:Name="chb_streets" Content="Small streets" HorizontalAlignment="Right" Margin="0,184,521,0" VerticalAlignment="Top" IsChecked="True" />
+                <CheckBox x:Name="chb_buildings" Content="Buildings" HorizontalAlignment="Right" Margin="0,184,448,0" VerticalAlignment="Top" IsChecked="True" />
+                <CheckBox x:Name="chb_borders" Content="Borders" HorizontalAlignment="Right" Margin="0,184,382,0" VerticalAlignment="Top" IsChecked="True" />
+                <CheckBox x:Name="chb_streams" Content="Streams" HorizontalAlignment="Right" Margin="0,204,429,0" VerticalAlignment="Top" IsChecked="True" />
+
+                <CheckBox x:Name="chb_farms" Content="Farms" HorizontalAlignment="Right" Margin="0,204,633,0" VerticalAlignment="Top" IsChecked="True" />
+                <CheckBox x:Name="chb_meadows" Content="Meadows" HorizontalAlignment="Right" Margin="0,204,557,0" VerticalAlignment="Top" IsChecked="True" />
+                <CheckBox x:Name="chb_quarrys" Content="Quarry" HorizontalAlignment="Right" Margin="0,204,496,0" VerticalAlignment="Top" IsChecked="True" />
+
+                <Button x:Name="btn_SaveSettings" Content="Save settings" HorizontalAlignment="Left" Margin="10,176,0,0" VerticalAlignment="Top" Width="90" RenderTransformOrigin="-1.787,0.05" Height="20"/>
+                <Button x:Name="btn_LoadSettings" Content="Load settings" HorizontalAlignment="Left" Margin="10,201,0,0" VerticalAlignment="Top" Width="90  " RenderTransformOrigin="-1.787,0.05" Height="20"/>
+
+                <Button x:Name="btn_osmbatExport" Content="Export '1-osmconvert.bat'" Margin="0,10,37,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Right" Width="151"/>
+                <Button x:Name="btn_QgisExport" Content="Export '2-qgis.py'" Margin="0,37,37,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Right" Width="151"/>
+                <Button x:Name="btn_tartool" Content="Export '3-tartool.bat'" Margin="0,64,37,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Right" Width="151"/>
+                <Button x:Name="btn_gdalExport" Content="Export '4-gdal.bat'" Margin="0,91,37,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Right" Width="151"/>
+                <Button x:Name="btn_WPScriptExport" Content="Export '6-wpscript.bat'" Margin="0,147,37,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Right" Width="151"/>
+                <Button x:Name="btn_Magick_Export" Content="Export '5-magick.bat'" Margin="0,119,37,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Right" Width="151"/>
+                <Button x:Name="btn_CombineExport" Content="Export '7-combine.bat'" Margin="0,174,37,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Right" Width="151"/>
+                <Button x:Name="btn_CleanUpExport" Content="Export '8-cleanup.bat'" Margin="0,201,37,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Right" Width="151"/>
+
+                <Button x:Name="btn_osmvoncert_help" Content="?" Margin="1408,9,10,0" Style="{DynamicResource Help_Button_Style}" Background="SteelBlue" Foreground="white" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Width="22" />
+                <Button x:Name="btn_qgis_help" Content="?" Margin="1408,37,10,0" Style="{DynamicResource Help_Button_Style}" Background="SteelBlue" Foreground="white" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Width="22" />
+                <Button x:Name="btn_tartool_help" Content="?" Margin="0,64,10,0" Style="{DynamicResource Help_Button_Style}" Background="SteelBlue" Foreground="white" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Width="22" />
+                <Button x:Name="btn_gdal_help" Content="?" Margin="0,91,10,0" Style="{DynamicResource Help_Button_Style}" Background="SteelBlue" Foreground="white" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Width="22" />
+                <Button x:Name="btn_wpscript_help" Content="?" Margin="0,147,10,0" Style="{DynamicResource Help_Button_Style}" Background="SteelBlue" Foreground="white" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Width="22" />
+                <Button x:Name="btn_magick_help" Content="?" Margin="0,119,10,0" Style="{DynamicResource Help_Button_Style}" Background="SteelBlue" Foreground="white" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Width="22" />
+                <Button x:Name="btn_Combine_help" Content="?" Margin="0,174,10,0" Style="{DynamicResource Help_Button_Style}" Background="SteelBlue" Foreground="white" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Width="22" />
+                <Button x:Name="btn_CleanUp_help" Content="?" Margin="0,201,10,0" Style="{DynamicResource Help_Button_Style}" Background="SteelBlue" Foreground="white" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Width="22" />
             </Grid>
         </Grid>
     </Grid>

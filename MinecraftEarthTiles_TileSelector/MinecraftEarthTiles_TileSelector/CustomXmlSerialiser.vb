@@ -38,15 +38,34 @@ Public Class CustomXmlSerialiser
     ''' <param name="objType"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function GetXML(ByVal sFileName As String, ByVal TilesList As List(Of String), ByVal objType As Type) As List(Of String)
+    Public Shared Function GetXMLSelection(ByVal sFileName As String, ByVal selection As Selection, ByVal objType As Type) As Selection
         If My.Computer.FileSystem.FileExists(sFileName) Then
             Dim fs As FileStream = New FileStream(sFileName, FileMode.Open)
             Dim xs As XmlSerializer = New XmlSerializer(objType)
-            TilesList = CType(xs.Deserialize(fs), List(Of String))
+            selection = CType(xs.Deserialize(fs), Selection)
             fs.Close()
-            Return TilesList
+            Return selection
         Else
-            Return TilesList
+            Return selection
+        End If
+    End Function
+
+    ''' <summary>
+    ''' 
+    ''' </summary>
+    ''' <param name="sFileName"></param>
+    ''' <param name="MySettings"></param>
+    ''' <param name="objType"></param>
+    ''' <returns></returns>
+    Public Shared Function GetXMLSettings(ByVal sFileName As String, ByVal MySettings As settings, ByVal objType As Type) As settings
+        If My.Computer.FileSystem.FileExists(sFileName) Then
+            Dim fs As FileStream = New FileStream(sFileName, FileMode.Open)
+            Dim xs As XmlSerializer = New XmlSerializer(objType)
+            MySettings = CType(xs.Deserialize(fs), settings)
+            fs.Close()
+            Return MySettings
+        Else
+            Return MySettings
         End If
     End Function
 

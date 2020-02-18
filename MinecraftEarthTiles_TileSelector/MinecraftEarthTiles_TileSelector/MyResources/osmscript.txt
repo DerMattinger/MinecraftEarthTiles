@@ -1,14 +1,18 @@
-﻿osmfilter osm/output.o5m --verbose --keep="highway=motorway or highway=trunk" -o=osm/output/highway.osm
-osmfilter osm/output.o5m --verbose --keep="highway=primary or highway=secondary" -o=osm/output/big_road.osm
-
-osmfilter osm/output.o5m --verbose --keep="waterway=river or waterway=canal or natural=water and water=river" -o=osm/output/river.osm
-osmfilter osm/output.o5m --verbose --keep="natural=water and water=lake or natural=water and water=reservoir or natural=water or landuse=reservoir or waterway=riverbank" -o=osm/output/water.osm
-osmfilter osm/output.o5m --verbose --keep="natural=wetland" --drop="wetland=swamp" -o=osm/output/wetland.osm
-osmfilter osm/output.o5m --verbose --keep="natural=wetland and wetland=swamp" -o=osm/output/swamp.osm
-osmfilter osm/output.o5m --verbose --keep="natural=glacier" -o=osm/output/glacier.osm
-
-osmfilter osm/output.o5m --verbose --keep="natural=beach" -o=output/beach.osm
-osmfilter osm/output.o5m --verbose --keep="natural=grassland or natural=fell" -o=osm/output/grass.osm
-osmfilter osm/output.o5m --verbose --keep="landuse=farmland" -o=osm/output/farmland.osm
-osmfilter osm/output.o5m --verbose --keep="landuse=meadow" -o=osm/output/meadow.osm
-osmfilter osm/output.o5m --verbose --keep="landuse=quarry" -o=osm/output/quarry.osm
+﻿osmfilter osm/output.o5m --verbose --keep="highway=motorway or highway=trunk" -o=QGIS/OsmData/highway.osm
+osmfilter osm/output.o5m --verbose --keep="highway=primary or highway=secondary" -o=QGIS/OsmData/big_road.osm
+osmfilter osm/output.o5m --verbose --keep="highway=tertiary" -o=QGIS/OsmData/middle_road.osm
+osmfilter osm/output.o5m --verbose --keep="highway=residential" -o=QGIS/OsmData/small_road.osm
+osmfilter osm/output.o5m --verbose --keep="waterway=river or waterway=canal or natural=water and water=river" -o=QGIS/OsmData/river.osm
+osmfilter osm/output.o5m --verbose --keep="water=lake or water=reservoir or natural=water or landuse=reservoir or waterway=riverbank or waterway=canal or water=river" -o=QGIS/OsmData/water.osm
+osmfilter osm/output.o5m --verbose --keep="waterway=stream" -o=QGIS/OsmData/stream.osm
+osmfilter osm/output.o5m --verbose --keep="natural=wetland" --drop="wetland=swamp" -o=QGIS/OsmData/wetland.osm
+osmfilter osm/output.o5m --verbose --keep="natural=wetland and wetland=swamp" -o=QGIS/OsmData/swamp.osm
+osmfilter osm/output.o5m --verbose --keep="natural=glacier" -o=QGIS/OsmData/glacier.osm
+osmfilter osm/output.o5m --verbose --keep="natural=volcano" -o=QGIS/OsmData/volcano.osm
+osmfilter osm/output.o5m --verbose --keep="natural=beach" -o=QGIS/OsmData/beach.osm
+osmfilter osm/output.o5m --verbose --keep="natural=grassland or natural=fell" -o=QGIS/OsmData/grass.osm
+osmfilter osm/output.o5m --verbose --keep="landuse=farmland" -o=QGIS/OsmData/farmland.osm
+osmfilter osm/output.o5m --verbose --keep="landuse=meadow" -o=QGIS/OsmData/meadow.osm
+osmfilter osm/output.o5m --verbose --keep="landuse=quarry" -o=QGIS/OsmData/quarry.osm
+osmfilter osm/output.o5m --verbose --keep="landuse=residential" -o=QGIS/OsmData/residential.osm
+osmfilter osm/output.o5m --verbose --keep="boundary=administrative AND admin_level=2" -o=QGIS/OsmData/border.osm

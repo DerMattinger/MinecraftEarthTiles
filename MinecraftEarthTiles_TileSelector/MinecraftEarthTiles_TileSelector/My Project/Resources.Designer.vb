@@ -98,7 +98,7 @@ Namespace My.Resources
         '''osmfilter osm/output.o5m --verbose --keep=&quot;highway=primary or highway=secondary&quot; -o=osm/output/big_road.osm
         '''
         '''osmfilter osm/output.o5m --verbose --keep=&quot;waterway=river or waterway=canal or natural=water and water=river&quot; -o=osm/output/river.osm
-        '''osmfilter osm/output.o5m --verbose --keep=&quot;natural=water and water=lake or natural=water and water=reservoir or natural=water or landuse=reservoir&quot; -o=osm/output [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
+        '''osmfilter osm/output.o5m --verbose --keep=&quot;type=multipolygon&quot; --keep=&quot;natural=water and water=lake or natural=water and water=reservoir or natural=water or landu [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
         '''</summary>
         Friend ReadOnly Property osmscript() As String
             Get

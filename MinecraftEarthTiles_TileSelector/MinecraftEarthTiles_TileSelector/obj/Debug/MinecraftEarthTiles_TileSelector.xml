@@ -89,7 +89,7 @@ MinecraftEarthTiles_TileSelector
 osmfilter osm/output.o5m --verbose --keep=&quot;highway=primary or highway=secondary&quot; -o=osm/output/big_road.osm
 
 osmfilter osm/output.o5m --verbose --keep=&quot;waterway=river or waterway=canal or natural=water and water=river&quot; -o=osm/output/river.osm
-osmfilter osm/output.o5m --verbose --keep=&quot;natural=water and water=lake or natural=water and water=reservoir or natural=water or landuse=reservoir&quot; -o=osm/output [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
+osmfilter osm/output.o5m --verbose --keep=&quot;type=multipolygon&quot; --keep=&quot;natural=water and water=lake or natural=water and water=reservoir or natural=water or landu [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
 </summary>
 </member>
 <member name="M:MinecraftEarthTiles_TileSelector.CustomXmlSerialiser.SaveXML(System.String,System.Object,System.Type)">
@@ -100,12 +100,21 @@ osmfilter osm/output.o5m --verbose --keep=&quot;natural=water and water=lake or 
  <returns></returns>
  <remarks></remarks>
 </member>
-<member name="M:MinecraftEarthTiles_TileSelector.CustomXmlSerialiser.GetXML(System.String,System.Collections.Generic.List{System.String},System.Type)">
+<member name="M:MinecraftEarthTiles_TileSelector.CustomXmlSerialiser.GetXMLSelection(System.String,MinecraftEarthTiles_TileSelector.Selection,System.Type)">
  <summary>XML Datei Lesen</summary>
  <param name="sFileName"></param>
  <param name="objType"></param>
  <returns></returns>
  <remarks></remarks>
+</member>
+<member name="M:MinecraftEarthTiles_TileSelector.CustomXmlSerialiser.GetXMLSettings(System.String,MinecraftEarthTiles_TileSelector.Settings,System.Type)">
+ <summary>
+ 
+ </summary>
+ <param name="sFileName"></param>
+ <param name="MySettings"></param>
+ <param name="objType"></param>
+ <returns></returns>
 </member>
 <member name="T:MinecraftEarthTiles_TileSelector.Application">
 <summary>
@@ -122,23 +131,9 @@ InitializeComponent
 Application Entry Point.
 </summary>
 </member>
-<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.programmLoaded(System.Object,System.EventArgs)">
+<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.ProgrammLoaded(System.Object,System.EventArgs)">
  <summary>
- 
- </summary>
- <param name="sender"></param>
- <param name="e"></param>
-</member>
-<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Btn_PathToScriptFolder_Click(System.Object,System.Windows.RoutedEventArgs)">
- <summary>
- 
- </summary>
- <param name="sender"></param>
- <param name="e"></param>
-</member>
-<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Btn_PathToWorldPainterFolder_Click(System.Object,System.Windows.RoutedEventArgs)">
- <summary>
- 
+ Generates the Checkboxes on StartUp
  </summary>
  <param name="sender"></param>
  <param name="e"></param>
@@ -157,7 +152,56 @@ Application Entry Point.
  <param name="sender"></param>
  <param name="e"></param>
 </member>
-<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Btn_WPScriptExport_Click(System.Object,System.Windows.RoutedEventArgs)">
+<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Btn_ClearSelection_Click(System.Object,System.Windows.RoutedEventArgs)">
+ <summary>
+ 
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Btn_PathToScriptFolder_Click(System.Object,System.Windows.RoutedEventArgs)">
+ <summary>
+ 
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Btn_PathToWorldPainter_Click(System.Object,System.Windows.RoutedEventArgs)">
+ <summary>
+ 
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Btn_PathToGdal_Click(System.Object,System.Windows.RoutedEventArgs)">
+ <summary>
+ 
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Btn_PathToMagick_Click(System.Object,System.Windows.RoutedEventArgs)">
+ <summary>
+ 
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Btn_SaveSettings_Click(System.Object,System.Windows.RoutedEventArgs)">
+ <summary>
+ 
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Btn_LoadSettings_Click(System.Object,System.Windows.RoutedEventArgs)">
+ <summary>
+ 
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Btn_osmbatExport_Click(System.Object,System.Windows.RoutedEventArgs)">
  <summary>
  
  </summary>
@@ -171,7 +215,98 @@ Application Entry Point.
  <param name="sender"></param>
  <param name="e"></param>
 </member>
-<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Btn_ClearSelection_Click(System.Object,System.Windows.RoutedEventArgs)">
+<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Btn_tartool_Click(System.Object,System.Windows.RoutedEventArgs)">
+ <summary>
+ 
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Btn_gdalExport_Click(System.Object,System.Windows.RoutedEventArgs)">
+ <summary>
+ 
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Btn_magick_Export_Click(System.Object,System.Windows.RoutedEventArgs)">
+ <summary>
+ 
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Btn_WPScriptExport_Click(System.Object,System.Windows.RoutedEventArgs)">
+ <summary>
+ 
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Btn_CombineExport_Click(System.Object,System.Windows.RoutedEventArgs)">
+ <summary>
+ 
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Btn_CleanUpExport_Click(System.Object,System.Windows.RoutedEventArgs)">
+ <summary>
+ 
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Btn_osmvoncert_help_Click(System.Object,System.Windows.RoutedEventArgs)">
+ <summary>
+ 
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Btn_qgis_help_Click(System.Object,System.Windows.RoutedEventArgs)">
+ <summary>
+ 
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Btn_tartool_help_Click(System.Object,System.Windows.RoutedEventArgs)">
+ <summary>
+ 
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Btn_gdal_help_Click(System.Object,System.Windows.RoutedEventArgs)">
+ <summary>
+ 
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Btn_wpscript_help_Click(System.Object,System.Windows.RoutedEventArgs)">
+ <summary>
+ 
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.btn_magick_help_Click(System.Object,System.Windows.RoutedEventArgs)">
+ <summary>
+ 
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.btn_Combine_help_Click(System.Object,System.Windows.RoutedEventArgs)">
+ <summary>
+ 
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Btn_CleanUp_help_Click(System.Object,System.Windows.RoutedEventArgs)">
  <summary>
  
  </summary>

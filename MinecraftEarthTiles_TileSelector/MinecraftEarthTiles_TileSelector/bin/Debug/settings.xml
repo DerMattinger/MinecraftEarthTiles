@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Settings>
+  <PathToScriptsFolder>E:\osm</PathToScriptsFolder>
+  <PathToWorldPainterFolder>E:\osm\WorldPainter\wpscript.exe</PathToWorldPainterFolder>
+  <PathToGdal>C:\Program Files\QGIS 3.10\bin\gdal_translate.exe</PathToGdal>
+  <PathToMagick>C:\Program Files\ImageMagick-7.0.9-Q16\magick.exe</PathToMagick>
+  <BlocksPerTile>1024</BlocksPerTile>
+  <VerticalScale>50</VerticalScale>
+  <adjacentTiles>true</adjacentTiles>
+  <geofabrik>true</geofabrik>
+  <streets>false</streets>
+  <borders>false</borders>
+  <streams>false</streams>
+  <buildings>false</buildings>
+</Settings>
