@@ -1,4 +1,5 @@
-﻿Imports System.IO
+﻿Imports System.Globalization
+Imports System.IO
 Imports System.Reflection
 Imports Microsoft.Win32
 
@@ -15,8 +16,8 @@ Class MainWindow
     ''' <param name="sender"></param>
     ''' <param name="e"></param>
     Private Sub ProgrammLoaded(sender As Object, e As EventArgs) Handles MyBase.Loaded
-        For latitude As Integer = -180 To 179 Step 1
-            For longitude As Integer = -89 To 90 Step 1
+        For longitude As Integer = -89 To 90 Step 1
+            For latitude As Integer = -180 To 179 Step 1
                 Dim chb As New CheckBox With {
                     .IsChecked = False,
                     .Height = 4,
@@ -81,6 +82,11 @@ Class MainWindow
         Next
     End Sub
 
+    ''' <summary>
+    ''' 
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
     Private Sub Chb_CheckedChanged(sender As Object, e As EventArgs)
         Dim chb As CheckBox = DirectCast(sender, CheckBox) 'Use DirectCast to cast the sender into a checkbox
         Dim currentSpawnTile As String = ""
@@ -184,7 +190,7 @@ Class MainWindow
                 Next
 
             End If
-            Else
+        Else
             lastChecked = chb.Name
         End If
 
@@ -329,14 +335,12 @@ Class MainWindow
     ''' </summary>
     ''' <param name="sender"></param>
     ''' <param name="e"></param>
-    Private Sub Btn_PathToGdal_Click(sender As Object, e As RoutedEventArgs) Handles btn_PathToGdal.Click
-        Dim GdalFileDialog As New OpenFileDialog With {
-            .FileName = "gdal_translate.exe",
-            .Filter = "Exe Files (.exe)|*.exe|All Files (*.*)|*.*",
-            .FilterIndex = 1
+    Private Sub Btn_PathToQGIS_Click(sender As Object, e As RoutedEventArgs) Handles btn_PathToQGIS.Click
+        Dim MyFolderBrowserDialog As New Forms.FolderBrowserDialog With {
+            .SelectedPath = My.Application.Info.DirectoryPath
         }
-        If GdalFileDialog.ShowDialog() = True Then
-            txb_PathToGdal.Text = GdalFileDialog.FileName
+        If MyFolderBrowserDialog.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
+            txb_PathToQGIS.Text = MyFolderBrowserDialog.SelectedPath
         End If
     End Sub
 
@@ -366,23 +370,23 @@ Class MainWindow
     ''' <param name="sender"></param>
     ''' <param name="e"></param>
     Private Sub Btn_SaveSettings_Click(sender As Object, e As RoutedEventArgs) Handles btn_SaveSettings.Click
-        Dim settings As New settings
+        Dim settings As New Settings
         settings.PathToScriptsFolder = txb_PathToScriptsFolder.Text
         settings.PathToWorldPainterFolder = txb_PathToWorldPainterFile.Text
-        settings.PathToGdal = txb_PathToGdal.Text
+        settings.PathToQGIS = txb_PathToQGIS.Text
         settings.PathToMagick = txb_PathToMagick.Text
         settings.BlocksPerTile = cbb_BlocksPerTile.Text
         settings.VerticalScale = cbb_verticalScale.Text
-        settings.adjacentTiles = CBool(chb_adjacentTiles.IsChecked)
         settings.geofabrik = CBool(chb_geofabrik.IsChecked)
         settings.highways = CBool(chb_highways.IsChecked)
-        settings.streets = CBool(chb_highways.IsChecked)
-        settings.buildings = CBool(chb_highways.IsChecked)
-        settings.borders = CBool(chb_highways.IsChecked)
-        settings.farms = CBool(chb_highways.IsChecked)
-        settings.meadows = CBool(chb_highways.IsChecked)
-        settings.quarrys = CBool(chb_highways.IsChecked)
-        settings.streams = CBool(chb_highways.IsChecked)
+        settings.streets = CBool(chb_streets.IsChecked)
+        settings.buildings = CBool(chb_buildings.IsChecked)
+        settings.borders = CBool(chb_borders.IsChecked)
+        settings.farms = CBool(chb_farms.IsChecked)
+        settings.meadows = CBool(chb_meadows.IsChecked)
+        settings.quarrys = CBool(chb_quarrys.IsChecked)
+        settings.streams = CBool(chb_streams.IsChecked)
+        settings.cubicChunks = CBool(chb_CubicChunks.IsChecked)
         Dim ExportPathName As String = My.Application.Info.DirectoryPath
         Try
             CustomXmlSerialiser.SaveXML(ExportPathName & "\settings.xml", settings, settings.GetType)
@@ -401,7 +405,7 @@ Class MainWindow
         Dim ImportPathName As String = My.Application.Info.DirectoryPath
         If My.Computer.FileSystem.FileExists(ImportPathName & "\settings.xml") Then
             Try
-                Dim MySettings As New settings
+                Dim MySettings As New Settings
                 MySettings = CustomXmlSerialiser.GetXMLSettings(ImportPathName & "\settings.xml", MySettings, MySettings.GetType)
                 If Directory.Exists(MySettings.PathToScriptsFolder) Then
                     txb_PathToScriptsFolder.Text = MySettings.PathToScriptsFolder
@@ -413,10 +417,10 @@ Class MainWindow
                 Else
                     Throw New System.Exception("The File '" & MySettings.PathToWorldPainterFolder & "' does not exist.")
                 End If
-                If File.Exists(MySettings.PathToGdal) Then
-                    txb_PathToGdal.Text = MySettings.PathToGdal
+                If Directory.Exists(MySettings.PathToQGIS) Then
+                    txb_PathToQGIS.Text = MySettings.PathToQGIS
                 Else
-                    Throw New System.Exception("The File '" & MySettings.PathToGdal & "' does not exist.")
+                    Throw New System.Exception("The File '" & MySettings.PathToQGIS & "' does not exist.")
                 End If
                 If File.Exists(MySettings.PathToMagick) Then
                     txb_PathToMagick.Text = MySettings.PathToMagick
@@ -434,14 +438,6 @@ Class MainWindow
                     cbb_verticalScale.Text = MySettings.VerticalScale
                 Else
                     Throw New System.Exception("Vertical scale '" & MySettings.VerticalScale & "' does not exist.")
-                End If
-
-                If MySettings.adjacentTiles = True Then
-                    chb_adjacentTiles.IsChecked = True
-                ElseIf MySettings.adjacentTiles = False Then
-                    chb_adjacentTiles.IsChecked = False
-                Else
-                    Throw New System.Exception("Adjacent Tiles is not defined.")
                 End If
 
                 If MySettings.geofabrik = True Then
@@ -516,6 +512,14 @@ Class MainWindow
                     Throw New System.Exception("streams is not defined.")
                 End If
 
+                If MySettings.cubicChunks = True Then
+                    chb_CubicChunks.IsChecked = True
+                ElseIf MySettings.streams = False Then
+                    chb_CubicChunks.IsChecked = False
+                Else
+                    Throw New System.Exception("Cubic Chunks is not defined.")
+                End If
+
                 MsgBox("Settings loaded from 'settings.xml'")
             Catch ex As Exception
                 MsgBox("Error while parsing 'settings.xml'. Is the file correct? " & ex.Message)
@@ -554,84 +558,97 @@ Class MainWindow
             TilesList.Sort()
             Dim OsmScriptBatchFile As System.IO.StreamWriter
             OsmScriptBatchFile = My.Computer.FileSystem.OpenTextFileWriter(ImportPathName & "\1-osmconvert.bat", False, System.Text.Encoding.ASCII)
-            Dim biggest_lati As Int32 = 0
-            Dim biggest_long As Int32 = 0
-            Dim smallest_lati As Int32 = 0
-            Dim smallest_long As Int32 = 0
             For Each Tile In TilesList
-                Dim LatiDir = Tile.Substring(0, 1)
-                Dim LatiNumber As Int32 = 0
-                Int32.TryParse(Tile.Substring(1, 2), LatiNumber)
-                Dim LongDir = Tile.Substring(3, 1)
-                Dim LongNumber As Int32 = 0
-                Int32.TryParse(Tile.Substring(4, 3), LongNumber)
-                If LatiDir = "S" Then
-                    LatiNumber *= -1
-                End If
-                If LongDir = "W" Then
-                    LongNumber *= -1
-                End If
-                If Tile = TilesList.First Then
-                    smallest_lati = LatiNumber
-                    biggest_lati = LatiNumber
-                    smallest_long = LongNumber
-                    biggest_long = LongNumber
-                End If
-                If LatiNumber < smallest_lati Then
-                    smallest_lati = LatiNumber
-                End If
-                If LatiNumber + 1 > biggest_lati Then
-                    biggest_lati = LatiNumber + 1
-                End If
-                If LongNumber < smallest_long Then
-                    smallest_long = LongNumber
-                End If
-                If LongNumber + 1 > biggest_long Then
-                    biggest_long = LongNumber + 1
-                End If
-                If chb_geofabrik.IsChecked = False And chb_adjacentTiles.IsChecked = False Then
-                    OsmScriptBatchFile.WriteLine("wget -O osm/" & Tile & ".osm " & Chr(34) & "http://overpass-api.de/api/interpreter?data=(node(" & LatiNumber.ToString & "," & LongNumber.ToString & "," & (LatiNumber + 1).ToString & "," & (LongNumber + 1).ToString & ");<;>;);out;" & Chr(34) & "")
-                    OsmScriptBatchFile.WriteLine("timeout /t 60 /nobreak")
-                End If
+                OsmScriptBatchFile.WriteLine("if not exist " & Chr(34) & ImportPathName & "\osm\" & Tile & Chr(34) & " mkdir " & Chr(34) & ImportPathName & "\osm\" & Tile & Chr(34))
             Next
-
             If chb_geofabrik.IsChecked = True Then
-                OsmScriptBatchFile.WriteLine("osmconvert osm/download.osm.pbf --complete-multipolygons --complete-ways -o=osm/output.o5m")
+                OsmScriptBatchFile.WriteLine("osmconvert osm/download.osm.pbf -o=osm/output.o5m")
+
+                For Each Tile In TilesList
+                    Dim LatiDir = Tile.Substring(0, 1)
+                    Dim LatiNumber As Int32 = 0
+                    Int32.TryParse(Tile.Substring(1, 2), LatiNumber)
+                    Dim LongDir = Tile.Substring(3, 1)
+                    Dim LongNumber As Int32 = 0
+                    Int32.TryParse(Tile.Substring(4, 3), LongNumber)
+                    Dim borderW As Double = 0
+                    Dim borderS As Double = 0
+                    Dim borderE As Double = 0
+                    Dim borderN As Double = 0
+                    If LatiDir = "N" Then
+                        borderS = LatiNumber - 0.5
+                        borderN = LatiNumber + 1.5
+                    Else
+                        borderS = (-1 * LatiNumber) - 0.5
+                        borderN = (-1 * LatiNumber) + 1.5
+                    End If
+                    If LongDir = "E" Then
+                        borderW = LongNumber - 0.5
+                        borderE = LongNumber + 1.5
+                    Else
+                        borderW = (-1 * LongNumber) - 0.5
+                        borderE = (-1 * LongNumber) + 1.5
+                    End If
+                    OsmScriptBatchFile.WriteLine("osmconvert osm/output.o5m -b=" & borderW.ToString("###.#", New CultureInfo("en-US")) & "," & borderS.ToString("##.#", New CultureInfo("en-US")) & "," & (borderE).ToString("###.#", New CultureInfo("en-US")) & "," & (borderN).ToString("##.#", New CultureInfo("en-US")) & " -o=osm/" & Tile & "/output.osm")
+                    OsmScriptBatchFile.WriteLine("SET folder=osm/" & Tile)
+                    Dim OsmScript As String = ""
+                    If My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath & "/osmscript.txt") Then
+                        Dim fileReader As String
+                        fileReader = My.Computer.FileSystem.ReadAllText(My.Application.Info.DirectoryPath & "/osmscript.txt")
+                        OsmScript = fileReader
+                    Else
+                        OsmScript = My.Resources.ResourceManager.GetString("osmscript")
+                        Dim objWriter As New System.IO.StreamWriter(My.Application.Info.DirectoryPath & "/osmscript.txt")
+                        objWriter.Write(OsmScript)
+                        objWriter.Close()
+                    End If
+                    OsmScriptBatchFile.WriteLine(OsmScript)
+                    OsmScriptBatchFile.WriteLine("del " & Chr(34) & ImportPathName & "\osm\" & Tile & "\output.osm" & Chr(34) & "")
+                Next
             Else
-                If chb_adjacentTiles.IsChecked = True Then
-                    OsmScriptBatchFile.WriteLine("wget -O osm/combined.osm " & Chr(34) & "http://overpass-api.de/api/interpreter?data=(node(" & smallest_lati.ToString & "," & smallest_long.ToString & "," & biggest_lati.ToString & "," & biggest_long.ToString & ");<;>;);out;" & Chr(34) & "")
-                    OsmScriptBatchFile.WriteLine("timeout /t 60 /nobreak")
-                Else
-                    Dim AllTilesString As String = ""
-                    For Each Tile In TilesList
-                        If Tile Is TilesList.Last Then
-                            AllTilesString = AllTilesString & "osm/" & Tile & ".osm"
-                        Else
-                            AllTilesString = AllTilesString & "osm/" & Tile & ".osm "
-                        End If
-                    Next
-                    OsmScriptBatchFile.WriteLine("osmconvert " & AllTilesString & " -o=osm/combined.osm")
-                End If
-                OsmScriptBatchFile.WriteLine("osmconvert osm/combined.osm --complete-multipolygons --complete-ways -o=osm/output.o5m")
+                For Each Tile In TilesList
+                    Dim LatiDir = Tile.Substring(0, 1)
+                    Dim LatiNumber As Int32 = 0
+                    Int32.TryParse(Tile.Substring(1, 2), LatiNumber)
+                    Dim LongDir = Tile.Substring(3, 1)
+                    Dim LongNumber As Int32 = 0
+                    Int32.TryParse(Tile.Substring(4, 3), LongNumber)
+                    Dim borderW As Int32 = 0
+                    Dim borderS As Int32 = 0
+                    Dim borderE As Int32 = 0
+                    Dim borderN As Int32 = 0
+                    If LatiDir = "N" Then
+                        borderS = LatiNumber
+                        borderN = LatiNumber + 1
+                    Else
+                        borderS = -1 * LatiNumber
+                        borderN = -1 * LatiNumber + 1
+                    End If
+                    If LongDir = "E" Then
+                        borderW = LongNumber
+                        borderE = LongNumber + 1
+                    Else
+                        borderW = -1 * LongNumber
+                        borderE = -1 * LongNumber + 1
+                    End If
+                    OsmScriptBatchFile.WriteLine("wget -O osm/" & Tile & "/output.osm " & Chr(34) & "http://overpass-api.de/api/interpreter?data=(node(" & borderS.ToString & "," & borderW.ToString & "," & borderN.ToString & "," & borderE.ToString & ");<;>;);out;" & Chr(34) & "")
+                    OsmScriptBatchFile.WriteLine("SET folder=osm/" & Tile)
+                    Dim OsmScript As String = ""
+                    If My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath & "/osmscript.txt") Then
+                        Dim fileReader As String
+                        fileReader = My.Computer.FileSystem.ReadAllText(My.Application.Info.DirectoryPath & "/osmscript.txt")
+                        OsmScript = fileReader
+                    Else
+                        OsmScript = My.Resources.ResourceManager.GetString("osmscript")
+                        Dim objWriter As New System.IO.StreamWriter(My.Application.Info.DirectoryPath & "/osmscript.txt")
+                        objWriter.Write(OsmScript)
+                        objWriter.Close()
+                    End If
+                    OsmScriptBatchFile.WriteLine(OsmScript)
+                    OsmScriptBatchFile.WriteLine("del " & Chr(34) & ImportPathName & "\osm\" & Tile & "\output.osm" & Chr(34) & "")
+                Next
             End If
-
-            Dim OsmScrip As String = ""
-            If My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath & "/osmscript.txt") Then
-                Dim fileReader As String
-                fileReader = My.Computer.FileSystem.ReadAllText(My.Application.Info.DirectoryPath & "/osmscript.txt")
-                OsmScrip = fileReader
-            Else
-                OsmScrip = My.Resources.ResourceManager.GetString("osmscript")
-                Dim objWriter As New System.IO.StreamWriter(My.Application.Info.DirectoryPath & "/osmscript.txt")
-                objWriter.Write(OsmScrip)
-                objWriter.Close()
-            End If
-
-            OsmScriptBatchFile.WriteLine(OsmScrip)
-
-            OsmScriptBatchFile.WriteLine("PAUSE")
             OsmScriptBatchFile.Close()
-            MsgBox("OSM script batch file saved as '1-osmconvert.bat'")
         Catch ex As Exception
             MsgBox("File '1-osmconvert.bat' could not be saved\n" & ex.Message)
         End Try
@@ -660,47 +677,49 @@ Class MainWindow
                 Throw New System.Exception("No Tiles selected.")
             End If
             TilesList.Sort()
-            Dim ScriptBatchFile As System.IO.StreamWriter
-            ScriptBatchFile = My.Computer.FileSystem.OpenTextFileWriter(ImportPathName & "\2-qgis.py", False, System.Text.Encoding.ASCII)
-            If TilesList.Count = 0 Then
-                Throw New System.Exception("No Tiles selected.")
+
+            If (Not System.IO.Directory.Exists(ImportPathName & "\python\")) Then
+                System.IO.Directory.CreateDirectory(ImportPathName & "\python\")
             End If
-            Dim AllTilesString As String = "["
+
             For Each Tile In TilesList
-                If Tile Is TilesList.Last Then
-                    AllTilesString = AllTilesString & Chr(34) & Tile & Chr(34) & "]"
+                Dim pythonFile As System.IO.StreamWriter
+                pythonFile = My.Computer.FileSystem.OpenTextFileWriter(ImportPathName & "\python\" & Tile.ToString & ".py", False, System.Text.Encoding.ASCII)
+                pythonFile.WriteLine("import os" & Environment.NewLine &
+                                    "from PyQt5.QtCore import *" & Environment.NewLine &
+                                    Environment.NewLine &
+                                    "path = '" & ImportPathName.Replace("\", "/") & "/'" & Environment.NewLine &
+                                    "tile = '" & Tile & "'" & Environment.NewLine &
+                                    "scale = " & cbb_BlocksPerTile.Text & Environment.NewLine &
+                                    Environment.NewLine)
+
+                Dim QgisBasescript As String = ""
+                If My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath & "/qgis.txt") Then
+                    Dim fileReader As String
+                    fileReader = My.Computer.FileSystem.ReadAllText(My.Application.Info.DirectoryPath & "/qgis.txt")
+                    QgisBasescript = fileReader
                 Else
-                    AllTilesString = AllTilesString & Chr(34) & Tile & Chr(34) & ", "
+                    QgisBasescript = My.Resources.ResourceManager.GetString("basescript")
+                    Dim objWriter As New System.IO.StreamWriter(My.Application.Info.DirectoryPath & "/qgis.txt")
+                    objWriter.Write(QgisBasescript)
+                    objWriter.Close()
                 End If
+                pythonFile.WriteLine(QgisBasescript)
+                pythonFile.WriteLine("os.kill(os.getpid(), 9)")
+                pythonFile.Close()
             Next
 
-            ScriptBatchFile.WriteLine("import os" & Environment.NewLine &
-                                      Environment.NewLine &
-                                      "path = '" & ImportPathName.Replace("\", "/") & "/'" & Environment.NewLine &
-                                      "tiles = " & AllTilesString & Environment.NewLine &
-                                      "scale = " & cbb_BlocksPerTile.Text & Environment.NewLine &
-                                      Environment.NewLine &
-                                      Environment.NewLine &
-                                      "")
-
-            Dim QgisBasescript As String = ""
-            If My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath & "/qgis.txt") Then
-                Dim fileReader As String
-                fileReader = My.Computer.FileSystem.ReadAllText(My.Application.Info.DirectoryPath & "/qgis.txt")
-                QgisBasescript = fileReader
-            Else
-                QgisBasescript = My.Resources.ResourceManager.GetString("basescript")
-                Dim objWriter As New System.IO.StreamWriter(My.Application.Info.DirectoryPath & "/qgis.txt")
-                objWriter.Write(QgisBasescript)
-                objWriter.Close()
-            End If
-
-            ScriptBatchFile.WriteLine(QgisBasescript)
-
+            Dim ScriptBatchFile As System.IO.StreamWriter
+            ScriptBatchFile = My.Computer.FileSystem.OpenTextFileWriter(ImportPathName & "\2-qgis.bat", False, System.Text.Encoding.ASCII)
+            For Each Tile In TilesList
+                ScriptBatchFile.WriteLine("if not exist " & Chr(34) & ImportPathName & "\image_exports\" & Tile & Chr(34) & " mkdir " & Chr(34) & ImportPathName & "\image_exports\" & Tile & Chr(34))
+                ScriptBatchFile.WriteLine("if not exist " & Chr(34) & ImportPathName & "\image_exports\" & Tile & "\heightmap" & Chr(34) & " mkdir " & Chr(34) & ImportPathName & "\image_exports\" & Tile & "\heightmap" & Chr(34))
+                ScriptBatchFile.WriteLine("xcopy " & Chr(34) & ImportPathName & "\osm\" & Tile & Chr(34) & " " & Chr(34) & ImportPathName & "\QGIS\OsmData" & Chr(34) & " /Y")
+                ScriptBatchFile.WriteLine(Chr(34) & txb_PathToQGIS.Text & "\bin\qgis-bin.exe" & Chr(34) & " --project " & Chr(34) & ImportPathName & "\QGIS\MinecraftEarthTiles.qgz" & Chr(34) & " --code " & Chr(34) & ImportPathName & "\python\" & Tile & ".py" & Chr(34))
+            Next
             ScriptBatchFile.Close()
-            MsgBox("Qgis console script file saved as '2-qgis.py'. Copy the code and place it inside the Qgis project.")
         Catch ex As Exception
-            MsgBox("File '2-qgis.py' could not be saved\n" & ex.Message)
+            MsgBox("File '2-qgis.bat' could not be saved\n" & ex.Message)
         End Try
     End Sub
 
@@ -810,9 +829,7 @@ Class MainWindow
                 GdalBatchFile.WriteLine("wget -O image_exports/" & Tile & "/" & Tile & ".tar.gz " & Chr(34) & "ftp://ftp.eorc.jaxa.jp/pub/ALOS/ext1/AW3D30/release_v1903/" & TilesRounded & "/" & TilesOneMoreDigit & ".tar.gz" & Chr(34))
                 GdalBatchFile.WriteLine("TarTool image_exports/" & Tile & "/" & Tile & ".tar.gz image_exports/" & Tile & "/heightmap")
             Next
-            GdalBatchFile.WriteLine("PAUSE")
             GdalBatchFile.Close()
-            MsgBox("WorldPainter script batch file saved as '3-tartool.bat'")
         Catch ex As Exception
             MsgBox("File '3-tartool.bat' could not be saved\n" & ex.Message)
         End Try
@@ -830,7 +847,7 @@ Class MainWindow
         Else
             ImportPathName = txb_PathToScriptsFolder.Text
         End If
-        If txb_PathToGdal.Text = "" Then
+        If txb_PathToQGIS.Text = "" Then
             MsgBox("Please enter the path to the 'gdal_translator.exe' file")
         Else
             Try
@@ -866,11 +883,22 @@ Class MainWindow
                     Else
                         TilesOneMoreDigit &= LongNumber
                     End If
-                    GdalBatchFile.WriteLine(Chr(34) & txb_PathToGdal.Text & Chr(34) & " -a_nodata none -outsize " & cbb_BlocksPerTile.Text & " " & cbb_BlocksPerTile.Text & " -Of PNG -ot UInt16 -scale -512 15872‬ 0 65535 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & TilesOneMoreDigit & "\" & TilesOneMoreDigit & "_AVE_DSM.tif" & Chr(34) & " " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_exported.png" & Chr(34))
+
+                    Select Case cbb_verticalScale.Text
+                        Case "100"
+                            GdalBatchFile.WriteLine(Chr(34) & txb_PathToQGIS.Text & "\bin\gdal_translate.exe" & Chr(34) & " -a_nodata none -outsize " & cbb_BlocksPerTile.Text & " " & cbb_BlocksPerTile.Text & " -Of PNG -ot UInt16 -scale -6200 6547300 0 65535 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & TilesOneMoreDigit & "\" & TilesOneMoreDigit & "_AVE_DSM.tif" & Chr(34) & " " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_exported.png" & Chr(34))
+                        Case "50"
+                            GdalBatchFile.WriteLine(Chr(34) & txb_PathToQGIS.Text & "\bin\gdal_translate.exe" & Chr(34) & " -a_nodata none -outsize " & cbb_BlocksPerTile.Text & " " & cbb_BlocksPerTile.Text & " -Of PNG -ot UInt16 -scale -3100 3273650 0 65535 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & TilesOneMoreDigit & "\" & TilesOneMoreDigit & "_AVE_DSM.tif" & Chr(34) & " " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_exported.png" & Chr(34))
+                        Case "25"
+                            GdalBatchFile.WriteLine(Chr(34) & txb_PathToQGIS.Text & "\bin\gdal_translate.exe" & Chr(34) & " -a_nodata none -outsize " & cbb_BlocksPerTile.Text & " " & cbb_BlocksPerTile.Text & " -Of PNG -ot UInt16 -scale -1550 1636825 0 65535 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & TilesOneMoreDigit & "\" & TilesOneMoreDigit & "_AVE_DSM.tif" & Chr(34) & " " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_exported.png" & Chr(34))
+                        Case "10"
+                            GdalBatchFile.WriteLine(Chr(34) & txb_PathToQGIS.Text & "\bin\gdal_translate.exe" & Chr(34) & " -a_nodata none -outsize " & cbb_BlocksPerTile.Text & " " & cbb_BlocksPerTile.Text & " -Of PNG -ot UInt16 -scale -620 654730‬ 0 65535 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & TilesOneMoreDigit & "\" & TilesOneMoreDigit & "_AVE_DSM.tif" & Chr(34) & " " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_exported.png" & Chr(34))
+                    End Select
+                    'GdalBatchFile.WriteLine(Chr(34) & txb_PathToQGIS.Text & "\bin\gdal_translate.exe" & Chr(34) & " -a_nodata none -outsize " & cbb_BlocksPerTile.Text & " " & cbb_BlocksPerTile.Text & " -Of PNG -ot UInt16 -scale -512 15872‬ 0 65535 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & TilesOneMoreDigit & "\" & TilesOneMoreDigit & "_AVE_DSM.tif" & Chr(34) & " " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_exported.png" & Chr(34))
+                    GdalBatchFile.WriteLine(Chr(34) & txb_PathToQGIS.Text & Chr(34) & "\bin\gdaldem.exe" & " slope " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & TilesOneMoreDigit & "\" & TilesOneMoreDigit & "_AVE_DSM.tif" & Chr(34) & " " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & TilesOneMoreDigit & "\" & TilesOneMoreDigit & "_AVE_DSM_slope.tif" & Chr(34) & " -s 111120 -compute_edges")
+                    GdalBatchFile.WriteLine(Chr(34) & txb_PathToQGIS.Text & "\bin\gdal_translate.exe" & Chr(34) & " -a_nodata none -outsize " & cbb_BlocksPerTile.Text & " " & cbb_BlocksPerTile.Text & " -Of PNG -ot UInt16 -scale 0 90 0 65535 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & TilesOneMoreDigit & "\" & TilesOneMoreDigit & "_AVE_DSM_slope.tif" & Chr(34) & " " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_slope.png" & Chr(34))
                 Next
-                GdalBatchFile.WriteLine("PAUSE")
                 GdalBatchFile.Close()
-                MsgBox("WorldPainter script batch file saved as '4-gdal.bat'")
             Catch ex As Exception
                 MsgBox("File '4-gdal.bat' could not be saved\n" & ex.Message)
             End Try
@@ -906,25 +934,33 @@ Class MainWindow
                 GdalBatchFile = My.Computer.FileSystem.OpenTextFileWriter(ImportPathName & "\5-magick.bat", False, System.Text.Encoding.ASCII)
 
                 Dim NumberOfResize = "( +clone -resize 50%% )"
+                Dim NumberOfResizeWater = "( +clone -filter Gaussian -resize 50%% -morphology Dilate Gaussian )"
                 Dim TilesSize As Double = CType(cbb_BlocksPerTile.Text, Double)
                 While TilesSize >= 2
                     NumberOfResize &= " ( +clone -resize 50%% )"
+                    NumberOfResizeWater &= " ( +clone -filter Gaussian -resize 50%% -morphology Dilate Gaussian )"
                     TilesSize /= 2
                 End While
-
                 For Each Tile In TilesList
-                    GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\" & Tile & "_groundcover.png" & Chr(34) & " -remap pattern:gray50 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\" & Tile & "_groundcover_dit.png" & Chr(34))
-                    GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\" & Tile & "_ground_red_sand.png" & Chr(34) & " -remap pattern:gray50 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\" & Tile & "_ground_red_sand_dit.png" & Chr(34))
-                    GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\" & Tile & "_ground_gravel.png" & Chr(34) & " -remap pattern:gray50 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\" & Tile & "_ground_gravel_dit.png" & Chr(34))
+                    GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\" & Tile & "_terrain.png" & Chr(34) & " -dither None -remap " & Chr(34) & txb_PathToScriptsFolder.Text & "\QGIS\terrain_colors.png" & Chr(34) & " " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\" & Tile & "_terrain_reduced_colors.png" & Chr(34))
                     GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_exported.png" & Chr(34) & " -transparent black -depth 16 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_removed_invalid.png" & Chr(34))
                     GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_removed_invalid.png" & Chr(34) & " -channel A -morphology EdgeIn Diamond -depth 16 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_edges.png" & Chr(34))
                     GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_edges.png" & Chr(34) & " " & NumberOfResize & " -layers RemoveDups -filter Gaussian -resize " & cbb_BlocksPerTile.Text & "x" & cbb_BlocksPerTile.Text & "! -reverse -background None -flatten -alpha off -depth 16 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_invalid_filled.png" & Chr(34))
                     GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_invalid_filled.png" & Chr(34) & " " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_removed_invalid.png" & Chr(34) & " -compose over -composite -depth 16 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_unsmoothed.png" & Chr(34))
-                    GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_unsmoothed.png" & Chr(34) & " -mask " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\" & Tile & "_water_mask.png" & Chr(34) & " -blur 0x4 +mask -depth 16 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & ".png" & Chr(34))
+                    GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\" & Tile & "_water.png" & Chr(34) & " -threshold 10%% -alpha off -depth 16 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\" & Tile & "_water_mask.png" & Chr(34))
+                    GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\" & Tile & "_water_mask.png" & Chr(34) & " -transparent white -depth 16 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_water_transparent.png" & Chr(34))
+                    GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_unsmoothed.png" & Chr(34) & " " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_water_transparent.png" & Chr(34) & " -compose over -composite -depth 16 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_water_blacked.png" & Chr(34))
+                    GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_water_blacked.png" & Chr(34) & " -transparent black -depth 16 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_water_removed.png" & Chr(34))
+                    GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_water_removed.png" & Chr(34) & " -channel A -morphology EdgeIn Diamond -depth 16 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_water_edges.png" & Chr(34))
+                    GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_water_edges.png" & Chr(34) & " -morphology Dilate Gaussian " & NumberOfResizeWater & " -layers RemoveDups -filter Gaussian -resize " & cbb_BlocksPerTile.Text & "x" & cbb_BlocksPerTile.Text & "! -reverse -background None -flatten -alpha off -depth 16 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_water_filled.png" & Chr(34))
+                    GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_water_filled.png" & Chr(34) & " " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_water_removed.png" & Chr(34) & " -compose over -composite -depth 16 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & ".png" & Chr(34))
+                    GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\" & Tile & "_bathymetry.png" & Chr(34) & " -transparent black -depth 16 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\" & Tile & "_bathymetry_transparent.png" & Chr(34))
+                    GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\" & Tile & ".png" & Chr(34) & " " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\" & Tile & "_bathymetry_transparent.png" & Chr(34) & " -compose over -composite -depth 16 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\" & Tile & ".png" & Chr(34))
+                    GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\" & Tile & "_bathymetry.png" & Chr(34) & " -evaluate divide 256 -depth 16 -alpha off " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_bathymetry.png" & Chr(34))
+                    GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_bathymetry.png" & Chr(34) & " -transparent black -depth 16 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_bathymetry_transparent.png" & Chr(34))
+                    GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & ".png" & Chr(34) & " " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_bathymetry_transparent.png" & Chr(34) & " -compose over -composite -depth 16 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & ".png" & Chr(34))
                 Next
-                GdalBatchFile.WriteLine("PAUSE")
                 GdalBatchFile.Close()
-                MsgBox("WorldPainter script batch file saved as '5-magick.bat'")
             Catch ex As Exception
                 MsgBox("File '5-magick.bat' could not be saved\n" & ex.Message)
             End Try
@@ -967,11 +1003,9 @@ Class MainWindow
                     Dim LongNumber As Int32 = 0
                     Int32.TryParse(Tile.Substring(4, 3), LongNumber)
                     Dim ReplacedString = LatiDir & " " & LatiNumber.ToString & " " & LongDir & " " & LongNumber.ToString
-                    ScriptBatchFile.WriteLine(Chr(34) & txb_PathToWorldPainterFile.Text & Chr(34) & " wpscript.js " & Chr(34) & ImportPathName.Replace("\", "/") & "/" & Chr(34) & " " & ReplacedString & " " & cbb_BlocksPerTile.Text & " " & cbb_verticalScale.Text & " " & chb_highways.IsChecked & " " & chb_streets.IsChecked & " " & chb_buildings.IsChecked & " " & chb_borders.IsChecked & " " & chb_farms.IsChecked & " " & chb_meadows.IsChecked & " " & chb_quarrys.IsChecked & " " & chb_streets.IsChecked)
+                    ScriptBatchFile.WriteLine(Chr(34) & txb_PathToWorldPainterFile.Text & Chr(34) & " wpscript.js " & Chr(34) & ImportPathName.Replace("\", "/") & "/" & Chr(34) & " " & ReplacedString & " " & cbb_BlocksPerTile.Text & " " & cbb_verticalScale.Text & " " & chb_highways.IsChecked.ToString & " " & chb_streets.IsChecked.ToString & " " & chb_buildings.IsChecked.ToString & " " & chb_borders.IsChecked.ToString & " " & chb_farms.IsChecked.ToString & " " & chb_meadows.IsChecked.ToString & " " & chb_quarrys.IsChecked.ToString & " " & chb_streets.IsChecked.ToString & " " & chb_CubicChunks.IsChecked.ToString)
                 Next
-                ScriptBatchFile.WriteLine("PAUSE")
                 ScriptBatchFile.Close()
-                MsgBox("WorldPainter script batch file saved as '6-wpscript.bat'")
             Catch ex As Exception
                 MsgBox("File '6-wpscript.bat' could not be saved\n" & ex.Message)
             End Try
@@ -1004,15 +1038,11 @@ Class MainWindow
                 ScriptBatchFile.WriteLine("mkdir " & Chr(34) & ImportPathName & "\world\region" & Chr(34))
                 ScriptBatchFile.WriteLine("copy " & Chr(34) & ImportPathName & "\wpscript\exports\" & cbb_SpawnTile.Text & "\level.dat" & Chr(34) & " " & Chr(34) & ImportPathName & "\world" & Chr(34))
                 ScriptBatchFile.WriteLine("copy " & Chr(34) & ImportPathName & "\wpscript\exports\" & cbb_SpawnTile.Text & "\session.lock" & Chr(34) & " " & Chr(34) & ImportPathName & "\world" & Chr(34))
-                ScriptBatchFile.WriteLine("")
                 ScriptBatchFile.WriteLine("pushd " & Chr(34) & ImportPathName & "\wpscript\exports\" & Chr(34))
                 ScriptBatchFile.WriteLine("For /r %%i in (*.mca) do  xcopy /Y " & Chr(34) & "%%i" & Chr(34) & " " & Chr(34) & ImportPathName & "\world\region\" & Chr(34))
                 ScriptBatchFile.WriteLine("popd")
-                ScriptBatchFile.WriteLine("")
-                ScriptBatchFile.WriteLine("PAUSE")
                 ScriptBatchFile.Close()
             End If
-            MsgBox("CleanUp batch file saved as '7-combine.bat'")
         Catch ex As Exception
             MsgBox("File '7-combine.bat' could not be saved\n" & ex.Message)
         End Try
@@ -1044,21 +1074,62 @@ Class MainWindow
             ScriptBatchFile.WriteLine("mkdir " & Chr(34) & ImportPathName & "\wpscript\worldpainter_files" & Chr(34))
             ScriptBatchFile.WriteLine("rmdir /Q /S " & Chr(34) & ImportPathName & "\wpscript\exports" & Chr(34))
             ScriptBatchFile.WriteLine("mkdir " & Chr(34) & ImportPathName & "\wpscript\exports" & Chr(34))
+            ScriptBatchFile.WriteLine("rmdir /Q /S " & Chr(34) & ImportPathName & "\python" & Chr(34))
+            ScriptBatchFile.WriteLine("mkdir " & Chr(34) & ImportPathName & "\python" & Chr(34))
             ScriptBatchFile.WriteLine("del " & Chr(34) & ImportPathName & "\1-osmconvert.bat" & Chr(34))
-            ScriptBatchFile.WriteLine("del " & Chr(34) & ImportPathName & "\2-qgis.py" & Chr(34))
+            ScriptBatchFile.WriteLine("del " & Chr(34) & ImportPathName & "\2-qgis.bat" & Chr(34))
             ScriptBatchFile.WriteLine("del " & Chr(34) & ImportPathName & "\3-tartool.bat" & Chr(34))
             ScriptBatchFile.WriteLine("del " & Chr(34) & ImportPathName & "\4-gdal.bat" & Chr(34))
             ScriptBatchFile.WriteLine("del " & Chr(34) & ImportPathName & "\5-magick.bat" & Chr(34))
             ScriptBatchFile.WriteLine("del " & Chr(34) & ImportPathName & "\6-wpscript.bat" & Chr(34))
             ScriptBatchFile.WriteLine("del " & Chr(34) & ImportPathName & "\7-combine.bat" & Chr(34))
             ScriptBatchFile.WriteLine("del " & Chr(34) & ImportPathName & "\8-cleanup.bat" & Chr(34))
-            ScriptBatchFile.WriteLine("PAUSE")
             ScriptBatchFile.Close()
-            MsgBox("CleanUp batch file saved as '8-cleanup.bat'")
         Catch ex As Exception
             MsgBox("File '8-cleanup.bat' could not be saved\n" & ex.Message)
         End Try
     End Sub
+
+    ''' <summary>
+    ''' 
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    Private Sub btn_AllExport_Click(sender As Object, e As RoutedEventArgs) Handles btn_AllExport.Click
+        Dim ImportPathName As String = ""
+        If txb_PathToScriptsFolder.Text = "" Then
+            ImportPathName = My.Application.Info.DirectoryPath
+        Else
+            ImportPathName = txb_PathToScriptsFolder.Text
+        End If
+        Btn_osmbatExport_Click(sender, e)
+        Btn_QgisExport_Click(sender, e)
+        Btn_tartool_Click(sender, e)
+        Btn_gdalExport_Click(sender, e)
+        Btn_magick_Export_Click(sender, e)
+        Btn_WPScriptExport_Click(sender, e)
+        Btn_CombineExport_Click(sender, e)
+        Btn_CleanUpExport_Click(sender, e)
+        Try
+            Dim ScriptBatchFile As System.IO.StreamWriter
+            ScriptBatchFile = My.Computer.FileSystem.OpenTextFileWriter(ImportPathName & "\0-combine.bat", False, System.Text.Encoding.ASCII)
+            ScriptBatchFile.WriteLine("@echo Started %date% %time%")
+            ScriptBatchFile.WriteLine("Call 1 - osmconvert.bat")
+            ScriptBatchFile.WriteLine("Call 2 - qgis.bat")
+            ScriptBatchFile.WriteLine("Call 3 - tartool.bat")
+            ScriptBatchFile.WriteLine("Call 3 - tartool.bat")
+            ScriptBatchFile.WriteLine("Call 4 - gdal.bat")
+            ScriptBatchFile.WriteLine("Call 5 - magick.bat")
+            ScriptBatchFile.WriteLine("Call 6 - wpscript.bat")
+            ScriptBatchFile.WriteLine("Call 7 - combine.bat")
+            ScriptBatchFile.WriteLine("@echo Completed: %date% %time%")
+            ScriptBatchFile.WriteLine("PAUSE")
+            ScriptBatchFile.Close()
+        Catch ex As Exception
+            MsgBox("File '0-combine.bat' could not be saved\n" & ex.Message)
+        End Try
+    End Sub
+
 
 #End Region
 

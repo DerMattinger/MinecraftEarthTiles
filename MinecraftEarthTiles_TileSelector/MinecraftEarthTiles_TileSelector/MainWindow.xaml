@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:MinecraftEarthTiles_TileSelector"
         mc:Ignorable="d"
         Title="MinecraftEarthTiles TileSelector"
-        Height="996.8"
+        Height="1023.8"
         Width="1456"
         MinHeight="830"
         MinWidth="1456"
@@ -93,11 +93,13 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <Grid Name="Tiles" Width="1440" Height="720" MinWidth="1440" MinHeight="720" Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
-            <Image Source="MyResources/background.jpg" Width="1440" Height="720" MinWidth="1440" MinHeight="720"  Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-            <Grid Name="CheckBoxes" Width="1440" Height="720" MinWidth="1440" MinHeight="720" Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
+        <ScrollViewer x:Name="scrollViewer" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
+            <Grid Name="Tiles" Width="1440" Height="720" MinWidth="1440" MinHeight="720" Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
+                <Image Source="MyResources/background.jpg" Width="1440" Height="720" MinWidth="1440" MinHeight="720"  Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                <Grid Name="CheckBoxes" Width="1440" Height="720" MinWidth="1440" MinHeight="720" Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
+                </Grid>
             </Grid>
-        </Grid>
+        </ScrollViewer>
         <Grid Margin="0,720,0,0">
             <Grid>
                 <Button x:Name="btn_SaveSelection" Content="Save selection" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="90" RenderTransformOrigin="-1.787,0.05" Height="20"/>
@@ -147,10 +149,10 @@
                     <TextBlock Grid.Row="0" Grid.Column="3" Text="Recommanded vertical scale" FontWeight="Bold"></TextBlock>
                     <TextBlock Grid.Row="1" Grid.Column="3" Text="1:100"></TextBlock>
                     <TextBlock Grid.Row="2" Grid.Column="3" Text="1:50"></TextBlock>
-                    <TextBlock Grid.Row="3" Grid.Column="3" Text="1:25 (with Cubic Chunks)"></TextBlock>
-                    <TextBlock Grid.Row="4" Grid.Column="3" Text="1:10 (with Cubic Chunks)"></TextBlock>
-                    <TextBlock Grid.Row="5" Grid.Column="3" Text="1:10 (with Cubic Chunks)"></TextBlock>
-                    <TextBlock Grid.Row="6" Grid.Column="3" Text="1:10 (with Cubic Chunks)"></TextBlock>
+                    <TextBlock Grid.Row="3" Grid.Column="3" Text="1:25 or 1:50"></TextBlock>
+                    <TextBlock Grid.Row="4" Grid.Column="3" Text="1:25"></TextBlock>
+                    <TextBlock Grid.Row="5" Grid.Column="3" Text="1:10 or 1:25"></TextBlock>
+                    <TextBlock Grid.Row="6" Grid.Column="3" Text="1:10"></TextBlock>
 
                 </Grid>
 
@@ -160,16 +162,16 @@
                 <Label x:Name="lbl_PathToWorldPainterFolder" Content="Path to wpscript.exe" Margin="0,35,691,0" VerticalAlignment="Top" HorizontalAlignment="Right"/>
                 <TextBox x:Name="txb_PathToWorldPainterFile" HorizontalAlignment="Right" Height="20" Margin="0,37,406,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="280" IsReadOnly="True" />
                 <Button x:Name="btn_PathToWorldPainter" Content="..." Margin="0,37,382,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="24"/>
-                <Label x:Name="lbl_PathToGdal" Content="Path to gdal_translate.exe" Margin="0,59,691,0" VerticalAlignment="Top" HorizontalAlignment="Right"/>
-                <TextBox x:Name="txb_PathToGdal" HorizontalAlignment="Right" Height="20" Margin="0,62,406,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="280" IsReadOnly="True" />
-                <Button x:Name="btn_PathToGdal" Content="..." Margin="0,62,382,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="24"/>
-                <Label x:Name="lbl_PathToMagick" Content="Path to magick.exe" Margin="0,84,691,0" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+                <Label x:Name="lbl_PathToQGIS" Content="Path to QGIS Folder" Margin="0,59,691,0" VerticalAlignment="Top" HorizontalAlignment="Right"/>
+                <TextBox x:Name="txb_PathToQGIS" HorizontalAlignment="Right" Height="20" Margin="0,62,406,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="280" IsReadOnly="True" />
+                <Button x:Name="btn_PathToQGIS" Content="..." Margin="0,62,382,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="24"/>
+                <Label x:Name="lbl_PathToMagick" Content="Path to magick.exe" Margin="0,85,691,0" VerticalAlignment="Top" HorizontalAlignment="Right"/>
                 <TextBox x:Name="txb_PathToMagick" HorizontalAlignment="Right" Height="20" Margin="0,87,406,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="280" IsReadOnly="True" />
                 <Button x:Name="btn_PathToMagick" Content="..." Margin="0,87,382,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="24"/>
 
 
-                <Label x:Name="lbl_BlocksPerTile" Content="Blocks per Tile" HorizontalAlignment="Right" Margin="0,111,696,0" VerticalAlignment="Top"/>
-                <ComboBox  x:Name="cbb_BlocksPerTile" Margin="0,113,632,0" VerticalAlignment="Top" HorizontalAlignment="Right">
+                <Label x:Name="lbl_BlocksPerTile" Content="Blocks per Tile" HorizontalAlignment="Right" Margin="0,139,696,0" VerticalAlignment="Top"/>
+                <ComboBox  x:Name="cbb_BlocksPerTile" Margin="0,141,632,0" VerticalAlignment="Top" HorizontalAlignment="Right">
                     <ComboBoxItem>512</ComboBoxItem>
                     <ComboBoxItem IsSelected="True">1024</ComboBoxItem>
                     <ComboBoxItem>2048</ComboBoxItem>
@@ -178,36 +180,35 @@
                     <ComboBoxItem>10240</ComboBoxItem>
                 </ComboBox>
 
-                <Label x:Name="lbl_verticalScale" Content="Vertical Scale: 1 :" HorizontalAlignment="Right" Margin="0,111,525,0" VerticalAlignment="Top"/>
-                <ComboBox  x:Name="cbb_verticalScale" Margin="0,113,479,0" VerticalAlignment="Top" HorizontalAlignment="Right">
+                <Label x:Name="lbl_verticalScale" Content="Vertical Scale: 1 :" HorizontalAlignment="Right" Margin="0,139,524,0" VerticalAlignment="Top"/>
+                <ComboBox  x:Name="cbb_verticalScale" Margin="0,141,478,0" VerticalAlignment="Top" HorizontalAlignment="Right">
                     <ComboBoxItem>100</ComboBoxItem>
                     <ComboBoxItem IsSelected="True">50</ComboBoxItem>
                     <ComboBoxItem>25</ComboBoxItem>
                     <ComboBoxItem>10</ComboBoxItem>
                 </ComboBox>
-                <CheckBox x:Name="chb_adjacentTiles" Content="Only adjacent Tiles" HorizontalAlignment="Right" Margin="0,117,355,0" VerticalAlignment="Top" />
 
-                <Label x:Name="lbl_SpawnTile" Content="Spawn Tile:" HorizontalAlignment="Right" Margin="0,137,696,0" VerticalAlignment="Top"/>
-                <ComboBox  x:Name="cbb_SpawnTile" Margin="0,140,594,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="92">
+                <Label x:Name="lbl_SpawnTile" Content="Spawn Tile:" HorizontalAlignment="Right" Margin="0,165,696,0" VerticalAlignment="Top"/>
+                <ComboBox  x:Name="cbb_SpawnTile" Margin="0,168,594,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="92">
                 </ComboBox>
 
-                <CheckBox x:Name="chb_geofabrik" Content="&quot;download.osm.pbf&quot; file from Geofabrik" HorizontalAlignment="Right" Margin="0,143,355,0" VerticalAlignment="Top" />
+                <CheckBox x:Name="chb_geofabrik" Content="&quot;download.osm.pbf&quot; file from Geofabrik" HorizontalAlignment="Right" Margin="0,171,354,0" VerticalAlignment="Top" />
 
-                <CheckBox x:Name="chb_highways" Content="Highways" HorizontalAlignment="Right" Margin="0,184,613,0" VerticalAlignment="Top" IsChecked="True" />
-                <CheckBox x:Name="chb_streets" Content="Small streets" HorizontalAlignment="Right" Margin="0,184,521,0" VerticalAlignment="Top" IsChecked="True" />
-                <CheckBox x:Name="chb_buildings" Content="Buildings" HorizontalAlignment="Right" Margin="0,184,448,0" VerticalAlignment="Top" IsChecked="True" />
-                <CheckBox x:Name="chb_borders" Content="Borders" HorizontalAlignment="Right" Margin="0,184,382,0" VerticalAlignment="Top" IsChecked="True" />
-                <CheckBox x:Name="chb_streams" Content="Streams" HorizontalAlignment="Right" Margin="0,204,429,0" VerticalAlignment="Top" IsChecked="True" />
+                <CheckBox x:Name="chb_highways" Content="Highways" HorizontalAlignment="Right" Margin="0,196,615,0" VerticalAlignment="Top" IsChecked="True" />
+                <CheckBox x:Name="chb_streets" Content="Small streets" HorizontalAlignment="Right" Margin="0,196,523,0" VerticalAlignment="Top" IsChecked="True" />
+                <CheckBox x:Name="chb_buildings" Content="Buildings" HorizontalAlignment="Right" Margin="0,196,450,0" VerticalAlignment="Top" IsChecked="True" />
+                <CheckBox x:Name="chb_borders" Content="Borders" HorizontalAlignment="Right" Margin="0,196,384,0" VerticalAlignment="Top" IsChecked="True" />
+                <CheckBox x:Name="chb_streams" Content="Streams" HorizontalAlignment="Right" Margin="0,216,431,0" VerticalAlignment="Top" IsChecked="True" />
 
-                <CheckBox x:Name="chb_farms" Content="Farms" HorizontalAlignment="Right" Margin="0,204,633,0" VerticalAlignment="Top" IsChecked="True" />
-                <CheckBox x:Name="chb_meadows" Content="Meadows" HorizontalAlignment="Right" Margin="0,204,557,0" VerticalAlignment="Top" IsChecked="True" />
-                <CheckBox x:Name="chb_quarrys" Content="Quarry" HorizontalAlignment="Right" Margin="0,204,496,0" VerticalAlignment="Top" IsChecked="True" />
+                <CheckBox x:Name="chb_farms" Content="Farms" HorizontalAlignment="Right" Margin="0,216,635,0" VerticalAlignment="Top" IsChecked="True" />
+                <CheckBox x:Name="chb_meadows" Content="Meadows" HorizontalAlignment="Right" Margin="0,216,559,0" VerticalAlignment="Top" IsChecked="True" />
+                <CheckBox x:Name="chb_quarrys" Content="Quarry" HorizontalAlignment="Right" Margin="0,216,498,0" VerticalAlignment="Top" IsChecked="True" />
 
                 <Button x:Name="btn_SaveSettings" Content="Save settings" HorizontalAlignment="Left" Margin="10,176,0,0" VerticalAlignment="Top" Width="90" RenderTransformOrigin="-1.787,0.05" Height="20"/>
                 <Button x:Name="btn_LoadSettings" Content="Load settings" HorizontalAlignment="Left" Margin="10,201,0,0" VerticalAlignment="Top" Width="90  " RenderTransformOrigin="-1.787,0.05" Height="20"/>
 
                 <Button x:Name="btn_osmbatExport" Content="Export '1-osmconvert.bat'" Margin="0,10,37,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Right" Width="151"/>
-                <Button x:Name="btn_QgisExport" Content="Export '2-qgis.py'" Margin="0,37,37,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Right" Width="151"/>
+                <Button x:Name="btn_QgisExport" Content="Export '2-qgis.bat'" Margin="0,37,37,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Right" Width="151"/>
                 <Button x:Name="btn_tartool" Content="Export '3-tartool.bat'" Margin="0,64,37,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Right" Width="151"/>
                 <Button x:Name="btn_gdalExport" Content="Export '4-gdal.bat'" Margin="0,91,37,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Right" Width="151"/>
                 <Button x:Name="btn_WPScriptExport" Content="Export '6-wpscript.bat'" Margin="0,147,37,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Right" Width="151"/>
@@ -223,6 +224,8 @@
                 <Button x:Name="btn_magick_help" Content="?" Margin="0,119,10,0" Style="{DynamicResource Help_Button_Style}" Background="SteelBlue" Foreground="white" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Width="22" />
                 <Button x:Name="btn_Combine_help" Content="?" Margin="0,174,10,0" Style="{DynamicResource Help_Button_Style}" Background="SteelBlue" Foreground="white" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Width="22" />
                 <Button x:Name="btn_CleanUp_help" Content="?" Margin="0,201,10,0" Style="{DynamicResource Help_Button_Style}" Background="SteelBlue" Foreground="white" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Width="22" />
+                <CheckBox x:Name="chb_CubicChunks" Content="Cubic Chunks" HorizontalAlignment="Right" Margin="0,145,381,0" VerticalAlignment="Top" />
+                <Button x:Name="btn_AllExport" Content="Export All" Margin="0,228,37,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Right" Width="151"/>
             </Grid>
         </Grid>
     </Grid>

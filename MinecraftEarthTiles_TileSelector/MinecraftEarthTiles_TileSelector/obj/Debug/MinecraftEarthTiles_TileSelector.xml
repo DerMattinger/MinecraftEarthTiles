@@ -138,6 +138,13 @@ Application Entry Point.
  <param name="sender"></param>
  <param name="e"></param>
 </member>
+<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Chb_CheckedChanged(System.Object,System.EventArgs)">
+ <summary>
+ 
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
 <member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Btn_SaveSelection_Click(System.Object,System.Windows.RoutedEventArgs)">
  <summary>
  
@@ -173,7 +180,7 @@ Application Entry Point.
  <param name="sender"></param>
  <param name="e"></param>
 </member>
-<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Btn_PathToGdal_Click(System.Object,System.Windows.RoutedEventArgs)">
+<member name="M:MinecraftEarthTiles_TileSelector.MainWindow.Btn_PathToQGIS_Click(System.Object,System.Windows.RoutedEventArgs)">
  <summary>
  
  </summary>

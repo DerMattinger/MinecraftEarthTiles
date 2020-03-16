@@ -13,3 +13,7 @@ C:\Users\brenne05\source\repos\MET\MinecraftEarthTiles_TileSelector\MinecraftEar
 C:\Users\brenne05\source\repos\MET\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_TileSelector\obj\Release\MinecraftEarthTiles_TileSelector.exe
 C:\Users\brenne05\source\repos\MET\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_TileSelector\obj\Release\MinecraftEarthTiles_TileSelector.xml
 C:\Users\brenne05\source\repos\MET\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_TileSelector\obj\Release\MinecraftEarthTiles_TileSelector.pdb
+C:\Users\brenne05\source\repos\MET\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_TileSelector\bin\Release\MinecraftEarthTiles_TileSelector.exe.manifest
+C:\Users\brenne05\source\repos\MET\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_TileSelector\bin\Release\MinecraftEarthTiles_TileSelector.application
+C:\Users\brenne05\source\repos\MET\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_TileSelector\obj\Release\MinecraftEarthTiles_TileSelector.exe.manifest
+C:\Users\brenne05\source\repos\MET\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_TileSelector\obj\Release\MinecraftEarthTiles_TileSelector.application
