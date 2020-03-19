@@ -942,12 +942,12 @@ Class MainWindow
                     TilesSize /= 2
                 End While
                 For Each Tile In TilesList
-                    GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\" & Tile & "_terrain.png" & Chr(34) & " -dither None -remap " & Chr(34) & txb_PathToScriptsFolder.Text & "\QGIS\terrain_colors.png" & Chr(34) & " " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\" & Tile & "_terrain_reduced_colors.png" & Chr(34))
+                    GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\" & Tile & "_terrain.png" & Chr(34) & " -dither None -remap " & Chr(34) & txb_PathToScriptsFolder.Text & "\QGIS\terrain\" & cbb_TerrainMapping.Text & ".png" & Chr(34) & " " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\" & Tile & "_terrain_reduced_colors.png" & Chr(34))
                     GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_exported.png" & Chr(34) & " -transparent black -depth 16 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_removed_invalid.png" & Chr(34))
                     GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_removed_invalid.png" & Chr(34) & " -channel A -morphology EdgeIn Diamond -depth 16 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_edges.png" & Chr(34))
                     GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_edges.png" & Chr(34) & " " & NumberOfResize & " -layers RemoveDups -filter Gaussian -resize " & cbb_BlocksPerTile.Text & "x" & cbb_BlocksPerTile.Text & "! -reverse -background None -flatten -alpha off -depth 16 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_invalid_filled.png" & Chr(34))
                     GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_invalid_filled.png" & Chr(34) & " " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_removed_invalid.png" & Chr(34) & " -compose over -composite -depth 16 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_unsmoothed.png" & Chr(34))
-                    GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\" & Tile & "_water.png" & Chr(34) & " -threshold 10%% -alpha off -depth 16 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\" & Tile & "_water_mask.png" & Chr(34))
+                    GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\" & Tile & "_water.png" & Chr(34) & " -threshold 5%% -alpha off -depth 16 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\" & Tile & "_water_mask.png" & Chr(34))
                     GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\" & Tile & "_water_mask.png" & Chr(34) & " -transparent white -depth 16 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_water_transparent.png" & Chr(34))
                     GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_unsmoothed.png" & Chr(34) & " " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_water_transparent.png" & Chr(34) & " -compose over -composite -depth 16 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_water_blacked.png" & Chr(34))
                     GdalBatchFile.WriteLine(Chr(34) & txb_PathToMagick.Text & Chr(34) & " convert " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_water_blacked.png" & Chr(34) & " -transparent black -depth 16 " & Chr(34) & txb_PathToScriptsFolder.Text & "\image_exports\" & Tile & "\heightmap\" & Tile & "_water_removed.png" & Chr(34))
@@ -1114,22 +1114,28 @@ Class MainWindow
             Dim ScriptBatchFile As System.IO.StreamWriter
             ScriptBatchFile = My.Computer.FileSystem.OpenTextFileWriter(ImportPathName & "\0-combine.bat", False, System.Text.Encoding.ASCII)
             ScriptBatchFile.WriteLine("@echo Started %date% %time%")
-            ScriptBatchFile.WriteLine("Call 1 - osmconvert.bat")
-            ScriptBatchFile.WriteLine("Call 2 - qgis.bat")
-            ScriptBatchFile.WriteLine("Call 3 - tartool.bat")
-            ScriptBatchFile.WriteLine("Call 3 - tartool.bat")
-            ScriptBatchFile.WriteLine("Call 4 - gdal.bat")
-            ScriptBatchFile.WriteLine("Call 5 - magick.bat")
-            ScriptBatchFile.WriteLine("Call 6 - wpscript.bat")
-            ScriptBatchFile.WriteLine("Call 7 - combine.bat")
-            ScriptBatchFile.WriteLine("@echo Completed: %date% %time%")
+            ScriptBatchFile.WriteLine("TITLE Convert OSM data")
+            ScriptBatchFile.WriteLine("Call 1-osmconvert.bat")
+            ScriptBatchFile.WriteLine("TITLE Export images using QGIS")
+            ScriptBatchFile.WriteLine("Call 2-qgis.bat")
+            ScriptBatchFile.WriteLine("TITLE Download heightmap")
+            ScriptBatchFile.WriteLine("Call 3-tartool.bat")
+            ScriptBatchFile.WriteLine("TITLE Convert heightmaps")
+            ScriptBatchFile.WriteLine("Call 4-gdal.bat")
+            ScriptBatchFile.WriteLine("TITLE Convert a lot of images")
+            ScriptBatchFile.WriteLine("Call 5-magick.bat")
+            ScriptBatchFile.WriteLine("TITLE Generating worlds with WorldPainter")
+            ScriptBatchFile.WriteLine("Call 6-wpscript.bat")
+            ScriptBatchFile.WriteLine("TITLE Combine world")
+            ScriptBatchFile.WriteLine("Call 7-combine.bat")
+            ScriptBatchFile.WriteLine("TITLE Finished at %date% %time%")
+            ScriptBatchFile.WriteLine("@echo Completed at %date% %time%")
             ScriptBatchFile.WriteLine("PAUSE")
             ScriptBatchFile.Close()
         Catch ex As Exception
             MsgBox("File '0-combine.bat' could not be saved\n" & ex.Message)
         End Try
     End Sub
-
 
 #End Region
 

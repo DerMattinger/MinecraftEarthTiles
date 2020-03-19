@@ -226,6 +226,11 @@
                 <Button x:Name="btn_CleanUp_help" Content="?" Margin="0,201,10,0" Style="{DynamicResource Help_Button_Style}" Background="SteelBlue" Foreground="white" Height="22" VerticalAlignment="Top" HorizontalAlignment="Right" Width="22" />
                 <CheckBox x:Name="chb_CubicChunks" Content="Cubic Chunks" HorizontalAlignment="Right" Margin="0,145,381,0" VerticalAlignment="Top" />
                 <Button x:Name="btn_AllExport" Content="Export All" Margin="0,228,37,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Right" Width="151"/>
+                <Label x:Name="lbl_TerrainMapping" Content="Terrain Mapping:" HorizontalAlignment="Right" Margin="0,233,696,0" VerticalAlignment="Top"/>
+                <ComboBox  x:Name="cbb_TerrainMapping" Margin="0,236,594,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="92">
+                    <ComboBoxItem IsSelected="True">Standard</ComboBoxItem>
+                    <ComboBoxItem>Custom</ComboBoxItem>
+                </ComboBox>
             </Grid>
         </Grid>
     </Grid>
