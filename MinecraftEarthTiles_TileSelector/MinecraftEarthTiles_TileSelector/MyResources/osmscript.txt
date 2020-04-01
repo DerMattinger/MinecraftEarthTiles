@@ -12,6 +12,7 @@ osmfilter %folder%/output.osm --verbose --keep="natural=volcano" -o=%folder%/vol
 osmfilter %folder%/output.osm --verbose --keep="natural=beach" -o=%folder%/beach.osm
 osmfilter %folder%/output.osm --verbose --keep="natural=grassland or natural=fell or natural=heath or natural=scrub" -o=%folder%/grass.osm
 osmfilter %folder%/output.osm --verbose --keep="landuse=farmland" -o=%folder%/farmland.osm
+osmfilter %folder%/output.osm --verbose --keep="landuse=forest" -o=%folder%/forest.osm
 osmfilter %folder%/output.osm --verbose --keep="landuse=vineyard" -o=%folder%/vineyard.osm
 osmfilter %folder%/output.osm --verbose --keep="landuse=meadow" -o=%folder%/meadow.osm
 osmfilter %folder%/output.osm --verbose --keep="landuse=quarry" -o=%folder%/quarry.osm

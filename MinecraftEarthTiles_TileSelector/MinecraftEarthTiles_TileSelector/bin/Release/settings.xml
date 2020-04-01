@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Settings>
+  <PathToScriptsFolder>E:\osm</PathToScriptsFolder>
+  <PathToWorldPainterFolder>E:\osm\WorldPainter\wpscript.exe</PathToWorldPainterFolder>
+  <PathToQGIS>C:\Program Files\QGIS 3.12</PathToQGIS>
+  <PathToMagick>C:\Program Files\ImageMagick-7.0.9-Q16\magick.exe</PathToMagick>
+  <BlocksPerTile>10240</BlocksPerTile>
+  <VerticalScale>10</VerticalScale>
+  <Terrain>Custom</Terrain>
+  <Heightmap_Error_Correction>false</Heightmap_Error_Correction>
+  <cubicChunks>false</cubicChunks>
+  <geofabrik>false</geofabrik>
+  <highways>true</highways>
+  <streets>true</streets>
+  <buildings>false</buildings>
+  <borders>true</borders>
+  <farms>true</farms>
+  <meadows>true</meadows>
+  <quarrys>true</quarrys>
+  <streams>true</streams>
+</Settings>

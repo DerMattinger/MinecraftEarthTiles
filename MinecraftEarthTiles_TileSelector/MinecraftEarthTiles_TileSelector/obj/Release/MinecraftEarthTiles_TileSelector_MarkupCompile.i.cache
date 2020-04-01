@@ -4,17 +4,17 @@
 winexe
 VB
 .vb
-C:\Users\brenne05\source\repos\MET\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_TileSelector\obj\Release\
+C:\Users\brenne05\source\repos\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_TileSelector\obj\Release\
 MinecraftEarthTiles_TileSelector
 none
 false
 
-C:\Users\brenne05\source\repos\MET\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_TileSelector\Application.xaml
-11151548125
+C:\Users\brenne05\source\repos\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_TileSelector\Application.xaml
+4-533320807
 
-10544419924
+13-1897518437
 121896634849
-MainWindow.xaml;
+LargeSelectionWindow.xaml;SelectionWindow.xaml;SettingsWindow.xaml;StartupWindow.xaml;
 
-True
+False
 

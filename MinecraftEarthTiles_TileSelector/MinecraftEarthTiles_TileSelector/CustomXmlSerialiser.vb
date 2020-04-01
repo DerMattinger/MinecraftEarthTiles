@@ -4,13 +4,7 @@ Imports System.IO
 
 Public Class CustomXmlSerialiser
 
-    ''' <summary>XML Datei Speichern</summary>
-    ''' <param name="FileName"></param>
-    ''' <param name="DataToSerialize"></param>
-    ''' <param name="objType"></param>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Public Shared Function SaveXML(ByVal FileName As String, ByVal DataToSerialize As Object, ByVal objType As Type) As Boolean
+    Public Shared Function SaveXML(ByVal FileName As String, ByVal DataToSerialize As Object) As Boolean
         Dim nsBlank As New XmlSerializerNamespaces
         nsBlank.Add("", "")
         Dim xSettings As New System.Xml.XmlWriterSettings
@@ -21,47 +15,32 @@ Public Class CustomXmlSerialiser
             .NewLineOnAttributes = False
             .ConformanceLevel = Xml.ConformanceLevel.Document
         End With
-        Try
-            Dim xw As System.Xml.XmlWriter = Xml.XmlWriter.Create(FileName, xSettings)
-            Dim writer As New XmlSerializer(objType)
-            writer.Serialize(xw, DataToSerialize, nsBlank)
-            xw.Close()
-            Return True
-        Catch ex As Exception
-            MsgBox(ex.Message)
-            Return False
-        End Try
+        Dim xw As System.Xml.XmlWriter = Xml.XmlWriter.Create(FileName, xSettings)
+        Dim writer As New XmlSerializer(DataToSerialize.GetType)
+        writer.Serialize(xw, DataToSerialize, nsBlank)
+        xw.Close()
+        Return True
     End Function
 
-    ''' <summary>XML Datei Lesen</summary>
-    ''' <param name="sFileName"></param>
-    ''' <param name="objType"></param>
-    ''' <returns></returns>
-    ''' <remarks></remarks>
-    Public Shared Function GetXMLSelection(ByVal sFileName As String, ByVal selection As Selection, ByVal objType As Type) As Selection
+    Public Shared Function GetXMLSelection(ByVal sFileName As String) As Selection
+        Dim MySelection As New Selection
         If My.Computer.FileSystem.FileExists(sFileName) Then
             Dim fs As FileStream = New FileStream(sFileName, FileMode.Open)
-            Dim xs As XmlSerializer = New XmlSerializer(objType)
-            selection = CType(xs.Deserialize(fs), Selection)
+            Dim xs As XmlSerializer = New XmlSerializer(MySelection.GetType)
+            MySelection = CType(xs.Deserialize(fs), Selection)
             fs.Close()
-            Return selection
+            Return MySelection
         Else
-            Return selection
+            Return MySelection
         End If
     End Function
 
-    ''' <summary>
-    ''' 
-    ''' </summary>
-    ''' <param name="sFileName"></param>
-    ''' <param name="MySettings"></param>
-    ''' <param name="objType"></param>
-    ''' <returns></returns>
-    Public Shared Function GetXMLSettings(ByVal sFileName As String, ByVal MySettings As settings, ByVal objType As Type) As settings
+    Public Shared Function GetXMLSettings(ByVal sFileName As String) As Settings
+        Dim MySettings As New Settings
         If My.Computer.FileSystem.FileExists(sFileName) Then
             Dim fs As FileStream = New FileStream(sFileName, FileMode.Open)
-            Dim xs As XmlSerializer = New XmlSerializer(objType)
-            MySettings = CType(xs.Deserialize(fs), settings)
+            Dim xs As XmlSerializer = New XmlSerializer(MySettings.GetType)
+            MySettings = CType(xs.Deserialize(fs), Settings)
             fs.Close()
             Return MySettings
         Else
