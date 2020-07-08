@@ -7,16 +7,25 @@ Public Class SelectionWindow
     Dim lastChecked As String = ""
 
     Private Sub Window_Loaded(sender As Object, e As RoutedEventArgs)
-        For longitude As Integer = -89 To 90 Step 1
-            For latitude As Integer = -180 To 179 Step 1
+        For longitude As Integer = -89 To 90 Step CType(StartupWindow.MySettings.TilesPerMap, Int32)
+            For latitude As Integer = -180 To 179 Step CType(StartupWindow.MySettings.TilesPerMap, Int32)
                 Dim chb As New CheckBox With {
                     .IsChecked = False,
-                    .Height = 4,
-                    .Width = 4,
+                    .Height = (4 * CType(StartupWindow.MySettings.TilesPerMap, Int32)),
+                    .Width = (4 * CType(StartupWindow.MySettings.TilesPerMap, Int32)),
                     .Style = CType(TryFindResource("EarthTilesCheckboxStyle"), Style),
                     .HorizontalAlignment = HorizontalAlignment.Left,
                     .VerticalAlignment = VerticalAlignment.Top
                 }
+
+                'Für nicht durch 90 Teilbare TilesPerMap
+                If (longitude = -89 Or longitude = 90) And CType(StartupWindow.MySettings.TilesPerMap, Int16) = 4 Then
+                    chb.Height = 2 * CType(StartupWindow.MySettings.TilesPerMap, Int32)
+                End If
+                If (latitude = -180 Or latitude = 179) And CType(StartupWindow.MySettings.TilesPerMap, Int16) = 4 Then
+                    chb.Width = 2 * CType(StartupWindow.MySettings.TilesPerMap, Int32)
+                End If
+
                 AddHandler chb.Click, AddressOf Chb_CheckedChanged
                 Dim TilesMargin As Thickness
                 TilesMargin.Left = (latitude * 4) + 720
@@ -171,8 +180,6 @@ Public Class SelectionWindow
                 For Each Checkbox In Me.Tiles.Children.OfType(Of CheckBox)
                     If NewTilesList.Contains(Checkbox.Name) Then
                         Checkbox.IsChecked = True
-                    Else
-                        Checkbox.IsChecked = False
                     End If
                 Next
 

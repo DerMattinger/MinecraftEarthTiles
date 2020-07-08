@@ -10,16 +10,16 @@ elif latDir == "S":
 else:
     yMax = 0
 
-yMin = yMax -1
+yMin = yMax - ( 1 * TilesPerMap )
 
 if longDir == "E":
-    xMax = longNumber + 1
+    xMin = longNumber
 elif longDir == "W":
-    xMax = (longNumber - 1) * -1
+    xMin = longNumber * -1
 else:
     xMax = 0
 
-xMin = xMax -1
+xMax = xMin + ( 1 * TilesPerMap )
 
 #create missing folders
 folder = path + 'image_exports/'
@@ -43,9 +43,11 @@ for alllayer in alllayers:
     
 layers = []
 for layer in QgsProject.instance().mapLayers().values():
-    if layer.name().startswith("background_heightmap"):
+    if layer.name().startswith("heightmap_background"):
         layers.append(layer)
-        
+    elif layer.name().startswith("gebco_08_rev_elev_"):
+        layers.append(layer)
+
 for layer in layers:
     node = root.findLayer(layer.id())
     node.setItemVisibilityChecked(Qt.Checked)
@@ -96,7 +98,7 @@ layers = []
 for layer in QgsProject.instance().mapLayers().values():
     if layer.name().startswith("land_polygons"):
         layers.append(layer)
-    elif layer.name().startswith("GEBCO"):
+    elif layer.name().startswith("GEBCO_2019"):
         layers.append(layer)
     elif layer.name().startswith("background_bathymetry"):
         layers.append(layer)
@@ -474,7 +476,9 @@ layers = []
 for layer in QgsProject.instance().mapLayers().values():
     if layer.name().startswith("EvergreenDeciduousNeedleleafTrees"):
         layers.append(layer)
-        
+    elif layer.name().startswith("vegetation_background"):
+        layers.append(layer)
+
 for layer in layers:
     node = root.findLayer(layer.id())
     node.setItemVisibilityChecked(Qt.Checked)
@@ -533,6 +537,8 @@ for alllayer in alllayers:
 layers = []
 for layer in QgsProject.instance().mapLayers().values():
     if layer.name().startswith("mixedTrees"):
+        layers.append(layer)
+    elif layer.name().startswith("vegetation_background"):
         layers.append(layer)
         
 for layer in layers:
@@ -594,6 +600,8 @@ layers = []
 for layer in QgsProject.instance().mapLayers().values():
     if layer.name().startswith("DeciduousBroadleafTrees"):
         layers.append(layer)
+    elif layer.name().startswith("vegetation_background"):
+        layers.append(layer)
         
 for layer in layers:
     node = root.findLayer(layer.id())
@@ -653,6 +661,8 @@ for alllayer in alllayers:
 layers = []
 for layer in QgsProject.instance().mapLayers().values():
     if layer.name().startswith("EvergreenBroadleafTrees"):
+        layers.append(layer)
+    elif layer.name().startswith("vegetation_background"):
         layers.append(layer)
         
 for layer in layers:
@@ -714,6 +724,8 @@ layers = []
 for layer in QgsProject.instance().mapLayers().values():
     if layer.name().startswith("Shrubs"):
         layers.append(layer)
+    elif layer.name().startswith("vegetation_background"):
+        layers.append(layer)
         
 for layer in layers:
     node = root.findLayer(layer.id())
@@ -763,6 +775,8 @@ for alllayer in alllayers:
 layers = []
 for layer in QgsProject.instance().mapLayers().values():
     if layer.name().startswith("HerbaceousVegetation"):
+        layers.append(layer)
+    elif layer.name().startswith("vegetation_background"):
         layers.append(layer)
         
 for layer in layers:

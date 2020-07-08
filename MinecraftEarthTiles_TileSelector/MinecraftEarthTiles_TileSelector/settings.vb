@@ -4,6 +4,7 @@
     Public PathToQGIS As String
     Public PathToMagick As String
     Public BlocksPerTile As String
+    Public TilesPerMap As String
     Public VerticalScale As String
     Public Terrain As String
     Public Heightmap_Error_Correction As Boolean
@@ -29,6 +30,7 @@
         PathToQGIS = ""
         PathToMagick = ""
         BlocksPerTile = "1024"
+        TilesPerMap = "1"
         VerticalScale = "50"
         Terrain = "Standard"
         Heightmap_Error_Correction = False

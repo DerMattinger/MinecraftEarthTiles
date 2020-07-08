@@ -43,7 +43,7 @@
                     <Button x:Name="btn_PathToMagick" Content="..." Margin="496,106,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="24" Click="Btn_PathToMagick_Click"/>
 
                     <Label x:Name="lbl_BlocksPerTile" Content="Blocks per Tile" HorizontalAlignment="Left" Margin="125,134,0,0" VerticalAlignment="Top"/>
-                    <ComboBox x:Name="cbb_BlocksPerTile" Margin="216,136,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="83" SelectionChanged="Calculate_Scale">
+                    <ComboBox x:Name="cbb_BlocksPerTile" Margin="216,136,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="83" DropDownClosed="Calculate_Scale">
                         <ComboBoxItem Content="512"/>
                         <ComboBoxItem IsSelected="True" Content="1024"/>
                         <ComboBoxItem Content="2048"/>
@@ -52,20 +52,27 @@
                         <ComboBoxItem Content="10240"/>
                     </ComboBox>
 
-                    <Label x:Name="lbl_TilesperMap" Content="Tiles per Map" HorizontalAlignment="Left" Margin="125,161,0,0" VerticalAlignment="Top" IsEnabled="False"/>
-                    <ComboBox x:Name="cbb_TilesperMap" Margin="216,163,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="83" SelectionChanged="Calculate_Scale" IsEnabled="False">
+                    <Label x:Name="lbl_TilesperMap" Content="Tiles per Map" HorizontalAlignment="Left" Margin="125,161,0,0" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="cbb_TilesperMap" Margin="216,163,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="83" DropDownClosed="Calculate_Scale">
                         <ComboBoxItem IsSelected="True" Content="1"/>
                         <ComboBoxItem Content="2"/>
                         <ComboBoxItem Content="3"/>
-                        <ComboBoxItem Content="4"/>
+                        <ComboBoxItem Content="5"/>
+                        <ComboBoxItem Content="10"/>
+                        <ComboBoxItem Content="15"/>
+                        <ComboBoxItem Content="30"/>
+                        <ComboBoxItem Content="45"/>
+                        <ComboBoxItem Content="90"/>
                     </ComboBox>
 
                     <Label x:Name="lbl_verticalScale" Content="Vertical Scale: 1 :" HorizontalAlignment="Left" Margin="114,188,0,0" VerticalAlignment="Top"/>
                     <ComboBox x:Name="cbb_VerticalScale" Margin="216,190,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="83">
+                        <ComboBoxItem Content="5"/>
                         <ComboBoxItem Content="10"/>
                         <ComboBoxItem Content="25"/>
                         <ComboBoxItem IsSelected="True" Content="50"/>
                         <ComboBoxItem Content="100"/>
+                        <ComboBoxItem Content="200"/>
                     </ComboBox>
 
                     <Label x:Name="lbl_TerrainMapping" Content="Terrain Mapping" HorizontalAlignment="Left" Margin="114,215,0,0" VerticalAlignment="Top"/>
@@ -75,7 +82,7 @@
                     </ComboBox>
 
                     <Label x:Name="lbl_MapVersion" Content="Map Format" HorizontalAlignment="Left" Margin="136,242,0,0" VerticalAlignment="Top"/>
-                    <ComboBox x:Name="cbb_MapVersion" Margin="216,244,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="83">
+                    <ComboBox x:Name="cbb_MapVersion" Margin="216,244,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="83" IsEnabled="false">
                         <ComboBoxItem IsSelected="True" Content="1.12"/>
                         <ComboBoxItem Content="1.12 with Cubic Chunks"/>
                         <ComboBoxItem Content="1.14+"/>
@@ -84,7 +91,7 @@
                     <CheckBox x:Name="chb_geofabrik" Content="download.osm.pbf file from Geofabrik" HorizontalAlignment="Left" Margin="10,274,0,0" VerticalAlignment="Top" FlowDirection="RightToLeft" RenderTransformOrigin="0.486,2.514"/>
                     <CheckBox x:Name="chb_highways" Content="Highways" HorizontalAlignment="Left" Margin="160,314,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
                     <CheckBox x:Name="chb_streets" Content="Small streets" HorizontalAlignment="Left" Margin="144,334,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
-                    <CheckBox x:Name="chb_buildings" Content="Buildings" HorizontalAlignment="Left" Margin="163,354,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
+                    <CheckBox x:Name="chb_buildings" Content="Buildings" HorizontalAlignment="Left" Margin="163,354,0,0" VerticalAlignment="Top" IsChecked="False" FlowDirection="RightToLeft" IsEnabled="false"/>
                     <CheckBox x:Name="chb_borders" Content="Borders" HorizontalAlignment="Left" Margin="170,374,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
                     <CheckBox x:Name="chb_streams" Content="Streams" HorizontalAlignment="Left" Margin="284,374,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
                     <CheckBox x:Name="chb_farms" Content="Farms" HorizontalAlignment="Left" Margin="295,314,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
@@ -92,8 +99,10 @@
                     <CheckBox x:Name="chb_quarrys" Content="Quarry" HorizontalAlignment="Left" Margin="290,354,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
                     <CheckBox x:Name="chb_Heightmap_Error_Correction" Content="Heightmap Error Correction" HorizontalAlignment="Left" Margin="64,294,0,0" VerticalAlignment="Top" FlowDirection="RightToLeft"/>
 
-                    <Label x:Name="lbl_Proxy" Content="Proxy" Margin="172,405,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" RenderTransformOrigin="0.709,0.449"/>
+                    <Label x:Name="lbl_Proxy" Content="Proxy Server" Margin="135,403,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" RenderTransformOrigin="0.709,0.449"/>
                     <TextBox x:Name="txb_Proxy" Text="" Height="20" Margin="216,409,0,0" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="212" />
+                    <Label x:Name="lbl_Scale" Content="Scale:" HorizontalAlignment="Left" Margin="304,134,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="lbl_Scale_Quantity" Content="1:100" HorizontalAlignment="Left" Margin="344,134,0,0" VerticalAlignment="Top"/>
 
 
                 </Grid>

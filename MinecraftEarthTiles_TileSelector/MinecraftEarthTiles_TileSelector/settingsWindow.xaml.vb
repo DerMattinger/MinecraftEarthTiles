@@ -115,6 +115,9 @@ Public Class SettingsWindow
 
     Private Sub Save_Click(sender As Object, e As RoutedEventArgs)
         Try
+            If Not StartupWindow.MySettings.TilesPerMap = cbb_TilesperMap.Text Then
+                StartupWindow.MySelection = New Selection
+            End If
             StartupWindow.MySettings = GUI_To_Settings()
             Close()
         Catch ex As Exception
@@ -142,7 +145,7 @@ Public Class SettingsWindow
             cbb_BlocksPerTile.Text = Settings.BlocksPerTile
         End If
 
-        If Settings.VerticalScale = "10" Or Settings.VerticalScale = "25" Or Settings.VerticalScale = "50" Or Settings.VerticalScale = "100" Then
+        If Settings.VerticalScale = "5" Or Settings.VerticalScale = "10" Or Settings.VerticalScale = "25" Or Settings.VerticalScale = "50" Or Settings.VerticalScale = "100" Or Settings.VerticalScale = "200" Then
             cbb_VerticalScale.SelectedValue = Settings.VerticalScale
             cbb_VerticalScale.Text = Settings.VerticalScale
         End If
@@ -152,9 +155,20 @@ Public Class SettingsWindow
             cbb_TerrainMapping.Text = Settings.Terrain
         End If
 
+        If Settings.TilesPerMap = "1" Or Settings.TilesPerMap = "2" Or Settings.TilesPerMap = "3" Or Settings.TilesPerMap = "5" Or Settings.TilesPerMap = "10" Or Settings.TilesPerMap = "15" Or Settings.TilesPerMap = "30" Then
+            cbb_TilesperMap.SelectedValue = Settings.TilesPerMap
+            cbb_TilesperMap.Text = Settings.TilesPerMap
+        End If
+
         If Settings.MapVersion = "1.12" Or Settings.MapVersion = "1.12 with Cubic Chunks" Or Settings.MapVersion = "1.14+" Then
             cbb_TerrainMapping.SelectedValue = Settings.Terrain
             cbb_TerrainMapping.Text = Settings.Terrain
+        End If
+
+        If Settings.Heightmap_Error_Correction = True Then
+            chb_Heightmap_Error_Correction.IsChecked = True
+        ElseIf Settings.Heightmap_Error_Correction = False Then
+            chb_Heightmap_Error_Correction.IsChecked = False
         End If
 
         If Settings.geofabrik = True Then
@@ -213,6 +227,23 @@ Public Class SettingsWindow
 
         txb_Proxy.Text = Settings.Proxy
 
+        Dim ScaleCalc As Int16 = 0
+        Select Case Settings.BlocksPerTile
+            Case "512"
+                ScaleCalc = 500
+            Case "1024"
+                ScaleCalc = 1000
+            Case "2048"
+                ScaleCalc = 2000
+            Case "3072"
+                ScaleCalc = 3000
+            Case "4096"
+                ScaleCalc = 4000
+            Case "10240"
+                ScaleCalc = 10000
+        End Select
+        lbl_Scale_Quantity.Content = "1:" & (Math.Round(100000 / (ScaleCalc / CType(Settings.TilesPerMap, Int16)))).ToString
+
     End Sub
 
     Private Function GUI_To_Settings() As Settings
@@ -232,8 +263,11 @@ Public Class SettingsWindow
         If cbb_BlocksPerTile.Text = "512" Or cbb_BlocksPerTile.Text = "1024" Or cbb_BlocksPerTile.Text = "2048" Or cbb_BlocksPerTile.Text = "3072" Or cbb_BlocksPerTile.Text = "4096" Or cbb_BlocksPerTile.Text = "10240" Then
             LocalSettings.BlocksPerTile = cbb_BlocksPerTile.Text
         End If
-        If cbb_verticalScale.Text = "100" Or cbb_verticalScale.Text = "50" Or cbb_verticalScale.Text = "25" Or cbb_verticalScale.Text = "10" Then
-            LocalSettings.VerticalScale = cbb_verticalScale.Text
+        If cbb_VerticalScale.Text = "200" Or cbb_VerticalScale.Text = "100" Or cbb_VerticalScale.Text = "50" Or cbb_VerticalScale.Text = "25" Or cbb_VerticalScale.Text = "10" Or cbb_VerticalScale.Text = "5" Then
+            LocalSettings.VerticalScale = cbb_VerticalScale.Text
+        End If
+        If cbb_TilesperMap.Text = "1" Or cbb_TilesperMap.Text = "2" Or cbb_TilesperMap.Text = "3" Or cbb_TilesperMap.Text = "5" Or cbb_TilesperMap.Text = "10" Or cbb_TilesperMap.Text = "15" Or cbb_TilesperMap.Text = "30" Then
+            LocalSettings.TilesPerMap = cbb_TilesperMap.Text
         End If
         If cbb_TerrainMapping.Text = "Default" Or cbb_TerrainMapping.Text = "Custom" Then
             LocalSettings.Terrain = cbb_TerrainMapping.Text
@@ -258,10 +292,25 @@ Public Class SettingsWindow
         Return LocalSettings
     End Function
 
-    Private Sub Calculate_Scale(sender As Object, e As RoutedEventArgs)
+    Private Sub Calculate_Scale(sender As Object, e As EventArgs)
         If Not cbb_BlocksPerTile Is Nothing And Not cbb_TilesperMap Is Nothing Then
             If Not cbb_BlocksPerTile.Text = "" And Not cbb_TilesperMap.Text = "" Then
-
+                Dim ScaleCalc As Int16 = 0
+                Select Case cbb_BlocksPerTile.Text
+                    Case "512"
+                        ScaleCalc = 500
+                    Case "1024"
+                        ScaleCalc = 1000
+                    Case "2048"
+                        ScaleCalc = 2000
+                    Case "3072"
+                        ScaleCalc = 3000
+                    Case "4096"
+                        ScaleCalc = 4000
+                    Case "10240"
+                        ScaleCalc = 10000
+                End Select
+                lbl_Scale_Quantity.Content = "1:" & (Math.Round(100000 / (ScaleCalc / CType(cbb_TilesperMap.Text, Int16)))).ToString
             End If
         End If
     End Sub

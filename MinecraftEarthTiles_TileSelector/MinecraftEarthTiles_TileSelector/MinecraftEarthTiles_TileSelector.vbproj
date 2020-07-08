@@ -104,9 +104,6 @@
     </ApplicationDefinition>
     <Compile Include="CustomXmlSerialiser.vb" />
     <Compile Include="Selection.vb" />
-    <Compile Include="LargeSelectionWindow.xaml.vb">
-      <DependentUpon>LargeSelectionWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="SelectionWindow.xaml.vb">
       <DependentUpon>SelectionWindow.xaml</DependentUpon>
     </Compile>
@@ -121,10 +118,6 @@
       <DependentUpon>Application.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="LargeSelectionWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="SelectionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -210,14 +203,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="MyResources\basescript.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="MyResources\MinecraftEarthTiles.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="MyResources\osmscript.txt" />
+    <Resource Include="MyResources\basescript.txt" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
