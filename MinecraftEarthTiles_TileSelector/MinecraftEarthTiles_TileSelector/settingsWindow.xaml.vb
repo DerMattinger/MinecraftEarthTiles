@@ -155,14 +155,19 @@ Public Class SettingsWindow
             cbb_TerrainMapping.Text = Settings.Terrain
         End If
 
-        If Settings.TilesPerMap = "1" Or Settings.TilesPerMap = "2" Or Settings.TilesPerMap = "3" Or Settings.TilesPerMap = "5" Or Settings.TilesPerMap = "10" Or Settings.TilesPerMap = "15" Or Settings.TilesPerMap = "30" Then
+        If Settings.TilesPerMap = "1" Or Settings.TilesPerMap = "2" Or Settings.TilesPerMap = "3" Or Settings.TilesPerMap = "5" Or Settings.TilesPerMap = "10" Or Settings.TilesPerMap = "15" Or Settings.TilesPerMap = "30" Or Settings.TilesPerMap = "45" Or Settings.TilesPerMap = "90" Then
             cbb_TilesperMap.SelectedValue = Settings.TilesPerMap
             cbb_TilesperMap.Text = Settings.TilesPerMap
         End If
 
         If Settings.MapVersion = "1.12" Or Settings.MapVersion = "1.12 with Cubic Chunks" Or Settings.MapVersion = "1.14+" Then
-            cbb_TerrainMapping.SelectedValue = Settings.Terrain
-            cbb_TerrainMapping.Text = Settings.Terrain
+            cbb_MapVersion.SelectedValue = Settings.MapVersion
+            cbb_MapVersion.Text = Settings.MapVersion
+        End If
+
+        If Settings.borders = "None" Or Settings.borders = "2000bc" Or Settings.borders = "1000bc" Or Settings.borders = "500bc" Or Settings.borders = "323bc" Or Settings.borders = "200bc" Or Settings.borders = "1bc" Or Settings.borders = "400" Or Settings.borders = "600" Or Settings.borders = "800" Or Settings.borders = "1000" Or Settings.borders = "1279" Or Settings.borders = "1482" Or Settings.borders = "1530" Or Settings.borders = "1650" Or Settings.borders = "1715" Or Settings.borders = "1783" Or Settings.borders = "1815" Or Settings.borders = "1880" Or Settings.borders = "1914" Or Settings.borders = "1920" Or Settings.borders = "1938" Or Settings.borders = "1945" Or Settings.borders = "1994" Or Settings.borders = "2020" Then
+            cbb_Borders.SelectedValue = Settings.borders
+            cbb_Borders.Text = Settings.borders
         End If
 
         If Settings.Heightmap_Error_Correction = True Then
@@ -189,16 +194,16 @@ Public Class SettingsWindow
             chb_streets.IsChecked = False
         End If
 
+        If Settings.small_streets = True Then
+            chb_small_streets.IsChecked = True
+        ElseIf Settings.streets = False Then
+            chb_small_streets.IsChecked = False
+        End If
+
         If Settings.buildings = True Then
             chb_buildings.IsChecked = True
         ElseIf Settings.buildings = False Then
             chb_buildings.IsChecked = False
-        End If
-
-        If Settings.borders = True Then
-            chb_borders.IsChecked = True
-        ElseIf Settings.borders = False Then
-            chb_borders.IsChecked = False
         End If
 
         If Settings.farms = True Then
@@ -217,6 +222,12 @@ Public Class SettingsWindow
             chb_quarrys.IsChecked = True
         ElseIf Settings.quarrys = False Then
             chb_quarrys.IsChecked = False
+        End If
+
+        If Settings.rivers = True Then
+            chb_rivers.IsChecked = True
+        ElseIf Settings.rivers = False Then
+            chb_rivers.IsChecked = False
         End If
 
         If Settings.streams = True Then
@@ -266,7 +277,7 @@ Public Class SettingsWindow
         If cbb_VerticalScale.Text = "200" Or cbb_VerticalScale.Text = "100" Or cbb_VerticalScale.Text = "50" Or cbb_VerticalScale.Text = "25" Or cbb_VerticalScale.Text = "10" Or cbb_VerticalScale.Text = "5" Then
             LocalSettings.VerticalScale = cbb_VerticalScale.Text
         End If
-        If cbb_TilesperMap.Text = "1" Or cbb_TilesperMap.Text = "2" Or cbb_TilesperMap.Text = "3" Or cbb_TilesperMap.Text = "5" Or cbb_TilesperMap.Text = "10" Or cbb_TilesperMap.Text = "15" Or cbb_TilesperMap.Text = "30" Then
+        If cbb_TilesperMap.Text = "1" Or cbb_TilesperMap.Text = "2" Or cbb_TilesperMap.Text = "3" Or cbb_TilesperMap.Text = "5" Or cbb_TilesperMap.Text = "10" Or cbb_TilesperMap.Text = "15" Or cbb_TilesperMap.Text = "30" Or cbb_TilesperMap.Text = "45" Or cbb_TilesperMap.Text = "90" Then
             LocalSettings.TilesPerMap = cbb_TilesperMap.Text
         End If
         If cbb_TerrainMapping.Text = "Default" Or cbb_TerrainMapping.Text = "Custom" Then
@@ -276,15 +287,21 @@ Public Class SettingsWindow
             LocalSettings.MapVersion = cbb_MapVersion.Text
         End If
 
+        If cbb_Borders.Text = "None" Or cbb_Borders.Text = "2000bc" Or cbb_Borders.Text = "1000bc" Or cbb_Borders.Text = "500bc" Or cbb_Borders.Text = "323bc" Or cbb_Borders.Text = "200bc" Or cbb_Borders.Text = "1bc" Or cbb_Borders.Text = "400" Or cbb_Borders.Text = "600" Or cbb_Borders.Text = "800" Or cbb_Borders.Text = "1000" Or cbb_Borders.Text = "1279" Or cbb_Borders.Text = "1482" Or cbb_Borders.Text = "1530" Or cbb_Borders.Text = "1650" Or cbb_Borders.Text = "1715" Or cbb_Borders.Text = "1783" Or cbb_Borders.Text = "1815" Or cbb_Borders.Text = "1880" Or cbb_Borders.Text = "1914" Or cbb_Borders.Text = "1920" Or cbb_Borders.Text = "1938" Or cbb_Borders.Text = "1945" Or cbb_Borders.Text = "1994" Or cbb_Borders.Text = "2020" Then
+            LocalSettings.borders = cbb_Borders.Text
+        End If
+
         LocalSettings.Heightmap_Error_Correction = CBool(chb_Heightmap_Error_Correction.IsChecked)
 
         LocalSettings.geofabrik = CBool(chb_geofabrik.IsChecked)
+        LocalSettings.highways = CBool(chb_highways.IsChecked)
         LocalSettings.streets = CBool(chb_streets.IsChecked)
         LocalSettings.buildings = CBool(chb_buildings.IsChecked)
-        LocalSettings.borders = CBool(chb_borders.IsChecked)
+        LocalSettings.small_streets = CBool(chb_small_streets.IsChecked)
         LocalSettings.farms = CBool(chb_farms.IsChecked)
         LocalSettings.meadows = CBool(chb_meadows.IsChecked)
         LocalSettings.quarrys = CBool(chb_quarrys.IsChecked)
+        LocalSettings.rivers = CBool(chb_rivers.IsChecked)
         LocalSettings.streams = CBool(chb_streams.IsChecked)
 
         LocalSettings.Proxy = txb_Proxy.Text

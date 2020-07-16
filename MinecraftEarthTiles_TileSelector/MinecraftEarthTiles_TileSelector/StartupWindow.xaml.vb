@@ -123,15 +123,24 @@ Public Class StartupWindow
                     If MySettings.streets Then
                         OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "highway=primary Or highway=secondary" & Chr(34) & " -o=%folder%/big_road.osm")
                         OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "highway=tertiary" & Chr(34) & " -o=%folder%/middle_road.osm")
-                        OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "highway=residential" & Chr(34) & " -o=%folder%/small_road.osm")
                     Else
                         OsmScriptBatchFile.WriteLine("xcopy /y " & Chr(34) & MySettings.PathToScriptsFolder & "\QGIS\empty.osm" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\osm\" & Tile & "\big_road.osm*" & Chr(34))
                         OsmScriptBatchFile.WriteLine("xcopy /y " & Chr(34) & MySettings.PathToScriptsFolder & "\QGIS\empty.osm" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\osm\" & Tile & "\middle_road.osm*" & Chr(34))
+                    End If
+
+                    If MySettings.small_streets Then
+                        OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "highway=residential" & Chr(34) & " -o=%folder%/small_road.osm")
+                    Else
                         OsmScriptBatchFile.WriteLine("xcopy /y " & Chr(34) & MySettings.PathToScriptsFolder & "\QGIS\empty.osm" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\osm\" & Tile & "\small_road.osm*" & Chr(34))
                     End If
 
-                    OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "waterway=river Or waterway=canal Or natural=water And water=river" & Chr(34) & " -o=%folder%/river.osm")
                     OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "water=lake Or water=reservoir Or natural=water Or landuse=reservoir Or waterway=riverbank Or waterway=canal Or water=river" & Chr(34) & " -o=%folder%/water.osm")
+
+                    If MySettings.rivers Then
+                        OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "waterway=river Or waterway=canal Or natural=water And water=river" & Chr(34) & " -o=%folder%/river.osm")
+                    Else
+                        OsmScriptBatchFile.WriteLine("xcopy /y " & Chr(34) & MySettings.PathToScriptsFolder & "\QGIS\empty.osm" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\osm\" & Tile & "\river.osm*" & Chr(34))
+                    End If
 
                     If MySettings.streams Then
                         OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "waterway=stream" & Chr(34) & " -o=%folder%/stream.osm")
@@ -169,7 +178,7 @@ Public Class StartupWindow
 
                     OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "landuse=bare_rock Or natural=scree Or natural=shingle" & Chr(34) & " -o=%folder%/bare_rock.osm")
 
-                    If MySettings.borders Then
+                    If MySettings.borders = "2020" Then
                         OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "boundary=administrative And admin_level=2" & Chr(34) & " --drop=" & Chr(34) & "natural=coastline Or admin_level=3 Or admin_level=4 Or admin_level=5 Or admin_level=6 Or admin_level=7 Or admin_level=8 Or admin_level=9 Or admin_level=10 Or admin_level=11" & Chr(34) & " -o=%folder%/border.osm")
                     Else
                         OsmScriptBatchFile.WriteLine("xcopy /y " & Chr(34) & MySettings.PathToScriptsFolder & "\QGIS\empty.osm" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\osm\" & Tile & "\border.osm*" & Chr(34))
@@ -240,15 +249,24 @@ Public Class StartupWindow
                     If MySettings.streets Then
                         OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "highway=primary Or highway=secondary" & Chr(34) & " -o=%folder%/big_road.osm")
                         OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "highway=tertiary" & Chr(34) & " -o=%folder%/middle_road.osm")
-                        OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "highway=residential" & Chr(34) & " -o=%folder%/small_road.osm")
                     Else
                         OsmScriptBatchFile.WriteLine("xcopy /y " & Chr(34) & MySettings.PathToScriptsFolder & "\QGIS\empty.osm" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\osm\" & Tile & "\big_road.osm*" & Chr(34))
                         OsmScriptBatchFile.WriteLine("xcopy /y " & Chr(34) & MySettings.PathToScriptsFolder & "\QGIS\empty.osm" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\osm\" & Tile & "\middle_road.osm*" & Chr(34))
+                    End If
+
+                    If MySettings.small_streets Then
+                        OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "highway=residential" & Chr(34) & " -o=%folder%/small_road.osm")
+                    Else
                         OsmScriptBatchFile.WriteLine("xcopy /y " & Chr(34) & MySettings.PathToScriptsFolder & "\QGIS\empty.osm" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\osm\" & Tile & "\small_road.osm*" & Chr(34))
                     End If
 
-                    OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "waterway=river Or waterway=canal Or natural=water And water=river" & Chr(34) & " -o=%folder%/river.osm")
                     OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "water=lake Or water=reservoir Or natural=water Or landuse=reservoir Or waterway=riverbank Or waterway=canal Or water=river" & Chr(34) & " -o=%folder%/water.osm")
+
+                    If MySettings.rivers Then
+                        OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "waterway=river Or waterway=canal Or natural=water And water=river" & Chr(34) & " -o=%folder%/river.osm")
+                    Else
+                        OsmScriptBatchFile.WriteLine("xcopy /y " & Chr(34) & MySettings.PathToScriptsFolder & "\QGIS\empty.osm" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\osm\" & Tile & "\river.osm*" & Chr(34))
+                    End If
 
                     If MySettings.streams Then
                         OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "waterway=stream" & Chr(34) & " -o=%folder%/stream.osm")
@@ -286,7 +304,7 @@ Public Class StartupWindow
 
                     OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "landuse=bare_rock Or natural=scree Or natural=shingle" & Chr(34) & " -o=%folder%/bare_rock.osm")
 
-                    If MySettings.borders Then
+                    If MySettings.borders = "2020" Then
                         OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "boundary=administrative And admin_level=2" & Chr(34) & " --drop=" & Chr(34) & "natural=coastline Or admin_level=3 Or admin_level=4 Or admin_level=5 Or admin_level=6 Or admin_level=7 Or admin_level=8 Or admin_level=9 Or admin_level=10 Or admin_level=11" & Chr(34) & " -o=%folder%/border.osm")
                     Else
                         OsmScriptBatchFile.WriteLine("xcopy /y " & Chr(34) & MySettings.PathToScriptsFolder & "\QGIS\empty.osm" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\osm\" & Tile & "\border.osm*" & Chr(34))
@@ -331,6 +349,7 @@ Public Class StartupWindow
                                     "tile = '" & Tile & "'" & Environment.NewLine &
                                     "scale = " & MySettings.BlocksPerTile & Environment.NewLine &
                                     "TilesPerMap = " & MySettings.TilesPerMap & Environment.NewLine &
+                                    "borderyear = " & MySettings.borders & Environment.NewLine &
                                     Environment.NewLine)
 
                 'Dim QgisBasescript As String = ""
@@ -606,7 +625,6 @@ Public Class StartupWindow
 
                     If CType(MySettings.TilesPerMap, Int16) = 1 Then
 
-                        GdalBatchFile.WriteLine(Chr(34) & MySettings.PathToMagick & Chr(34) & " convert " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_terrain.png" & Chr(34) & " -dither None -remap " & Chr(34) & MySettings.PathToScriptsFolder & "\QGIS\terrain\" & MySettings.Terrain & ".png" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_terrain_reduced_colors.png" & Chr(34))
                         If MySettings.Heightmap_Error_Correction = True Then
                             GdalBatchFile.WriteLine(Chr(34) & MySettings.PathToMagick & Chr(34) & " convert " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & "_exported.png" & Chr(34) & " -transparent black -depth 16 " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & "_removed_invalid.png" & Chr(34))
                             GdalBatchFile.WriteLine(Chr(34) & MySettings.PathToMagick & Chr(34) & " convert " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & "_removed_invalid.png" & Chr(34) & " -channel A -morphology EdgeIn Diamond -depth 16 " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & "_edges.png" & Chr(34))
@@ -622,18 +640,13 @@ Public Class StartupWindow
                         Else
                             GdalBatchFile.WriteLine(Chr(34) & MySettings.PathToMagick & Chr(34) & " convert " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & "_exported.png" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & ".png" & Chr(34))
                         End If
-                        'GdalBatchFile.WriteLine(Chr(34) & MySettings.PathToMagick & Chr(34) & " convert " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_bathymetry.png" & Chr(34) & " -transparent black -depth 16 " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_bathymetry_transparent.png" & Chr(34))
-                        'GdalBatchFile.WriteLine(Chr(34) & MySettings.PathToMagick & Chr(34) & " convert " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & ".png" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_bathymetry_transparent.png" & Chr(34) & " -compose over -composite -depth 16 " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & ".png" & Chr(34))
-                        'GdalBatchFile.WriteLine(Chr(34) & MySettings.PathToMagick & Chr(34) & " convert " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_bathymetry.png" & Chr(34) & " -evaluate divide 256 -depth 16 -alpha off " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & "_bathymetry.png" & Chr(34))
-                        'GdalBatchFile.WriteLine(Chr(34) & MySettings.PathToMagick & Chr(34) & " convert " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & "_bathymetry.png" & Chr(34) & " -transparent black -depth 16 " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & "_bathymetry_transparent.png" & Chr(34))
-                        'GdalBatchFile.WriteLine(Chr(34) & MySettings.PathToMagick & Chr(34) & " convert " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & ".png" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & "_bathymetry_transparent.png" & Chr(34) & " -compose over -composite -depth 16 " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & ".png" & Chr(34))
                         GdalBatchFile.WriteLine(Chr(34) & MySettings.PathToMagick & Chr(34) & " convert " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & ".png" & Chr(34) & " -blur 5 " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & ".png" & Chr(34))
-
                     Else
-                        GdalBatchFile.WriteLine(Chr(34) & MySettings.PathToMagick & Chr(34) & " convert " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_terrain.png" & Chr(34) & " -dither None -remap " & Chr(34) & MySettings.PathToScriptsFolder & "\QGIS\terrain\" & MySettings.Terrain & ".png" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_terrain_reduced_colors.png" & Chr(34))
-                        GdalBatchFile.WriteLine(Chr(34) & MySettings.PathToMagick & Chr(34) & " convert " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & ".png" & Chr(34) & " -blur 5 " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & ".png" & Chr(34))
-
+                        GdalBatchFile.WriteLine(Chr(34) & MySettings.PathToMagick & Chr(34) & " convert " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & ".png" & Chr(34) & " -blur 5 " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & ".png" & Chr(34))
                     End If
+
+                    GdalBatchFile.WriteLine(Chr(34) & MySettings.PathToMagick & Chr(34) & " convert " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_terrain.png" & Chr(34) & " -dither None -remap " & Chr(34) & MySettings.PathToScriptsFolder & "\QGIS\terrain\" & MySettings.Terrain & ".png" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_terrain_reduced_colors.png" & Chr(34))
+                    GdalBatchFile.WriteLine(Chr(34) & MySettings.PathToMagick & Chr(34) & " convert " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_herbs.png" & Chr(34) & " -dither None -remap pattern:gray50 " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_herbs_reduced_colors.png" & Chr(34))
 
                 Next
                 GdalBatchFile.Close()
@@ -672,7 +685,7 @@ Public Class StartupWindow
                         Case "1.14+"
                             MapVersionShort = "1-14"
                     End Select
-                    ScriptBatchFile.WriteLine(Chr(34) & MySettings.PathToWorldPainterFolder & Chr(34) & " wpscript.js " & Chr(34) & MySettings.PathToScriptsFolder.Replace("\", "/") & "/" & Chr(34) & " " & ReplacedString & " " & MySettings.BlocksPerTile & " " & MySettings.TilesPerMap & " " & MySettings.VerticalScale & " " & MySettings.highways.ToString & " " & MySettings.streets.ToString & " " & MySettings.buildings.ToString & " " & MySettings.borders.ToString & " " & MySettings.farms.ToString & " " & MySettings.meadows.ToString & " " & MySettings.quarrys.ToString & " " & MySettings.streets.ToString & " " & MapVersionShort)
+                    ScriptBatchFile.WriteLine(Chr(34) & MySettings.PathToWorldPainterFolder & Chr(34) & " wpscript.js " & Chr(34) & MySettings.PathToScriptsFolder.Replace("\", "/") & "/" & Chr(34) & " " & ReplacedString & " " & MySettings.BlocksPerTile & " " & MySettings.TilesPerMap & " " & MySettings.VerticalScale & " " & MySettings.highways.ToString & " " & MySettings.streets.ToString & " " & MySettings.small_streets.ToString & " " & MySettings.buildings.ToString & " " & MySettings.borders & " " & MySettings.farms.ToString & " " & MySettings.meadows.ToString & " " & MySettings.quarrys.ToString & " " & MySettings.rivers.ToString & " " & MySettings.streams.ToString & " " & MapVersionShort)
                 Next
                 ScriptBatchFile.Close()
             Catch ex As Exception

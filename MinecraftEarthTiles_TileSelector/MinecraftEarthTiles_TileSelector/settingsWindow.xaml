@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MinecraftEarthTiles_TileSelector"
         mc:Ignorable="d"
-        Title="Settings" Width="563" Height="548" MinWidth="563" Loaded="Window_Loaded">
+        Title="Settings" Width="563" Height="594.5" MinWidth="563" Loaded="Window_Loaded">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File">
@@ -25,6 +25,10 @@
             </Grid.RowDefinitions>
             <ScrollViewer>
                 <Grid MinHeight="380">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="302*"/>
+                        <RowDefinition Height="203*"/>
+                    </Grid.RowDefinitions>
 
                     <Label x:Name="lbl_PathToScriptsFolder" Content="Path to scripts folder" Margin="92,10,0,0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Width="119"/>
                     <TextBox x:Name="txb_PathToScriptsFolder" Height="20" Margin="216,16,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" IsReadOnly="True" HorizontalAlignment="Left" Width="280" />
@@ -81,30 +85,57 @@
                         <ComboBoxItem Content="Custom"/>
                     </ComboBox>
 
-                    <Label x:Name="lbl_MapVersion" Content="Map Format" HorizontalAlignment="Left" Margin="136,242,0,0" VerticalAlignment="Top"/>
-                    <ComboBox x:Name="cbb_MapVersion" Margin="216,244,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="83" IsEnabled="false">
+                    <Label x:Name="lbl_MapVersion" Content="Map Format" HorizontalAlignment="Left" Margin="135,242,0,0" VerticalAlignment="Top"/>
+                    <ComboBox x:Name="cbb_MapVersion" Margin="216,244,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="83">
                         <ComboBoxItem IsSelected="True" Content="1.12"/>
                         <ComboBoxItem Content="1.12 with Cubic Chunks"/>
                         <ComboBoxItem Content="1.14+"/>
                     </ComboBox>
 
-                    <CheckBox x:Name="chb_geofabrik" Content="download.osm.pbf file from Geofabrik" HorizontalAlignment="Left" Margin="10,274,0,0" VerticalAlignment="Top" FlowDirection="RightToLeft" RenderTransformOrigin="0.486,2.514"/>
-                    <CheckBox x:Name="chb_highways" Content="Highways" HorizontalAlignment="Left" Margin="160,314,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
-                    <CheckBox x:Name="chb_streets" Content="Small streets" HorizontalAlignment="Left" Margin="144,334,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
-                    <CheckBox x:Name="chb_buildings" Content="Buildings" HorizontalAlignment="Left" Margin="163,354,0,0" VerticalAlignment="Top" IsChecked="False" FlowDirection="RightToLeft" IsEnabled="false"/>
-                    <CheckBox x:Name="chb_borders" Content="Borders" HorizontalAlignment="Left" Margin="170,374,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
-                    <CheckBox x:Name="chb_streams" Content="Streams" HorizontalAlignment="Left" Margin="284,374,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
-                    <CheckBox x:Name="chb_farms" Content="Farms" HorizontalAlignment="Left" Margin="295,314,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
-                    <CheckBox x:Name="chb_meadows" Content="Meadows" HorizontalAlignment="Left" Margin="275,334,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
-                    <CheckBox x:Name="chb_quarrys" Content="Quarry" HorizontalAlignment="Left" Margin="290,354,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
-                    <CheckBox x:Name="chb_Heightmap_Error_Correction" Content="Heightmap Error Correction" HorizontalAlignment="Left" Margin="64,294,0,0" VerticalAlignment="Top" FlowDirection="RightToLeft"/>
+                    <Label x:Name="lbl_Border" Content="Borders (Year)" HorizontalAlignment="Left" Margin="128,269,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.494,0.615"/>
+                    <ComboBox x:Name="cbb_Borders" Margin="216,271,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="83">
+                        <ComboBoxItem IsSelected="True" Content="2020"/>
+                        <ComboBoxItem Content="1994"/>
+                        <ComboBoxItem Content="1945"/>
+                        <ComboBoxItem Content="1938"/>
+                        <ComboBoxItem Content="1920"/>
+                        <ComboBoxItem Content="1914"/>
+                        <ComboBoxItem Content="1880"/>
+                        <ComboBoxItem Content="1815"/>
+                        <ComboBoxItem Content="1783"/>
+                        <ComboBoxItem Content="1715"/>
+                        <ComboBoxItem Content="1650"/>
+                        <ComboBoxItem Content="1530"/>
+                        <ComboBoxItem Content="1482"/>
+                        <ComboBoxItem Content="1279"/>
+                        <ComboBoxItem Content="1000"/>
+                        <ComboBoxItem Content="800"/>
+                        <ComboBoxItem Content="600"/>
+                        <ComboBoxItem Content="400"/>
+                        <ComboBoxItem Content="1bc"/>
+                        <ComboBoxItem Content="200bc"/>
+                        <ComboBoxItem Content="323bc"/>
+                        <ComboBoxItem Content="500bc"/>
+                        <ComboBoxItem Content="1000bc"/>
+                        <ComboBoxItem Content="2000bc"/>
+                        <ComboBoxItem Content="None"/>
+                    </ComboBox>
 
-                    <Label x:Name="lbl_Proxy" Content="Proxy Server" Margin="135,403,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" RenderTransformOrigin="0.709,0.449"/>
-                    <TextBox x:Name="txb_Proxy" Text="" Height="20" Margin="216,409,0,0" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="212" />
+                    <CheckBox x:Name="chb_geofabrik" Content="download.osm.pbf file from Geofabrik" HorizontalAlignment="Left" Margin="10,12,0,0" VerticalAlignment="Top" FlowDirection="RightToLeft" RenderTransformOrigin="0.486,2.514" Grid.Row="1"/>
+                    <CheckBox x:Name="chb_Heightmap_Error_Correction" Content="Heightmap Error Correction" HorizontalAlignment="Left" Margin="64,32,0,0" VerticalAlignment="Top" FlowDirection="RightToLeft"  IsChecked="True" Grid.Row="1" />
+                    <CheckBox x:Name="chb_highways" Content="Highways" HorizontalAlignment="Left" Margin="273,12,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft" Grid.Row="1"/>
+                    <CheckBox x:Name="chb_streets" Content="Streets" HorizontalAlignment="Left" Margin="288,32,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft" Grid.Row="1"/>
+                    <CheckBox x:Name="chb_small_streets" Content="Small streets" HorizontalAlignment="Left" Margin="257,52,0,0" VerticalAlignment="Top" IsChecked="false" FlowDirection="RightToLeft" Grid.Row="1"/>
+                    <CheckBox x:Name="chb_buildings" Content="Buildings" HorizontalAlignment="Left" Margin="276,72,0,0" VerticalAlignment="Top" IsChecked="False" FlowDirection="RightToLeft" Grid.Row="1"/>
+                    <CheckBox x:Name="chb_rivers" Content="Rivers" HorizontalAlignment="Left" Margin="180,52,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft" Grid.Row="1"/>
+                    <CheckBox x:Name="chb_streams" Content="Streams" HorizontalAlignment="Left" Margin="169,72,0,0" VerticalAlignment="Top" IsChecked="false" FlowDirection="RightToLeft" Grid.Row="1"/>
+                    <CheckBox x:Name="chb_farms" Content="Farms" HorizontalAlignment="Left" Margin="420,32,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft" Grid.Row="1"/>
+                    <CheckBox x:Name="chb_meadows" Content="Meadows" HorizontalAlignment="Left" Margin="400,12,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft" Grid.Row="1"/>
+                    <CheckBox x:Name="chb_quarrys" Content="Quarry" HorizontalAlignment="Left" Margin="415,52,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft" Grid.Row="1"/>
+                    <Label x:Name="lbl_Proxy" Content="Proxy Server" Margin="135,167,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" RenderTransformOrigin="0.709,0.449" Grid.Row="1"/>
+                    <TextBox x:Name="txb_Proxy" Text="" Height="20" Margin="216,173,0,0" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="212" Grid.Row="1" />
                     <Label x:Name="lbl_Scale" Content="Scale:" HorizontalAlignment="Left" Margin="304,134,0,0" VerticalAlignment="Top"/>
                     <Label x:Name="lbl_Scale_Quantity" Content="1:100" HorizontalAlignment="Left" Margin="344,134,0,0" VerticalAlignment="Top"/>
-
-
                 </Grid>
             </ScrollViewer>
             <Grid Grid.Row="2" Height="40" VerticalAlignment="Bottom" Background="LightGray">

@@ -207,6 +207,19 @@ Public Class SelectionWindow
         Next
     End Sub
 
+    Public Sub Change_Background(sender As Object, e As EventArgs)
+        Dim MyURI As Uri
+        Select Case cbb_Background_Image.Text
+            Case "Terrain"
+                MyURI = New Uri("pack://application:,,,/MyResources/terrain.jpg")
+            Case "Borders"
+                MyURI = New Uri("pack://application:,,,/MyResources/borders.png")
+            Case Else
+                MyURI = New Uri("pack://application:,,,/MyResources/terrain.jpg")
+        End Select
+        img_Background.Source = New BitmapImage(MyURI)
+    End Sub
+
 #Region "Menu"
 
     Private Sub Reset_Selection_Click(sender As Object, e As RoutedEventArgs)

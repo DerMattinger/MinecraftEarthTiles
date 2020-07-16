@@ -183,7 +183,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="MyResources\background.jpg" />
+    <Resource Include="MyResources\terrain.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="MyResources\checked.png" />
@@ -207,6 +207,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="MyResources\basescript.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="MyResources\borders.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

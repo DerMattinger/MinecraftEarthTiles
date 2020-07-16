@@ -107,7 +107,7 @@
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                 <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
                     <Grid Name="Tiles" Width="1440" Height="720" MinWidth="1440" MinHeight="720" Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
-                        <Image Source="MyResources/background.jpg" Width="1440" Height="720" MinWidth="1440" MinHeight="720"  Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                        <Image x:Name="img_Background" Source="MyResources/terrain.jpg" Width="1440" Height="720" MinWidth="1440" MinHeight="720"  Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                         <Grid Name="CheckBoxes" Width="1440" Height="720" MinWidth="1440" MinHeight="720" Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" />
                     </Grid>
                     <StackPanel.LayoutTransform>
@@ -118,14 +118,18 @@
 
             <Grid Grid.Row="2" Height="40" VerticalAlignment="Bottom" Background="LightGray">
                 <Label x:Name="lbl_ZoomSlider" Content="Zoom" HorizontalAlignment="Left" Margin="10,7,0,0" RenderTransformOrigin="0.78,0.615" Height="26" VerticalAlignment="Top"/>
-                <Slider x:Name="ZoomSlider" Orientation="Horizontal" Minimum="0.5" Maximum="10.0" LargeChange="1.0" SmallChange="0.5"  Value="1.0" Margin="56,10,0,0" HorizontalAlignment="Left" Width="220" Height="20" VerticalAlignment="Top" />
+                <Slider x:Name="ZoomSlider" Orientation="Horizontal" Minimum="0.5" Maximum="10.0" LargeChange="1.0" SmallChange="0.5"  Value="1.0" Margin="56,10,0,0" HorizontalAlignment="Left" Width="147" Height="20" VerticalAlignment="Top" />
 
                 <Button x:Name="btn_Clear_Selection" Content="Clear Selection" Margin="0,0,367,10" Click="Reset_Selection_Click" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="105"/>
                 <Label x:Name="lbl_Spawn_Tile" Content="Spawn Tile" Margin="0,0,295,7" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="67" RenderTransformOrigin="0.522,0.154"/>
                 <ComboBox x:Name="cbb_Spawn_Tile" Margin="0,0,170,10" VerticalAlignment="Bottom" Height="20" HorizontalAlignment="Right" Width="120"/>
-                
+
                 <Button x:Name="btn_Save_Selection" Content="Save" Margin="0,0,90,10" Click="Save_Click" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75"/>
                 <Button x:Name="btn_Cancel_Selection" Content="Cancel" Margin="0,0,10,10" Click="Cancel_Click" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75"/>
+                <ComboBox x:Name="cbb_Background_Image" HorizontalAlignment="Right" Margin="0,0,477,10" VerticalAlignment="Bottom" Width="79" Height="20" DropDownClosed="Change_Background" RenderTransformOrigin="0.542,0.5">
+                    <ComboBoxItem IsSelected="True">Terrain</ComboBoxItem>
+                    <ComboBoxItem>Borders</ComboBoxItem>
+                </ComboBox>
             </Grid>
         </Grid>
     </DockPanel>
