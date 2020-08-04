@@ -40,6 +40,9 @@ $("#longitude_dec").change(function() {
 $("#scale").change(function() {
 	displayDMS();
 });
+$("#tiles").change(function() {
+	displayDMS();
+});
 $("#xcoord").change(function() {
 	displayCoords();
 });
@@ -57,6 +60,7 @@ function displayDMS(){
 	var longitude_second = $("#longitude_second").val();
 	var longitude_direction = $("#longitude_direction").val();
 	var scale = $("#scale").val();
+	var tiles = $("#tiles").val();
 	
 	var latitude_dec = 0;
 	if(latitude_direction == "south"){
@@ -76,10 +80,10 @@ function displayDMS(){
 	longitude_dec = round_six(longitude_dec);
 	
 	var x_coord = 0;
-	xcoord = Math.round(longitude_dec * scale);
+	xcoord = Math.round(longitude_dec * scale / tiles);
 	
 	var z_coord = 0;
-	zcoord = -1 * Math.round(latitude_dec * scale);
+	zcoord = -1 * Math.round(latitude_dec * scale / tiles);
 	
 	$("#latitude_dec").val( latitude_dec );
 	$("#longitude_dec").val( longitude_dec );
@@ -94,6 +98,7 @@ function displayDEC(){
 	var latitude_dec = $("#latitude_dec").val();
 	var longitude_dec = $("#longitude_dec").val();
 	var scale = $("#scale").val();
+	var tiles = $("#tiles").val();
 	
 	var latitude_direction = "north";
 	var latitude_hour = 0;
@@ -141,10 +146,10 @@ function displayDEC(){
 	$("#longitude_direction").val( longitude_direction );
 
 	var x_coord = 0;
-	xcoord = Math.round(longitude_dec * scale);
+	xcoord = Math.round(longitude_dec * scale / tiles);
 	
 	var z_coord = 0;
-	zcoord = -1 * Math.round(latitude_dec * scale);
+	zcoord = -1 * Math.round(latitude_dec * scale / tiles);
 		
 	$("#xcoord").val( xcoord );
 	$("#zcoord").val( zcoord );
@@ -157,12 +162,13 @@ function displayCoords(){
 	var xcoord = $("#xcoord").val();
 	var zcoord = $("#zcoord").val();
 	var scale = $("#scale").val();
+	var tiles = $("#tiles").val();
 
 	var longitude_dec = 0;
-	longitude_dec = xcoord * scale;
+	longitude_dec = xcoord * scale / tiles;
 	
 	var latitude_dec = 0;
-	latitude_dec = -1 * zcoord * scale;
+	latitude_dec = -1 * zcoord * scale / tiles;
 	
 	latitude_dec = round_six(latitude_dec);
 	longitude_dec = round_six(longitude_dec);

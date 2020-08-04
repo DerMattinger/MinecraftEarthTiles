@@ -48,7 +48,8 @@ Public Class StartupWindow
     End Sub
 
     Private Sub Help_Click(sender As Object, e As RoutedEventArgs)
-        Help.ShowHelp(Nothing, "MyResources/MinecraftEarthTiles.chm")
+        'Help.ShowHelp(Nothing, "MyResources/MinecraftEarthTiles.chm")
+        Process.Start("https://earthtiles.motfe.net/")
     End Sub
 
 #End Region
@@ -84,7 +85,47 @@ Public Class StartupWindow
                 OsmScriptBatchFile.WriteLine("if not exist " & Chr(34) & MySettings.PathToScriptsFolder & "\osm\" & Tile & Chr(34) & " mkdir " & Chr(34) & MySettings.PathToScriptsFolder & "\osm\" & Tile & Chr(34))
             Next
             If MySettings.geofabrik = True Then
-                OsmScriptBatchFile.WriteLine("osmconvert osm/download.osm.pbf -o=osm/output.o5m")
+                OsmScriptBatchFile.WriteLine("osmconvert download.osm.pbf -o=osm/unfiltered.o5m")
+
+                Dim filter As String = "water=lake Or water=reservoir Or natural=water Or landuse=reservoir Or natural=wetland Or wetland=swamp Or natural=glacier Or natural=volcano Or natural=beach Or natural=grassland Or natural=fell Or natural=heath Or natural=scrub Or landuse=forest Or landuse=bare_rock Or natural=scree Or natural=shingle"
+
+                If MySettings.highways Then
+                    filter &= "Or highway=motorway Or highway=trunk"
+                End If
+
+                If MySettings.streets Then
+                    filter &= "Or highway=primary Or highway=secondary Or highway=tertiary"
+                End If
+
+                If MySettings.small_streets Then
+                    filter &= "Or highway=residential"
+                End If
+
+                If MySettings.rivers Then
+                    filter &= "Or waterway=river Or waterway=canal Or natural=water And water=river Or waterway=riverbank"
+                End If
+
+                If MySettings.streams Then
+                    filter &= "Or waterway=stream"
+                End If
+
+                If MySettings.farms Then
+                    filter &= "Or landuse=farmland Or landuse=vineyard"
+                End If
+
+                If MySettings.meadows Then
+                    filter &= "Or landuse=meadow"
+                End If
+
+                If MySettings.quarrys Then
+                    filter &= "Or landuse=quarry"
+                End If
+
+                If MySettings.borders = "2020" Then
+                    filter &= "Or boundary=administrative"
+                End If
+
+                OsmScriptBatchFile.WriteLine("osmfilter osm/unfiltered.o5m --verbose --keep=" & Chr(34) & filter & Chr(34) & " -o=osm/output.o5m")
 
                 For Each Tile In TilesList
                     Dim LatiDir = Tile.Substring(0, 1)
@@ -134,10 +175,10 @@ Public Class StartupWindow
                         OsmScriptBatchFile.WriteLine("xcopy /y " & Chr(34) & MySettings.PathToScriptsFolder & "\QGIS\empty.osm" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\osm\" & Tile & "\small_road.osm*" & Chr(34))
                     End If
 
-                    OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "water=lake Or water=reservoir Or natural=water Or landuse=reservoir Or waterway=riverbank Or waterway=canal Or water=river" & Chr(34) & " -o=%folder%/water.osm")
+                    OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "water=lake Or water=reservoir Or natural=water Or landuse=reservoir" & Chr(34) & " -o=%folder%/water.osm")
 
                     If MySettings.rivers Then
-                        OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "waterway=river Or waterway=canal Or natural=water And water=river" & Chr(34) & " -o=%folder%/river.osm")
+                        OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "waterway=river Or waterway=canal Or natural=water And water=river Or waterway=riverbank" & Chr(34) & " -o=%folder%/river.osm")
                     Else
                         OsmScriptBatchFile.WriteLine("xcopy /y " & Chr(34) & MySettings.PathToScriptsFolder & "\QGIS\empty.osm" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\osm\" & Tile & "\river.osm*" & Chr(34))
                     End If
@@ -184,12 +225,6 @@ Public Class StartupWindow
                         OsmScriptBatchFile.WriteLine("xcopy /y " & Chr(34) & MySettings.PathToScriptsFolder & "\QGIS\empty.osm" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\osm\" & Tile & "\border.osm*" & Chr(34))
                     End If
 
-                    If MySettings.buildings Then
-                        OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "landuse=commercial Or landuse=construction Or landuse=industrial Or landuse=residential Or landuse=retail" & Chr(34) & " -o=%folder%/residential.osm")
-                    Else
-                        OsmScriptBatchFile.WriteLine("xcopy /y " & Chr(34) & MySettings.PathToScriptsFolder & "\QGIS\empty.osm" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\osm\" & Tile & "\residential.osm*" & Chr(34))
-                    End If
-
                     OsmScriptBatchFile.WriteLine("del " & Chr(34) & MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm" & Chr(34) & "")
 
                 Next
@@ -222,7 +257,7 @@ Public Class StartupWindow
                         borderW = -1 * LongNumber
                         borderE = -1 * LongNumber + 1
                     End If
-                    OsmScriptBatchFile.WriteLine(":Download_" & Tile)
+                    OsmScriptBatchFile.WriteLine(": Download_" & Tile)
                     OsmScriptBatchFile.WriteLine("@echo on")
                     OsmScriptBatchFile.WriteLine("wget -O osm/" & Tile & "/output.osm " & Chr(34) & "http://overpass-api.de/api/interpreter?data=(node(" & borderS.ToString & "," & borderW.ToString & "," & borderN.ToString & "," & borderE.ToString & ");<;>;);out;" & Chr(34) & "")
                     OsmScriptBatchFile.WriteLine("@echo off")
@@ -308,12 +343,6 @@ Public Class StartupWindow
                         OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "boundary=administrative And admin_level=2" & Chr(34) & " --drop=" & Chr(34) & "natural=coastline Or admin_level=3 Or admin_level=4 Or admin_level=5 Or admin_level=6 Or admin_level=7 Or admin_level=8 Or admin_level=9 Or admin_level=10 Or admin_level=11" & Chr(34) & " -o=%folder%/border.osm")
                     Else
                         OsmScriptBatchFile.WriteLine("xcopy /y " & Chr(34) & MySettings.PathToScriptsFolder & "\QGIS\empty.osm" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\osm\" & Tile & "\border.osm*" & Chr(34))
-                    End If
-
-                    If MySettings.buildings Then
-                        OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "landuse=commercial Or landuse=construction Or landuse=industrial Or landuse=residential Or landuse=retail" & Chr(34) & " -o=%folder%/residential.osm")
-                    Else
-                        OsmScriptBatchFile.WriteLine("xcopy /y " & Chr(34) & MySettings.PathToScriptsFolder & "\QGIS\empty.osm" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\osm\" & Tile & "\residential.osm*" & Chr(34))
                     End If
 
                     OsmScriptBatchFile.WriteLine("del " & Chr(34) & MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm" & Chr(34) & "")
@@ -578,6 +607,8 @@ Public Class StartupWindow
                                 GdalBatchFile.WriteLine(Chr(34) & MySettings.PathToQGIS & "\bin\gdal_translate.exe" & Chr(34) & " -a_nodata none -outsize " & MySettings.BlocksPerTile & " " & MySettings.BlocksPerTile & " -Of PNG -ot UInt16 -scale -6200 6547300 0 65535 " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & Tile & "\heightmap\" & TilesOneMoreDigit & "\" & TilesOneMoreDigit & "_AVE_DSM.tif" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & Tile & "\heightmap\" & Tile & "_exported.png" & Chr(34))
                             Case "50"
                                 GdalBatchFile.WriteLine(Chr(34) & MySettings.PathToQGIS & "\bin\gdal_translate.exe" & Chr(34) & " -a_nodata none -outsize " & MySettings.BlocksPerTile & " " & MySettings.BlocksPerTile & " -Of PNG -ot UInt16 -scale -3100 3273650 0 65535 " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & Tile & "\heightmap\" & TilesOneMoreDigit & "\" & TilesOneMoreDigit & "_AVE_DSM.tif" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & Tile & "\heightmap\" & Tile & "_exported.png" & Chr(34))
+                            Case "33"
+                                GdalBatchFile.WriteLine(Chr(34) & MySettings.PathToQGIS & "\bin\gdal_translate.exe" & Chr(34) & " -a_nodata none -outsize " & MySettings.BlocksPerTile & " " & MySettings.BlocksPerTile & " -Of PNG -ot UInt16 -scale -2046 2160609 0 65535 " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & Tile & "\heightmap\" & TilesOneMoreDigit & "\" & TilesOneMoreDigit & "_AVE_DSM.tif" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & Tile & "\heightmap\" & Tile & "_exported.png" & Chr(34))
                             Case "25"
                                 GdalBatchFile.WriteLine(Chr(34) & MySettings.PathToQGIS & "\bin\gdal_translate.exe" & Chr(34) & " -a_nodata none -outsize " & MySettings.BlocksPerTile & " " & MySettings.BlocksPerTile & " -Of PNG -ot UInt16 -scale -1550 1636825 0 65535 " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & Tile & "\heightmap\" & TilesOneMoreDigit & "\" & TilesOneMoreDigit & "_AVE_DSM.tif" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & Tile & "\heightmap\" & Tile & "_exported.png" & Chr(34))
                             Case "10"
@@ -586,7 +617,7 @@ Public Class StartupWindow
                                 GdalBatchFile.WriteLine(Chr(34) & MySettings.PathToQGIS & "\bin\gdal_translate.exe" & Chr(34) & " -a_nodata none -outsize " & MySettings.BlocksPerTile & " " & MySettings.BlocksPerTile & " -Of PNG -ot UInt16 -scale -310 327365 0 65535 " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & Tile & "\heightmap\" & TilesOneMoreDigit & "\" & TilesOneMoreDigit & "_AVE_DSM.tif" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & Tile & "\heightmap\" & Tile & "_exported.png" & Chr(34))
                         End Select
                         'GdalBatchFile.WriteLine(Chr(34) & MySettings.PathToQGIS & "\bin\gdal_translate.exe" & Chr(34) & " -a_nodata none -outsize " & MySettings.BlocksPerTile & " " & MySettings.BlocksPerTile & " -Of PNG -ot UInt16 -scale -512 15872‬ 0 65535 " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & Tile & "\heightmap\" & TilesOneMoreDigit & "\" & TilesOneMoreDigit & "_AVE_DSM.tif" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & Tile & "\heightmap\" & Tile & "_exported.png" & Chr(34))
-                        GdalBatchFile.WriteLine(Chr(34) & MySettings.PathToQGIS & Chr(34) & "\bin\gdaldem.exe" & " slope " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & Tile & "\heightmap\" & TilesOneMoreDigit & "\" & TilesOneMoreDigit & "_AVE_DSM.tif" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & Tile & "\heightmap\" & TilesOneMoreDigit & "\" & TilesOneMoreDigit & "_AVE_DSM_slope.tif" & Chr(34) & " -s 111120 -compute_edges")
+                        GdalBatchFile.WriteLine(Chr(34) & MySettings.PathToQGIS & "\bin\gdaldem.exe" & Chr(34) & " slope " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & Tile & "\heightmap\" & TilesOneMoreDigit & "\" & TilesOneMoreDigit & "_AVE_DSM.tif" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & Tile & "\heightmap\" & TilesOneMoreDigit & "\" & TilesOneMoreDigit & "_AVE_DSM_slope.tif" & Chr(34) & " -s 111120 -compute_edges")
                         GdalBatchFile.WriteLine(Chr(34) & MySettings.PathToQGIS & "\bin\gdal_translate.exe" & Chr(34) & " -a_nodata none -outsize " & MySettings.BlocksPerTile & " " & MySettings.BlocksPerTile & " -Of PNG -ot UInt16 -scale 0 90 0 65535 " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & Tile & "\heightmap\" & TilesOneMoreDigit & "\" & TilesOneMoreDigit & "_AVE_DSM_slope.tif" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\image_exports\" & Tile & "\heightmap\" & Tile & "_slope.png" & Chr(34))
 
                     Next
@@ -764,7 +795,7 @@ Public Class StartupWindow
         Try
             Dim ScriptBatchFile As System.IO.StreamWriter
             ScriptBatchFile = My.Computer.FileSystem.OpenTextFileWriter(MySettings.PathToScriptsFolder & "\0-all.bat", False, System.Text.Encoding.ASCII)
-            ScriptBatchFile.WriteLine("@echo Started %date% %time%")
+            ScriptBatchFile.WriteLine("SET start=%date% %time%")
             ScriptBatchFile.WriteLine("TITLE Convert OSM data")
             ScriptBatchFile.WriteLine("Call 1-osmconvert.bat")
             ScriptBatchFile.WriteLine("TITLE Export images using QGIS")
@@ -780,7 +811,8 @@ Public Class StartupWindow
             ScriptBatchFile.WriteLine("TITLE Combine world")
             ScriptBatchFile.WriteLine("Call 7-combine.bat")
             ScriptBatchFile.WriteLine("TITLE Finished at %date% %time%")
-            ScriptBatchFile.WriteLine("@echo Completed at %date% %time%")
+            ScriptBatchFile.WriteLine("@echo Started at %start%")
+            ScriptBatchFile.WriteLine("@echo Finished at %date% %time%")
             ScriptBatchFile.WriteLine("PAUSE")
             ScriptBatchFile.Close()
         Catch ex As Exception

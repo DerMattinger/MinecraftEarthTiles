@@ -36,12 +36,12 @@ Public Class SettingsWindow
                 If Not File.Exists(LocalSettings.PathToMagick) Then
                     LocalSettings.PathToMagick = ""
                 End If
+                Settings_To_GUI(LocalSettings)
                 MsgBox("Settings loaded from file.")
             Catch ex As Exception
                 MsgBox(ex.Message)
             End Try
         End If
-        Settings_To_GUI(LocalSettings)
     End Sub
 
     Private Sub Save_Settings_Click(sender As Object, e As RoutedEventArgs)
@@ -62,7 +62,8 @@ Public Class SettingsWindow
     End Sub
 
     Private Sub Help_Click(sender As Object, e As RoutedEventArgs)
-        Help.ShowHelp(Nothing, "Help/Settings.chm")
+        'Help.ShowHelp(Nothing, "Help/Settings.chm")
+        Process.Start("https://earthtiles.motfe.net/2020/08/04/settings/")
     End Sub
 
 #End Region
@@ -145,7 +146,7 @@ Public Class SettingsWindow
             cbb_BlocksPerTile.Text = Settings.BlocksPerTile
         End If
 
-        If Settings.VerticalScale = "5" Or Settings.VerticalScale = "10" Or Settings.VerticalScale = "25" Or Settings.VerticalScale = "50" Or Settings.VerticalScale = "100" Or Settings.VerticalScale = "200" Then
+        If Settings.VerticalScale = "5" Or Settings.VerticalScale = "10" Or Settings.VerticalScale = "25" Or Settings.VerticalScale = "33" Or Settings.VerticalScale = "50" Or Settings.VerticalScale = "100" Or Settings.VerticalScale = "200" Then
             cbb_VerticalScale.SelectedValue = Settings.VerticalScale
             cbb_VerticalScale.Text = Settings.VerticalScale
         End If
@@ -238,22 +239,7 @@ Public Class SettingsWindow
 
         txb_Proxy.Text = Settings.Proxy
 
-        Dim ScaleCalc As Int16 = 0
-        Select Case Settings.BlocksPerTile
-            Case "512"
-                ScaleCalc = 500
-            Case "1024"
-                ScaleCalc = 1000
-            Case "2048"
-                ScaleCalc = 2000
-            Case "3072"
-                ScaleCalc = 3000
-            Case "4096"
-                ScaleCalc = 4000
-            Case "10240"
-                ScaleCalc = 10000
-        End Select
-        lbl_Scale_Quantity.Content = "1:" & (Math.Round(100000 / (ScaleCalc / CType(Settings.TilesPerMap, Int16)))).ToString
+        Calculate_Scale()
 
     End Sub
 
@@ -274,7 +260,7 @@ Public Class SettingsWindow
         If cbb_BlocksPerTile.Text = "512" Or cbb_BlocksPerTile.Text = "1024" Or cbb_BlocksPerTile.Text = "2048" Or cbb_BlocksPerTile.Text = "3072" Or cbb_BlocksPerTile.Text = "4096" Or cbb_BlocksPerTile.Text = "10240" Then
             LocalSettings.BlocksPerTile = cbb_BlocksPerTile.Text
         End If
-        If cbb_VerticalScale.Text = "200" Or cbb_VerticalScale.Text = "100" Or cbb_VerticalScale.Text = "50" Or cbb_VerticalScale.Text = "25" Or cbb_VerticalScale.Text = "10" Or cbb_VerticalScale.Text = "5" Then
+        If cbb_VerticalScale.Text = "200" Or cbb_VerticalScale.Text = "100" Or cbb_VerticalScale.Text = "50" Or cbb_VerticalScale.Text = "33" Or cbb_VerticalScale.Text = "25" Or cbb_VerticalScale.Text = "10" Or cbb_VerticalScale.Text = "5" Then
             LocalSettings.VerticalScale = cbb_VerticalScale.Text
         End If
         If cbb_TilesperMap.Text = "1" Or cbb_TilesperMap.Text = "2" Or cbb_TilesperMap.Text = "3" Or cbb_TilesperMap.Text = "5" Or cbb_TilesperMap.Text = "10" Or cbb_TilesperMap.Text = "15" Or cbb_TilesperMap.Text = "30" Or cbb_TilesperMap.Text = "45" Or cbb_TilesperMap.Text = "90" Then
@@ -309,7 +295,7 @@ Public Class SettingsWindow
         Return LocalSettings
     End Function
 
-    Private Sub Calculate_Scale(sender As Object, e As EventArgs)
+    Private Sub Calculate_Scale()
         If Not cbb_BlocksPerTile Is Nothing And Not cbb_TilesperMap Is Nothing Then
             If Not cbb_BlocksPerTile.Text = "" And Not cbb_TilesperMap.Text = "" Then
                 Dim ScaleCalc As Int16 = 0
@@ -328,6 +314,27 @@ Public Class SettingsWindow
                         ScaleCalc = 10000
                 End Select
                 lbl_Scale_Quantity.Content = "1:" & (Math.Round(100000 / (ScaleCalc / CType(cbb_TilesperMap.Text, Int16)))).ToString
+
+                If Math.Round(100000 / (ScaleCalc / CType(cbb_TilesperMap.Text, Int16))) >= 200 Then
+                    chb_small_streets.IsEnabled = False
+                    chb_small_streets.IsChecked = False
+                    chb_farms.IsEnabled = False
+                    chb_farms.IsChecked = False
+                    chb_meadows.IsEnabled = False
+                    chb_meadows.IsChecked = False
+                    chb_quarrys.IsEnabled = False
+                    chb_quarrys.IsChecked = False
+                    chb_streams.IsEnabled = False
+                    chb_streams.IsChecked = False
+                    lbl_Warning.Content = "Some features are only available on larger scales."
+                Else
+                    chb_small_streets.IsEnabled = True
+                    chb_farms.IsEnabled = True
+                    chb_meadows.IsEnabled = True
+                    chb_quarrys.IsEnabled = True
+                    chb_streams.IsEnabled = True
+                    lbl_Warning.Content = ""
+                End If
             End If
         End If
     End Sub

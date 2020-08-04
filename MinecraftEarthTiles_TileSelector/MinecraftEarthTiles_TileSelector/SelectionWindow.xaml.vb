@@ -83,6 +83,108 @@ Public Class SelectionWindow
         Selection_To_GUI(StartupWindow.MySelection)
     End Sub
 
+
+#Region "Menu"
+
+    Private Sub Reset_Selection_Click(sender As Object, e As RoutedEventArgs)
+        Dim MySelection As New Selection
+        Selection_To_GUI(MySelection)
+    End Sub
+
+    Private Sub Load_Selection_Click(sender As Object, e As RoutedEventArgs)
+        Dim LocalSelection As New Selection
+        Dim LoadSettingsFileDialog As New Forms.OpenFileDialog With {
+            .FileName = "tiles.xml",
+            .Filter = "Exe Files (.xml)|*.xml|All Files (*.*)|*.*",
+            .FilterIndex = 1
+        }
+        If LoadSettingsFileDialog.ShowDialog() = Forms.DialogResult.OK Then
+            Try
+                LocalSelection = CustomXmlSerialiser.GetXMLSelection(LoadSettingsFileDialog.FileName)
+                Selection_To_GUI(LocalSelection)
+                MsgBox("Selection loaded from file.")
+            Catch ex As Exception
+                MsgBox(ex.Message)
+            End Try
+        End If
+    End Sub
+
+    Private Sub Save_Selection_Click(sender As Object, e As RoutedEventArgs)
+        Dim LocalSelection As Selection = GUI_To_Selection()
+        Dim SaveSelectionFileDialog As New Forms.SaveFileDialog With {
+            .FileName = "tiles.xml",
+            .Filter = "Exe Files (.xml)|*.xml|All Files (*.*)|*.*",
+            .FilterIndex = 1
+        }
+        If SaveSelectionFileDialog.ShowDialog() = Forms.DialogResult.OK Then
+            Try
+                CustomXmlSerialiser.SaveXML(SaveSelectionFileDialog.FileName, LocalSelection)
+                MsgBox("Selection saved to file.")
+            Catch ex As Exception
+                MsgBox(ex.Message)
+            End Try
+        End If
+    End Sub
+
+    Private Sub Help_Click(sender As Object, e As RoutedEventArgs)
+        'Help.ShowHelp(Nothing, "Help/Settings.chm")
+        Process.Start("https://earthtiles.motfe.net/2020/08/04/selection/")
+    End Sub
+
+#End Region
+
+#Region "Save/Cancel"
+
+    Private Sub Save_Click(sender As Object, e As RoutedEventArgs)
+        Try
+            StartupWindow.MySelection = GUI_To_Selection()
+            'StartupWindow.Check()
+            Close()
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
+    End Sub
+
+    Private Sub Cancel_Click(sender As Object, e As RoutedEventArgs)
+        Close()
+    End Sub
+
+#End Region
+
+#Region "GUI"
+
+    Public Sub Selection_To_GUI(MySelection As Selection)
+        cbb_Spawn_Tile.Items.Clear()
+        If Not MySelection.TilesList Is Nothing Then
+            For Each Tile In MySelection.TilesList
+                cbb_Spawn_Tile.Items.Add(Tile)
+                If Tile = MySelection.SpawnTile Then
+                    cbb_Spawn_Tile.Text = MySelection.SpawnTile
+                End If
+            Next
+            For Each Checkbox In Me.Tiles.Children.OfType(Of CheckBox)
+                If MySelection.TilesList.Contains(Checkbox.Name) Then
+                    Checkbox.IsChecked = True
+                Else
+                    Checkbox.IsChecked = False
+                End If
+            Next
+        End If
+
+    End Sub
+
+    Private Function GUI_To_Selection() As Selection
+        Dim LocalSelection As New Selection
+        Dim TilesList = (
+            From T In Me.Tiles.Children.OfType(Of CheckBox)()
+            Where T.IsChecked Select T.Name
+        ).ToList
+        TilesList.Sort()
+        LocalSelection.TilesList = TilesList
+        LocalSelection.SpawnTile = cbb_Spawn_Tile.Text
+        Return LocalSelection
+    End Function
+
     Private Sub Chb_CheckedChanged(sender As Object, e As EventArgs)
         Dim chb As CheckBox = DirectCast(sender, CheckBox) 'Use DirectCast to cast the sender into a checkbox
         Dim currentSpawnTile As String = ""
@@ -205,6 +307,8 @@ Public Class SelectionWindow
                 cbb_Spawn_Tile.Text = Tile
             End If
         Next
+
+        CheckForMaximumTiles()
     End Sub
 
     Public Sub Change_Background(sender As Object, e As EventArgs)
@@ -220,106 +324,22 @@ Public Class SelectionWindow
         img_Background.Source = New BitmapImage(MyURI)
     End Sub
 
-#Region "Menu"
-
-    Private Sub Reset_Selection_Click(sender As Object, e As RoutedEventArgs)
-        Dim MySelection As New Selection
-        Selection_To_GUI(MySelection)
+    Public Sub CheckForMaximumTiles()
+        'Dim TilesList = (
+        'From T In Me.Tiles.Children.OfType(Of CheckBox)()
+        'Where T.IsChecked Select T.Name
+        ').ToList
+        'If TilesList.Count > 10 Then
+        'btn_Save_Selection.IsEnabled = False
+        'Dim MyToolTip As ToolTip = New ToolTip
+        'MyToolTip.Placement = Primitives.PlacementMode.Mouse
+        'MyToolTip.Content = "You can't create more then 10 Tiles in the demo version."
+        'grd_Buttons.ToolTip = MyToolTip
+        'Else
+        'btn_Save_Selection.IsEnabled = True
+        'grd_Buttons.ToolTip = New ToolTip
+        'End If
     End Sub
-
-    Private Sub Load_Selection_Click(sender As Object, e As RoutedEventArgs)
-        Dim LocalSelection As New Selection
-        Dim LoadSettingsFileDialog As New Forms.OpenFileDialog With {
-            .FileName = "tiles.xml",
-            .Filter = "Exe Files (.xml)|*.xml|All Files (*.*)|*.*",
-            .FilterIndex = 1
-        }
-        If LoadSettingsFileDialog.ShowDialog() = Forms.DialogResult.OK Then
-            Try
-                LocalSelection = CustomXmlSerialiser.GetXMLSelection(LoadSettingsFileDialog.FileName)
-                MsgBox("Selection loaded from file.")
-            Catch ex As Exception
-                MsgBox(ex.Message)
-            End Try
-        End If
-        Selection_To_GUI(LocalSelection)
-    End Sub
-
-    Private Sub Save_Selection_Click(sender As Object, e As RoutedEventArgs)
-        Dim LocalSelection As Selection = GUI_To_Selection()
-        Dim SaveSelectionFileDialog As New Forms.SaveFileDialog With {
-            .FileName = "tiles.xml",
-            .Filter = "Exe Files (.xml)|*.xml|All Files (*.*)|*.*",
-            .FilterIndex = 1
-        }
-        If SaveSelectionFileDialog.ShowDialog() = Forms.DialogResult.OK Then
-            Try
-                CustomXmlSerialiser.SaveXML(SaveSelectionFileDialog.FileName, LocalSelection)
-                MsgBox("Selection saved to file.")
-            Catch ex As Exception
-                MsgBox(ex.Message)
-            End Try
-        End If
-    End Sub
-
-    Private Sub Help_Click(sender As Object, e As RoutedEventArgs)
-        'Help.ShowHelp(Nothing, "Help/Settings.chm")
-    End Sub
-
-#End Region
-
-#Region "Save/Cancel"
-
-    Private Sub Save_Click(sender As Object, e As RoutedEventArgs)
-        Try
-            StartupWindow.MySelection = GUI_To_Selection()
-            'StartupWindow.Check()
-            Close()
-        Catch ex As Exception
-            MsgBox(ex.Message)
-        End Try
-    End Sub
-
-    Private Sub Cancel_Click(sender As Object, e As RoutedEventArgs)
-        Close()
-    End Sub
-
-#End Region
-
-#Region "GUI"
-
-    Public Sub Selection_To_GUI(MySelection As Selection)
-        cbb_Spawn_Tile.Items.Clear()
-        If Not MySelection.TilesList Is Nothing Then
-            For Each Tile In MySelection.TilesList
-                cbb_Spawn_Tile.Items.Add(Tile)
-                If Tile = MySelection.SpawnTile Then
-                    cbb_Spawn_Tile.Text = MySelection.SpawnTile
-                End If
-            Next
-            For Each Checkbox In Me.Tiles.Children.OfType(Of CheckBox)
-                If MySelection.TilesList.Contains(Checkbox.Name) Then
-                    Checkbox.IsChecked = True
-                Else
-                    Checkbox.IsChecked = False
-                End If
-            Next
-        End If
-
-    End Sub
-
-    Private Function GUI_To_Selection() As Selection
-        Dim LocalSelection As New Selection
-        Dim TilesList =
-            (
-                From T In Me.Tiles.Children.OfType(Of CheckBox)()
-                Where T.IsChecked Select T.Name
-            ).ToList
-        TilesList.Sort()
-        LocalSelection.TilesList = TilesList
-        LocalSelection.SpawnTile = cbb_Spawn_Tile.Text
-        Return LocalSelection
-    End Function
 
 #End Region
 
