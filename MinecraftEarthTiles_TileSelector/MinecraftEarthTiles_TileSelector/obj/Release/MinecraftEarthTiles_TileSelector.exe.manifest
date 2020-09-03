@@ -4,7 +4,7 @@
   <description asmv2:iconFile="MyResources\MinecraftEarthTiles.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <application />
   <entryPoint>
-    <assemblyIdentity name="MinecraftEarthTiles_TileSelector" version="0.7.0.0" language="neutral" processorArchitecture="msil" />
+    <assemblyIdentity name="MinecraftEarthTiles_TileSelector" version="0.9.0.0" language="neutral" processorArchitecture="msil" />
     <commandLine file="MinecraftEarthTiles_TileSelector.exe" parameters="" />
   </entryPoint>
   <trustInfo>
@@ -43,14 +43,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MinecraftEarthTiles_TileSelector.exe" size="12413352">
-      <assemblyIdentity name="MinecraftEarthTiles_TileSelector" version="0.7.0.0" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MinecraftEarthTiles_TileSelector.exe" size="12418472">
+      <assemblyIdentity name="MinecraftEarthTiles_TileSelector" version="0.9.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>GIrCMjpuAXGQkF58BnhJva1pokJZ67V5szSdGX2BIug=</dsig:DigestValue>
+        <dsig:DigestValue>z5KWF05X9sgiFYev+//IE9TiRhxCdu/teCHXoFI6ANc=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

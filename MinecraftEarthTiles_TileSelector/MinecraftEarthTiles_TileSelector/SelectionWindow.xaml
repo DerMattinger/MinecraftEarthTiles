@@ -104,9 +104,15 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+
+            <ScrollViewer x:Name="ScrollViewer" PanningMode="Both" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                 <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
                     <Grid Name="Tiles" Width="1440" Height="720" MinWidth="1440" MinHeight="720" Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
+                        <Grid.LayoutTransform>
+                            <TransformGroup>
+                                <ScaleTransform x:Name="scaleTransform"/>
+                            </TransformGroup>
+                        </Grid.LayoutTransform>
                         <Image x:Name="img_Background" Source="MyResources/terrain.jpg" Width="1440" Height="720" MinWidth="1440" MinHeight="720"  Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                         <Grid Name="CheckBoxes" Width="1440" Height="720" MinWidth="1440" MinHeight="720" Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" />
                     </Grid>
@@ -118,7 +124,7 @@
 
             <Grid Grid.Row="2" Height="40" VerticalAlignment="Bottom" Background="LightGray">
                 <Label x:Name="lbl_ZoomSlider" Content="Zoom" HorizontalAlignment="Left" Margin="10,7,0,0" RenderTransformOrigin="0.78,0.615" Height="26" VerticalAlignment="Top"/>
-                <Slider x:Name="ZoomSlider" Orientation="Horizontal" Minimum="0.5" Maximum="10.0" LargeChange="1.0" SmallChange="0.5"  Value="1.0" Margin="56,10,0,0" HorizontalAlignment="Left" Width="147" Height="20" VerticalAlignment="Top" />
+                <Slider x:Name="ZoomSlider" Orientation="Horizontal" Minimum="0.5" Maximum="10.0" LargeChange="0.5" SmallChange="0.25" Value="1.0" Margin="56,10,0,0" HorizontalAlignment="Left" Width="147" Height="20" VerticalAlignment="Top" />
                 
                 <ComboBox x:Name="cbb_Background_Image" HorizontalAlignment="Right" Margin="0,0,477,10" VerticalAlignment="Bottom" Width="79" Height="20" DropDownClosed="Change_Background" RenderTransformOrigin="0.542,0.5">
                     <ComboBoxItem IsSelected="True">Terrain</ComboBoxItem>

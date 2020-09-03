@@ -4,6 +4,106 @@ Imports System.Reflection
 Imports Microsoft.Win32
 Public Class SelectionWindow
 
+    Private lastCenterPositionOnTarget As Point?
+    Private lastMousePositionOnTarget As Point?
+    Private lastDragPoint As Point?
+
+    Public Sub New()
+        InitializeComponent()
+        AddHandler ScrollViewer.ScrollChanged, AddressOf OnScrollViewerScrollChanged
+        AddHandler ScrollViewer.MouseRightButtonUp, AddressOf OnMouseRightButtonUpCustom
+        AddHandler ScrollViewer.PreviewMouseRightButtonUp, AddressOf OnMouseRightButtonUpCustom
+        AddHandler ScrollViewer.PreviewMouseWheel, AddressOf OnPreviewMouseWheelCustom
+        AddHandler ScrollViewer.PreviewMouseRightButtonDown, AddressOf OnMouseRightButtonDownCustom
+        AddHandler ScrollViewer.MouseMove, AddressOf OnMouseMoveCustom
+        AddHandler ZoomSlider.ValueChanged, AddressOf OnSliderValueChanged
+    End Sub
+
+    Private Sub OnMouseMoveCustom(ByVal sender As Object, ByVal e As MouseEventArgs)
+        If lastDragPoint.HasValue Then
+            Dim posNow As Point = e.GetPosition(ScrollViewer)
+            Dim dX As Double = posNow.X - lastDragPoint.Value.X
+            Dim dY As Double = posNow.Y - lastDragPoint.Value.Y
+            lastDragPoint = posNow
+            ScrollViewer.ScrollToHorizontalOffset(ScrollViewer.HorizontalOffset - dX)
+            ScrollViewer.ScrollToVerticalOffset(ScrollViewer.VerticalOffset - dY)
+        End If
+    End Sub
+
+    Private Sub OnMouseRightButtonDownCustom(ByVal sender As Object, ByVal e As MouseButtonEventArgs)
+        Dim mousePos = e.GetPosition(ScrollViewer)
+
+        If mousePos.X <= ScrollViewer.ViewportWidth AndAlso mousePos.Y < ScrollViewer.ViewportHeight Then 'make sure we still can use the scrollbars
+            ScrollViewer.Cursor = Cursors.SizeAll
+            lastDragPoint = mousePos
+            Mouse.Capture(ScrollViewer)
+        End If
+    End Sub
+
+    Private Sub OnPreviewMouseWheelCustom(ByVal sender As Object, ByVal e As MouseWheelEventArgs)
+        lastMousePositionOnTarget = Mouse.GetPosition(Tiles)
+
+        If e.Delta > 0 Then
+            ZoomSlider.Value += 0.5
+        End If
+
+        If e.Delta < 0 Then
+            ZoomSlider.Value -= 0.5
+        End If
+
+        e.Handled = True
+    End Sub
+
+    Private Sub OnMouseRightButtonUpCustom(ByVal sender As Object, ByVal e As MouseButtonEventArgs)
+        ScrollViewer.Cursor = Cursors.Arrow
+        ScrollViewer.ReleaseMouseCapture()
+        lastDragPoint = Nothing
+    End Sub
+
+    Private Sub OnSliderValueChanged(ByVal sender As Object, ByVal e As RoutedPropertyChangedEventArgs(Of Double))
+        ScaleTransform.ScaleX = e.NewValue
+        ScaleTransform.ScaleY = e.NewValue
+        Dim centerOfViewport = New Point(ScrollViewer.ViewportWidth / 2, ScrollViewer.ViewportHeight / 2)
+        lastCenterPositionOnTarget = ScrollViewer.TranslatePoint(centerOfViewport, Tiles)
+    End Sub
+
+    Private Sub OnScrollViewerScrollChanged(ByVal sender As Object, ByVal e As ScrollChangedEventArgs)
+        If e.ExtentHeightChange <> 0 OrElse e.ExtentWidthChange <> 0 Then
+            Dim targetBefore As Point? = Nothing
+            Dim targetNow As Point? = Nothing
+
+            If Not lastMousePositionOnTarget.HasValue Then
+
+                If lastCenterPositionOnTarget.HasValue Then
+                    Dim centerOfViewport = New Point(ScrollViewer.ViewportWidth / 2, ScrollViewer.ViewportHeight / 2)
+                    Dim centerOfTargetNow As Point = ScrollViewer.TranslatePoint(centerOfViewport, Tiles)
+                    targetBefore = lastCenterPositionOnTarget
+                    targetNow = centerOfTargetNow
+                End If
+            Else
+                targetBefore = lastMousePositionOnTarget
+                targetNow = Mouse.GetPosition(Tiles)
+                lastMousePositionOnTarget = Nothing
+            End If
+
+            If targetBefore.HasValue Then
+                Dim dXInTargetPixels As Double = targetNow.Value.X - targetBefore.Value.X
+                Dim dYInTargetPixels As Double = targetNow.Value.Y - targetBefore.Value.Y
+                Dim multiplicatorX As Double = e.ExtentWidth / Tiles.Width
+                Dim multiplicatorY As Double = e.ExtentHeight / Tiles.Height
+                Dim newOffsetX As Double = ScrollViewer.HorizontalOffset - dXInTargetPixels * multiplicatorX
+                Dim newOffsetY As Double = ScrollViewer.VerticalOffset - dYInTargetPixels * multiplicatorY
+
+                If Double.IsNaN(newOffsetX) OrElse Double.IsNaN(newOffsetY) Then
+                    Return
+                End If
+
+                ScrollViewer.ScrollToHorizontalOffset(newOffsetX)
+                ScrollViewer.ScrollToVerticalOffset(newOffsetY)
+            End If
+        End If
+    End Sub
+
     Dim lastChecked As String = ""
 
     Private Sub Window_Loaded(sender As Object, e As RoutedEventArgs)
@@ -83,7 +183,6 @@ Public Class SelectionWindow
         Selection_To_GUI(StartupWindow.MySelection)
     End Sub
 
-
 #Region "Menu"
 
     Private Sub Reset_Selection_Click(sender As Object, e As RoutedEventArgs)
@@ -94,7 +193,7 @@ Public Class SelectionWindow
     Private Sub Load_Selection_Click(sender As Object, e As RoutedEventArgs)
         Dim LocalSelection As New Selection
         Dim LoadSettingsFileDialog As New Forms.OpenFileDialog With {
-            .FileName = "tiles.xml",
+            .FileName = "custom_selection.xml",
             .Filter = "Exe Files (.xml)|*.xml|All Files (*.*)|*.*",
             .FilterIndex = 1
         }
@@ -112,7 +211,7 @@ Public Class SelectionWindow
     Private Sub Save_Selection_Click(sender As Object, e As RoutedEventArgs)
         Dim LocalSelection As Selection = GUI_To_Selection()
         Dim SaveSelectionFileDialog As New Forms.SaveFileDialog With {
-            .FileName = "tiles.xml",
+            .FileName = "custom_selection.xml",
             .Filter = "Exe Files (.xml)|*.xml|All Files (*.*)|*.*",
             .FilterIndex = 1
         }
@@ -138,7 +237,11 @@ Public Class SelectionWindow
     Private Sub Save_Click(sender As Object, e As RoutedEventArgs)
         Try
             StartupWindow.MySelection = GUI_To_Selection()
-            'StartupWindow.Check()
+            Try
+                CustomXmlSerialiser.SaveXML(StartupWindow.MySettings.PathToScriptsFolder & "/selection.xml", StartupWindow.MySelection)
+            Catch ex As Exception
+                MsgBox(ex.Message)
+            End Try
             Close()
         Catch ex As Exception
             MsgBox(ex.Message)

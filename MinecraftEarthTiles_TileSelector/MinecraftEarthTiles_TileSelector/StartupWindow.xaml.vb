@@ -85,7 +85,7 @@ Public Class StartupWindow
                 OsmScriptBatchFile.WriteLine("if not exist " & Chr(34) & MySettings.PathToScriptsFolder & "\osm\" & Tile & Chr(34) & " mkdir " & Chr(34) & MySettings.PathToScriptsFolder & "\osm\" & Tile & Chr(34))
             Next
             If MySettings.geofabrik = True Then
-                OsmScriptBatchFile.WriteLine("osmconvert download.osm.pbf -o=osm/unfiltered.o5m")
+                OsmScriptBatchFile.WriteLine("osmconvert " & Chr(34) & MySettings.PathToPBF & Chr(34) & " -o=osm/unfiltered.o5m")
 
                 Dim filter As String = "water=lake Or water=reservoir Or natural=water Or landuse=reservoir Or natural=wetland Or wetland=swamp Or natural=glacier Or natural=volcano Or natural=beach Or natural=grassland Or natural=fell Or natural=heath Or natural=scrub Or landuse=forest Or landuse=bare_rock Or natural=scree Or natural=shingle"
 
@@ -152,7 +152,24 @@ Public Class StartupWindow
                         borderW = (-1 * LongNumber) - 0.5
                         borderE = (-1 * LongNumber) + CType(MySettings.TilesPerMap, Int16) + 0.5
                     End If
-                    OsmScriptBatchFile.WriteLine("osmconvert osm/output.o5m -b=" & borderW.ToString("###.#", New CultureInfo("en-US")) & "," & borderS.ToString("##.#", New CultureInfo("en-US")) & "," & (borderE).ToString("###.#", New CultureInfo("en-US")) & "," & (borderN).ToString("##.#", New CultureInfo("en-US")) & " -o=osm/" & Tile & "/output.osm")
+
+                    If borderN > 90 Then
+                        borderN = 90
+                    End If
+
+                    If borderS < -90 Then
+                        borderS = -90
+                    End If
+
+                    If borderE > 180 Then
+                        borderE = 180
+                    End If
+
+                    If borderW < -180 Then
+                        borderW = -180
+                    End If
+
+                    OsmScriptBatchFile.WriteLine("osmconvert osm/output.o5m -b=" & borderW.ToString("###.#", New CultureInfo("en-US")) & "," & borderS.ToString("##.#", New CultureInfo("en-US")) & "," & (borderE).ToString("###.#", New CultureInfo("en-US")) & "," & (borderN).ToString("##.#", New CultureInfo("en-US")) & " -o=osm/" & Tile & "/output.osm --complete-ways --drop-version --verbose")
                     OsmScriptBatchFile.WriteLine("SET folder=osm/" & Tile)
 
                     If MySettings.highways Then
@@ -175,10 +192,10 @@ Public Class StartupWindow
                         OsmScriptBatchFile.WriteLine("xcopy /y " & Chr(34) & MySettings.PathToScriptsFolder & "\QGIS\empty.osm" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\osm\" & Tile & "\small_road.osm*" & Chr(34))
                     End If
 
-                    OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "water=lake Or water=reservoir Or natural=water Or landuse=reservoir" & Chr(34) & " -o=%folder%/water.osm")
+                    OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "water=lake Or water=reservoir Or natural=water Or landuse=reservoir Or waterway=riverbank Or waterway=canal Or waterway=canal" & Chr(34) & " -o=%folder%/water.osm")
 
                     If MySettings.rivers Then
-                        OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "waterway=river Or waterway=canal Or natural=water And water=river Or waterway=riverbank" & Chr(34) & " -o=%folder%/river.osm")
+                        OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "waterway=river Or water=river Or natural=water And water=river" & Chr(34) & " -o=%folder%/river.osm")
                     Else
                         OsmScriptBatchFile.WriteLine("xcopy /y " & Chr(34) & MySettings.PathToScriptsFolder & "\QGIS\empty.osm" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\osm\" & Tile & "\river.osm*" & Chr(34))
                     End If
@@ -273,6 +290,7 @@ Public Class StartupWindow
                     OsmScriptBatchFile.WriteLine("if /I '%E%'=='N' goto :Continue_" & Tile)
                     OsmScriptBatchFile.WriteLine(":Continue_" & Tile)
                     OsmScriptBatchFile.WriteLine("@echo on")
+
                     OsmScriptBatchFile.WriteLine("SET folder=osm/" & Tile)
 
                     If MySettings.highways Then
@@ -295,10 +313,10 @@ Public Class StartupWindow
                         OsmScriptBatchFile.WriteLine("xcopy /y " & Chr(34) & MySettings.PathToScriptsFolder & "\QGIS\empty.osm" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\osm\" & Tile & "\small_road.osm*" & Chr(34))
                     End If
 
-                    OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "water=lake Or water=reservoir Or natural=water Or landuse=reservoir Or waterway=riverbank Or waterway=canal Or water=river" & Chr(34) & " -o=%folder%/water.osm")
+                    OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "water=lake Or water=reservoir Or natural=water Or landuse=reservoir Or waterway=riverbank Or waterway=canal Or waterway=canal" & Chr(34) & " -o=%folder%/water.osm")
 
                     If MySettings.rivers Then
-                        OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "waterway=river Or waterway=canal Or natural=water And water=river" & Chr(34) & " -o=%folder%/river.osm")
+                        OsmScriptBatchFile.WriteLine("osmfilter %folder%/output.osm --verbose --keep=" & Chr(34) & "waterway=river Or water=river Or natural=water And water=river" & Chr(34) & " -o=%folder%/river.osm")
                     Else
                         OsmScriptBatchFile.WriteLine("xcopy /y " & Chr(34) & MySettings.PathToScriptsFolder & "\QGIS\empty.osm" & Chr(34) & " " & Chr(34) & MySettings.PathToScriptsFolder & "\osm\" & Tile & "\river.osm*" & Chr(34))
                     End If
@@ -713,8 +731,8 @@ Public Class StartupWindow
                             MapVersionShort = "1-12"
                         Case "1.12 with Cubic Chunks"
                             MapVersionShort = "1-12-cc"
-                        Case "1.14+"
-                            MapVersionShort = "1-14"
+                        Case "1.16+"
+                            MapVersionShort = "1-16"
                     End Select
                     ScriptBatchFile.WriteLine(Chr(34) & MySettings.PathToWorldPainterFolder & Chr(34) & " wpscript.js " & Chr(34) & MySettings.PathToScriptsFolder.Replace("\", "/") & "/" & Chr(34) & " " & ReplacedString & " " & MySettings.BlocksPerTile & " " & MySettings.TilesPerMap & " " & MySettings.VerticalScale & " " & MySettings.highways.ToString & " " & MySettings.streets.ToString & " " & MySettings.small_streets.ToString & " " & MySettings.buildings.ToString & " " & MySettings.borders & " " & MySettings.farms.ToString & " " & MySettings.meadows.ToString & " " & MySettings.quarrys.ToString & " " & MySettings.rivers.ToString & " " & MySettings.streams.ToString & " " & MapVersionShort)
                 Next
@@ -795,7 +813,15 @@ Public Class StartupWindow
         Try
             Dim ScriptBatchFile As System.IO.StreamWriter
             ScriptBatchFile = My.Computer.FileSystem.OpenTextFileWriter(MySettings.PathToScriptsFolder & "\0-all.bat", False, System.Text.Encoding.ASCII)
+            ScriptBatchFile.WriteLine("set LOGFILE=log.txt")
             ScriptBatchFile.WriteLine("SET start=%date% %time%")
+            ScriptBatchFile.WriteLine("call :LOG > %LOGFILE%")
+            ScriptBatchFile.WriteLine("@echo Started at %start%")
+            ScriptBatchFile.WriteLine("@echo Finished at %date% %time%")
+            ScriptBatchFile.WriteLine("PAUSE")
+            ScriptBatchFile.WriteLine("exit /B")
+            ScriptBatchFile.WriteLine("")
+            ScriptBatchFile.WriteLine(":LOG")
             ScriptBatchFile.WriteLine("TITLE Convert OSM data")
             ScriptBatchFile.WriteLine("Call 1-osmconvert.bat")
             ScriptBatchFile.WriteLine("TITLE Export images using QGIS")
@@ -813,7 +839,6 @@ Public Class StartupWindow
             ScriptBatchFile.WriteLine("TITLE Finished at %date% %time%")
             ScriptBatchFile.WriteLine("@echo Started at %start%")
             ScriptBatchFile.WriteLine("@echo Finished at %date% %time%")
-            ScriptBatchFile.WriteLine("PAUSE")
             ScriptBatchFile.Close()
         Catch ex As Exception
             MsgBox("File '0-all.bat' could not be saved\n" & ex.Message)
@@ -834,7 +859,7 @@ Public Class StartupWindow
         btn_CleanUpExport.IsEnabled = False
         btn_AllExport.IsEnabled = False
 
-        If Not MySettings.PathToMagick = "" And Not MySettings.PathToQGIS = "" And Not MySettings.PathToScriptsFolder = "" And Not MySettings.PathToWorldPainterFolder = "" Then
+        If Not MySettings.PathToMagick = "" And Not MySettings.PathToQGIS = "" And Not MySettings.PathToScriptsFolder = "" And Not MySettings.PathToWorldPainterFolder = "" And ((Not MySettings.PathToPBF = "" And MySettings.geofabrik = True) Or (MySettings.geofabrik = False)) Then
             lbl_Setting_Status.Content = "Status: complete"
             If Not MySelection.SpawnTile = "" And MySelection.TilesList.Count > 0 Then
                 btn_osmbatExport.IsEnabled = True

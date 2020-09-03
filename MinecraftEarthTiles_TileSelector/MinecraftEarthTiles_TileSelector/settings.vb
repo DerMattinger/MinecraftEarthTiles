@@ -3,6 +3,7 @@
     Public PathToWorldPainterFolder As String
     Public PathToQGIS As String
     Public PathToMagick As String
+    Public PathToPBF As String
     Public BlocksPerTile As String
     Public TilesPerMap As String
     Public VerticalScale As String
@@ -30,6 +31,7 @@
         PathToWorldPainterFolder = ""
         PathToQGIS = ""
         PathToMagick = ""
+        PathToPBF = ""
         BlocksPerTile = "1024"
         TilesPerMap = "1"
         VerticalScale = "50"

@@ -47,7 +47,7 @@ Public Class SettingsWindow
     Private Sub Save_Settings_Click(sender As Object, e As RoutedEventArgs)
         Dim LocalSettings As Settings = GUI_To_Settings()
         Dim SaveSettingsFileDialog As New SaveFileDialog With {
-            .FileName = "settings.xml",
+            .FileName = "custom_settings.xml",
             .Filter = "XML Files (.xml)|*.xml|All Files (*.*)|*.*",
             .FilterIndex = 1
         }
@@ -110,6 +110,16 @@ Public Class SettingsWindow
         End If
     End Sub
 
+    Private Sub Btn_PathToPBF_Click(sender As Object, e As RoutedEventArgs)
+        Dim PBFFileDialog As New OpenFileDialog With {
+            .Filter = "pbf Files (.pbf)|*.pbf|All Files (*.*)|*.*",
+            .FilterIndex = 1
+        }
+        If PBFFileDialog.ShowDialog() = Forms.DialogResult.OK Then
+            txb_PathToPBF.Text = PBFFileDialog.FileName
+        End If
+    End Sub
+
 #End Region
 
 #Region "Save/Cancel"
@@ -120,6 +130,11 @@ Public Class SettingsWindow
                 StartupWindow.MySelection = New Selection
             End If
             StartupWindow.MySettings = GUI_To_Settings()
+            Try
+                CustomXmlSerialiser.SaveXML(StartupWindow.MySettings.PathToScriptsFolder & "/settings.xml", StartupWindow.MySettings)
+            Catch ex As Exception
+                MsgBox(ex.Message)
+            End Try
             Close()
         Catch ex As Exception
             MsgBox(ex.Message)
@@ -140,6 +155,7 @@ Public Class SettingsWindow
         txb_PathToWorldPainterFile.Text = Settings.PathToWorldPainterFolder
         txb_PathToQGIS.Text = Settings.PathToQGIS
         txb_PathToMagick.Text = Settings.PathToMagick
+        txb_PathToPBF.Text = Settings.PathToPBF
 
         If Settings.BlocksPerTile = "512" Or Settings.BlocksPerTile = "1024" Or Settings.BlocksPerTile = "2048" Or Settings.BlocksPerTile = "3072" Or Settings.BlocksPerTile = "4096" Or Settings.BlocksPerTile = "10240" Then
             cbb_BlocksPerTile.SelectedValue = Settings.BlocksPerTile
@@ -161,7 +177,7 @@ Public Class SettingsWindow
             cbb_TilesperMap.Text = Settings.TilesPerMap
         End If
 
-        If Settings.MapVersion = "1.12" Or Settings.MapVersion = "1.12 with Cubic Chunks" Or Settings.MapVersion = "1.14+" Then
+        If Settings.MapVersion = "1.12" Or Settings.MapVersion = "1.12 with Cubic Chunks" Or Settings.MapVersion = "1.16+" Then
             cbb_MapVersion.SelectedValue = Settings.MapVersion
             cbb_MapVersion.Text = Settings.MapVersion
         End If
@@ -257,6 +273,9 @@ Public Class SettingsWindow
         If File.Exists(txb_PathToMagick.Text) Then
             LocalSettings.PathToMagick = txb_PathToMagick.Text
         End If
+        If File.Exists(txb_PathToPBF.Text) Then
+            LocalSettings.PathToPBF = txb_PathToPBF.Text
+        End If
         If cbb_BlocksPerTile.Text = "512" Or cbb_BlocksPerTile.Text = "1024" Or cbb_BlocksPerTile.Text = "2048" Or cbb_BlocksPerTile.Text = "3072" Or cbb_BlocksPerTile.Text = "4096" Or cbb_BlocksPerTile.Text = "10240" Then
             LocalSettings.BlocksPerTile = cbb_BlocksPerTile.Text
         End If
@@ -269,7 +288,7 @@ Public Class SettingsWindow
         If cbb_TerrainMapping.Text = "Default" Or cbb_TerrainMapping.Text = "Custom" Then
             LocalSettings.Terrain = cbb_TerrainMapping.Text
         End If
-        If cbb_MapVersion.Text = "1.12" Or cbb_MapVersion.Text = "1.12 with Cubic Chunks" Or cbb_MapVersion.Text = "1.14+" Then
+        If cbb_MapVersion.Text = "1.12" Or cbb_MapVersion.Text = "1.12 with Cubic Chunks" Or cbb_MapVersion.Text = "1.16+" Then
             LocalSettings.MapVersion = cbb_MapVersion.Text
         End If
 
