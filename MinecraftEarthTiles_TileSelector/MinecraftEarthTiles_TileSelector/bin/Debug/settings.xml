@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Settings>
+  <PathToScriptsFolder>E:\osm</PathToScriptsFolder>
+  <PathToWorldPainterFolder>E:\osm\WorldPainter\wpscript.exe</PathToWorldPainterFolder>
+  <PathToQGIS>C:\Program Files\QGIS 3.14</PathToQGIS>
+  <PathToMagick>C:\Program Files\ImageMagick-7.0.10-Q16-HDRI\magick.exe</PathToMagick>
+  <PathToPBF>C:\Users\brenne05\Desktop\us-northeast-latest.osm.pbf</PathToPBF>
+  <BlocksPerTile>1024</BlocksPerTile>
+  <TilesPerMap>1</TilesPerMap>
+  <VerticalScale>25</VerticalScale>
+  <Terrain>Standard</Terrain>
+  <Heightmap_Error_Correction>true</Heightmap_Error_Correction>
+  <borders>2020</borders>
+  <geofabrik>true</geofabrik>
+  <geofabrikalreadygenerated>true</geofabrikalreadygenerated>
+  <bathymetry>true</bathymetry>
+  <highways>true</highways>
+  <streets>false</streets>
+  <small_streets>false</small_streets>
+  <buildings>false</buildings>
+  <farms>true</farms>
+  <meadows>true</meadows>
+  <quarrys>true</quarrys>
+  <rivers>true</rivers>
+  <streams>false</streams>
+  <MapVersion>1.12</MapVersion>
+  <Proxy>webproxy.bs.ptb.de:8080</Proxy>
+  <KeepTemporaryFiles>false</KeepTemporaryFiles>
+  <NumberOfCores>2</NumberOfCores>
+</Settings>

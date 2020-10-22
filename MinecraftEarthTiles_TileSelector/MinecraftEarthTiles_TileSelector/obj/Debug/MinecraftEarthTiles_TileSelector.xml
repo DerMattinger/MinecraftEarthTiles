@@ -84,6 +84,16 @@ folder = path + &apos;image_exports/&apos;
 if not os.path.exists(folde [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
 </summary>
 </member>
+<member name="T:MinecraftEarthTiles_TileSelector.GenerationWindow">
+<summary>
+GenerationWindow
+</summary>
+</member>
+<member name="M:MinecraftEarthTiles_TileSelector.GenerationWindow.InitializeComponent">
+<summary>
+InitializeComponent
+</summary>
+</member>
 <member name="T:MinecraftEarthTiles_TileSelector.SelectionWindow">
 <summary>
 SelectionWindow
@@ -122,6 +132,16 @@ lbl_Setting_Status Name Field
 <member name="F:MinecraftEarthTiles_TileSelector.StartupWindow._lbl_Selection_Numbers">
 <summary>
 lbl_Selection_Numbers Name Field
+</summary>
+</member>
+<member name="F:MinecraftEarthTiles_TileSelector.StartupWindow._lbl_World_Size_Label">
+<summary>
+lbl_World_Size_Label Name Field
+</summary>
+</member>
+<member name="F:MinecraftEarthTiles_TileSelector.StartupWindow._lbl_World_Size_Content">
+<summary>
+lbl_World_Size_Content Name Field
 </summary>
 </member>
 <member name="M:MinecraftEarthTiles_TileSelector.StartupWindow.InitializeComponent">

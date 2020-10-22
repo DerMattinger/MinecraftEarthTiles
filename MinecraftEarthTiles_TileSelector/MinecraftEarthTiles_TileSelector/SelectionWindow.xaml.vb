@@ -227,7 +227,7 @@ Public Class SelectionWindow
 
     Private Sub Help_Click(sender As Object, e As RoutedEventArgs)
         'Help.ShowHelp(Nothing, "Help/Settings.chm")
-        Process.Start("https://earthtiles.motfe.net/2020/08/04/selection/")
+        Process.Start("https://earthtiles.motfe.net/")
     End Sub
 
 #End Region
@@ -421,6 +421,14 @@ Public Class SelectionWindow
                 MyURI = New Uri("pack://application:,,,/MyResources/terrain.jpg")
             Case "Borders"
                 MyURI = New Uri("pack://application:,,,/MyResources/borders.png")
+            Case "Scale 1:33"
+                MyURI = New Uri("pack://application:,,,/MyResources/scale33.png")
+            Case "Scale 1:25"
+                MyURI = New Uri("pack://application:,,,/MyResources/scale25.png")
+            Case "Scale 1:10"
+                MyURI = New Uri("pack://application:,,,/MyResources/scale10.png")
+            Case "Scale 1:5"
+                MyURI = New Uri("pack://application:,,,/MyResources/scale5.png")
             Case Else
                 MyURI = New Uri("pack://application:,,,/MyResources/terrain.jpg")
         End Select
@@ -432,11 +440,11 @@ Public Class SelectionWindow
         'From T In Me.Tiles.Children.OfType(Of CheckBox)()
         'Where T.IsChecked Select T.Name
         ').ToList
-        'If TilesList.Count > 10 Then
+        'If TilesList.Count > 25 Then
         'btn_Save_Selection.IsEnabled = False
         'Dim MyToolTip As ToolTip = New ToolTip
         'MyToolTip.Placement = Primitives.PlacementMode.Mouse
-        'MyToolTip.Content = "You can't create more then 10 Tiles in the demo version."
+        'MyToolTip.Content = "You can't create more then 25 Tiles in the demo version."
         'grd_Buttons.ToolTip = MyToolTip
         'Else
         'btn_Save_Selection.IsEnabled = True

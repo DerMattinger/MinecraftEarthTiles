@@ -103,6 +103,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="CustomXmlSerialiser.vb" />
+    <Compile Include="Generation.vb" />
+    <Compile Include="GenerationWindow.xaml.vb">
+      <DependentUpon>GenerationWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Selection.vb" />
     <Compile Include="SelectionWindow.xaml.vb">
       <DependentUpon>SelectionWindow.xaml</DependentUpon>
@@ -118,6 +122,10 @@
       <DependentUpon>Application.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="GenerationWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="SelectionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -210,6 +218,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="MyResources\borders.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="MyResources\scale10.png" />
+    <Resource Include="MyResources\scale25.png" />
+    <Resource Include="MyResources\scale33.png" />
+    <Resource Include="MyResources\scale5.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

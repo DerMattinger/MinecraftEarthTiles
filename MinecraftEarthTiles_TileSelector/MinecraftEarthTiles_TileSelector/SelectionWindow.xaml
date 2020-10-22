@@ -126,9 +126,13 @@
                 <Label x:Name="lbl_ZoomSlider" Content="Zoom" HorizontalAlignment="Left" Margin="10,7,0,0" RenderTransformOrigin="0.78,0.615" Height="26" VerticalAlignment="Top"/>
                 <Slider x:Name="ZoomSlider" Orientation="Horizontal" Minimum="0.5" Maximum="10.0" LargeChange="0.5" SmallChange="0.25" Value="1.0" Margin="56,10,0,0" HorizontalAlignment="Left" Width="147" Height="20" VerticalAlignment="Top" />
                 
-                <ComboBox x:Name="cbb_Background_Image" HorizontalAlignment="Right" Margin="0,0,477,10" VerticalAlignment="Bottom" Width="79" Height="20" DropDownClosed="Change_Background" RenderTransformOrigin="0.542,0.5">
+                <ComboBox x:Name="cbb_Background_Image" HorizontalAlignment="Right" Margin="0,0,477,10" VerticalAlignment="Bottom" Width="88" Height="20" DropDownClosed="Change_Background" RenderTransformOrigin="0.542,0.5">
                     <ComboBoxItem IsSelected="True">Terrain</ComboBoxItem>
                     <ComboBoxItem>Borders</ComboBoxItem>
+                    <ComboBoxItem>Scale 1:33</ComboBoxItem>
+                    <ComboBoxItem>Scale 1:25</ComboBoxItem>
+                    <ComboBoxItem>Scale 1:10</ComboBoxItem>
+                    <ComboBoxItem>Scale 1:5</ComboBoxItem>
                 </ComboBox>
                 
                 <Button x:Name="btn_Clear_Selection" Content="Clear Selection" Margin="0,0,367,10" Click="Reset_Selection_Click" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="105"/>

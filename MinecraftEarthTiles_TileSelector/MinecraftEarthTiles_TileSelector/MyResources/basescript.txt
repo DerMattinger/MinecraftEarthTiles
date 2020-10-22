@@ -43,9 +43,7 @@ for alllayer in alllayers:
     
 layers = []
 for layer in QgsProject.instance().mapLayers().values():
-    if layer.name().startswith("heightmap_background"):
-        layers.append(layer)
-    elif layer.name().startswith("gebco_08_rev_elev_"):
+    if layer.name().startswith("heightmap"):
         layers.append(layer)
 
 for layer in layers:
@@ -98,7 +96,7 @@ layers = []
 for layer in QgsProject.instance().mapLayers().values():
     if layer.name().startswith("land_polygons"):
         layers.append(layer)
-    elif layer.name().startswith("GEBCO_2019"):
+    elif layer.name().startswith("bathymetry"):
         layers.append(layer)
     elif layer.name().startswith("background_bathymetry"):
         layers.append(layer)
@@ -258,11 +256,21 @@ for alllayer in alllayers:
     node = root.findLayer(alllayer.id())
     node.setItemVisibilityChecked(Qt.Unchecked)
     
-#save all layers starting with "river" into a list
 layers = []
-for layer in QgsProject.instance().mapLayers().values():
-    if layer.name().startswith("river"):
-        layers.append(layer)
+if rivers == "small":
+    for layer in QgsProject.instance().mapLayers().values():
+        if layer.name().startswith("rivers_small"):
+            layers.append(layer)
+
+if rivers == "medium":
+    for layer in QgsProject.instance().mapLayers().values():
+        if layer.name().startswith("rivers_medium"):
+            layers.append(layer)
+
+if rivers == "large":
+    for layer in QgsProject.instance().mapLayers().values():
+        if layer.name().startswith("rivers_large"):
+            layers.append(layer)
         
 for layer in layers:
     node = root.findLayer(layer.id())
@@ -412,7 +420,7 @@ for alllayer in alllayers:
     node.setItemVisibilityChecked(Qt.Unchecked)
 
 #save all layers starting with "terrain" into a list
-if TilesPerMap > 29:
+if ( TilesPerMap / scale ) > 0.09:
 	layers = []
 	for layer in QgsProject.instance().mapLayers().values():
 		if layer.name().startswith("backupterrain"):
@@ -932,9 +940,11 @@ for alllayer in alllayers:
     node.setItemVisibilityChecked(Qt.Unchecked)
     
 layers = []
-for layer in QgsProject.instance().mapLayers().values():
-    if layer.name().startswith("cntry" + str(borderyear)):
-        layers.append(layer)
+
+if borders == True:
+    for layer in QgsProject.instance().mapLayers().values():
+        if layer.name().startswith("cntry" + borderyear):
+            layers.append(layer)
         
 for layer in layers:
     node = root.findLayer(layer.id())
@@ -1118,6 +1128,246 @@ settings.flags = context.flags()
 
 #create image
 ret = exporter.exportToImage(path + 'image_exports/' + tile + '/' + tile + '_ocean_temp.png', settings)
+assert ret==0
+    
+#at last, disable all layers
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+    
+####################################################################################
+
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+    
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+    
+layers = []
+for layer in QgsProject.instance().mapLayers().values():
+    if layer.name().startswith("longitude"):
+        layers.append(layer)
+        
+for layer in layers:
+    node = root.findLayer(layer.id())
+    node.setItemVisibilityChecked(Qt.Checked)
+    
+project = QgsProject().instance()
+layout = QgsPrintLayout(project)
+layout.initializeDefaults()
+    
+#select all pages and change the first one to the right dimension
+pages = layout.pageCollection()
+pages.page(0).setPageSize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+    
+#create a map inside the layout
+map = QgsLayoutItemMap(layout)
+map.setRect(0, 0, scale, scale)
+map.setExtent(QgsRectangle(xMin, yMin, xMax, yMax))
+map.attemptMove(QgsLayoutPoint(0,0,QgsUnitTypes.LayoutPixels))
+map.attemptResize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+layout.addLayoutItem(map)
+    
+#create exporter with settings
+exporter = QgsLayoutExporter(layout)
+settings = QgsLayoutExporter.ImageExportSettings()
+settings.imageSize = (QSize(scale,scale))
+    
+#disable Antialiasing
+context = QgsLayoutRenderContext(layout)
+context.setFlag(context.FlagAntialiasing, False)
+settings.flags = context.flags()
+
+#create image
+ret = exporter.exportToImage(path + 'image_exports/' + tile + '/' + tile + '_longitude.png', settings)
+assert ret==0
+    
+#at last, disable all layers
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+
+####################################################################################
+
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+    
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+    
+layers = []
+for layer in QgsProject.instance().mapLayers().values():
+    if layer.name().startswith("latitude"):
+        layers.append(layer)
+        
+for layer in layers:
+    node = root.findLayer(layer.id())
+    node.setItemVisibilityChecked(Qt.Checked)
+    
+project = QgsProject().instance()
+layout = QgsPrintLayout(project)
+layout.initializeDefaults()
+    
+#select all pages and change the first one to the right dimension
+pages = layout.pageCollection()
+pages.page(0).setPageSize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+    
+#create a map inside the layout
+map = QgsLayoutItemMap(layout)
+map.setRect(0, 0, scale, scale)
+map.setExtent(QgsRectangle(xMin, yMin, xMax, yMax))
+map.attemptMove(QgsLayoutPoint(0,0,QgsUnitTypes.LayoutPixels))
+map.attemptResize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+layout.addLayoutItem(map)
+    
+#create exporter with settings
+exporter = QgsLayoutExporter(layout)
+settings = QgsLayoutExporter.ImageExportSettings()
+settings.imageSize = (QSize(scale,scale))
+    
+#disable Antialiasing
+context = QgsLayoutRenderContext(layout)
+context.setFlag(context.FlagAntialiasing, False)
+settings.flags = context.flags()
+
+#create image
+ret = exporter.exportToImage(path + 'image_exports/' + tile + '/' + tile + '_latitude.png', settings)
+assert ret==0
+    
+#at last, disable all layers
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+
+####################################################################################
+
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+    
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+    
+layers = []
+for layer in QgsProject.instance().mapLayers().values():
+    if layer.name().startswith("aerodrome"):
+        layers.append(layer)
+        
+for layer in layers:
+    node = root.findLayer(layer.id())
+    node.setItemVisibilityChecked(Qt.Checked)
+    
+project = QgsProject().instance()
+layout = QgsPrintLayout(project)
+layout.initializeDefaults()
+    
+#select all pages and change the first one to the right dimension
+pages = layout.pageCollection()
+pages.page(0).setPageSize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+    
+#create a map inside the layout
+map = QgsLayoutItemMap(layout)
+map.setRect(0, 0, scale, scale)
+map.setExtent(QgsRectangle(xMin, yMin, xMax, yMax))
+map.attemptMove(QgsLayoutPoint(0,0,QgsUnitTypes.LayoutPixels))
+map.attemptResize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+layout.addLayoutItem(map)
+    
+#create exporter with settings
+exporter = QgsLayoutExporter(layout)
+settings = QgsLayoutExporter.ImageExportSettings()
+settings.imageSize = (QSize(scale,scale))
+    
+#disable Antialiasing
+context = QgsLayoutRenderContext(layout)
+context.setFlag(context.FlagAntialiasing, False)
+settings.flags = context.flags()
+
+#create image
+ret = exporter.exportToImage(path + 'image_exports/' + tile + '/' + tile + '_aerodrome.png', settings)
+assert ret==0
+    
+#at last, disable all layers
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+   
+####################################################################################
+
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+    
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+    
+layers = []
+for layer in QgsProject.instance().mapLayers().values():
+    if layer.name().startswith("easter_egg"):
+        layers.append(layer)
+        
+for layer in layers:
+    node = root.findLayer(layer.id())
+    node.setItemVisibilityChecked(Qt.Checked)
+    
+project = QgsProject().instance()
+layout = QgsPrintLayout(project)
+layout.initializeDefaults()
+    
+#select all pages and change the first one to the right dimension
+pages = layout.pageCollection()
+pages.page(0).setPageSize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+    
+#create a map inside the layout
+map = QgsLayoutItemMap(layout)
+map.setRect(0, 0, scale, scale)
+map.setExtent(QgsRectangle(xMin, yMin, xMax, yMax))
+map.attemptMove(QgsLayoutPoint(0,0,QgsUnitTypes.LayoutPixels))
+map.attemptResize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+layout.addLayoutItem(map)
+    
+#create exporter with settings
+exporter = QgsLayoutExporter(layout)
+settings = QgsLayoutExporter.ImageExportSettings()
+settings.imageSize = (QSize(scale,scale))
+    
+#disable Antialiasing
+context = QgsLayoutRenderContext(layout)
+context.setFlag(context.FlagAntialiasing, False)
+settings.flags = context.flags()
+
+#create image
+ret = exporter.exportToImage(path + 'image_exports/' + tile + '/' + tile + '_easter_eggs.png', settings)
 assert ret==0
     
 #at last, disable all layers

@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports System.Text.RegularExpressions
 Imports System.Windows.Forms
 
 Public Class SettingsWindow
@@ -117,6 +118,7 @@ Public Class SettingsWindow
         }
         If PBFFileDialog.ShowDialog() = Forms.DialogResult.OK Then
             txb_PathToPBF.Text = PBFFileDialog.FileName
+            chb_geofabrik.IsChecked = True
         End If
     End Sub
 
@@ -157,7 +159,13 @@ Public Class SettingsWindow
         txb_PathToMagick.Text = Settings.PathToMagick
         txb_PathToPBF.Text = Settings.PathToPBF
 
-        If Settings.BlocksPerTile = "512" Or Settings.BlocksPerTile = "1024" Or Settings.BlocksPerTile = "2048" Or Settings.BlocksPerTile = "3072" Or Settings.BlocksPerTile = "4096" Or Settings.BlocksPerTile = "10240" Then
+        If Not Settings.WorldName = "" Then
+            txb_worldName.Text = Settings.WorldName
+        Else
+            txb_worldName.Text = "world"
+        End If
+
+        If CType(Settings.BlocksPerTile, Int16) Mod 512 = 0.0 Then
             cbb_BlocksPerTile.SelectedValue = Settings.BlocksPerTile
             cbb_BlocksPerTile.Text = Settings.BlocksPerTile
         End If
@@ -172,7 +180,7 @@ Public Class SettingsWindow
             cbb_TerrainMapping.Text = Settings.Terrain
         End If
 
-        If Settings.TilesPerMap = "1" Or Settings.TilesPerMap = "2" Or Settings.TilesPerMap = "3" Or Settings.TilesPerMap = "5" Or Settings.TilesPerMap = "10" Or Settings.TilesPerMap = "15" Or Settings.TilesPerMap = "30" Or Settings.TilesPerMap = "45" Or Settings.TilesPerMap = "90" Then
+        If 90 Mod CType(Settings.TilesPerMap, Int16) = 0.0 Then
             cbb_TilesperMap.SelectedValue = Settings.TilesPerMap
             cbb_TilesperMap.Text = Settings.TilesPerMap
         End If
@@ -182,76 +190,58 @@ Public Class SettingsWindow
             cbb_MapVersion.Text = Settings.MapVersion
         End If
 
-        If Settings.borders = "None" Or Settings.borders = "2000bc" Or Settings.borders = "1000bc" Or Settings.borders = "500bc" Or Settings.borders = "323bc" Or Settings.borders = "200bc" Or Settings.borders = "1bc" Or Settings.borders = "400" Or Settings.borders = "600" Or Settings.borders = "800" Or Settings.borders = "1000" Or Settings.borders = "1279" Or Settings.borders = "1482" Or Settings.borders = "1530" Or Settings.borders = "1650" Or Settings.borders = "1715" Or Settings.borders = "1783" Or Settings.borders = "1815" Or Settings.borders = "1880" Or Settings.borders = "1914" Or Settings.borders = "1920" Or Settings.borders = "1938" Or Settings.borders = "1945" Or Settings.borders = "1994" Or Settings.borders = "2020" Then
+        chb_Borders.IsChecked = Settings.bordersBoolean
+
+        If Settings.borders = "2000bc" Or Settings.borders = "1000bc" Or Settings.borders = "500bc" Or Settings.borders = "323bc" Or Settings.borders = "200bc" Or Settings.borders = "1bc" Or Settings.borders = "400" Or Settings.borders = "600" Or Settings.borders = "800" Or Settings.borders = "1000" Or Settings.borders = "1279" Or Settings.borders = "1482" Or Settings.borders = "1530" Or Settings.borders = "1650" Or Settings.borders = "1715" Or Settings.borders = "1783" Or Settings.borders = "1815" Or Settings.borders = "1880" Or Settings.borders = "1914" Or Settings.borders = "1920" Or Settings.borders = "1938" Or Settings.borders = "1945" Or Settings.borders = "1994" Or Settings.borders = "2020" Then
             cbb_Borders.SelectedValue = Settings.borders
             cbb_Borders.Text = Settings.borders
         End If
 
-        If Settings.Heightmap_Error_Correction = True Then
-            chb_Heightmap_Error_Correction.IsChecked = True
-        ElseIf Settings.Heightmap_Error_Correction = False Then
-            chb_Heightmap_Error_Correction.IsChecked = False
+        chb_Heightmap_Error_Correction.IsChecked = Settings.Heightmap_Error_Correction
+
+        chb_geofabrik.IsChecked = Settings.geofabrik
+
+        chb_geofabrikalreadygenerated.IsChecked = Settings.geofabrikalreadygenerated
+
+        chb_bathymetry.IsChecked = Settings.bathymetry
+
+        chb_highways.IsChecked = Settings.highways
+
+        chb_streets.IsChecked = Settings.streets
+
+        chb_small_streets.IsChecked = Settings.small_streets
+
+        chb_buildings.IsChecked = Settings.buildings
+
+        chb_farms.IsChecked = Settings.farms
+
+        chb_meadows.IsChecked = Settings.meadows
+
+        chb_quarrys.IsChecked = Settings.quarrys
+
+        chb_aerodrome.IsChecked = Settings.aerodrome
+
+        chb_mob_spawner.IsChecked = Settings.mobSpawner
+
+        chb_animal_spawner.IsChecked = Settings.animalSpawner
+
+        chb_rivers.IsChecked = Settings.riversBoolean
+
+        If Settings.rivers = "small" Or Settings.rivers = "medium" Or Settings.rivers = "large" Then
+            cbb_Rivers.SelectedValue = Settings.rivers
+            cbb_Rivers.Text = Settings.rivers
         End If
 
-        If Settings.geofabrik = True Then
-            chb_geofabrik.IsChecked = True
-        ElseIf Settings.geofabrik = False Then
-            chb_geofabrik.IsChecked = False
+        chb_streams.IsChecked = Settings.streams
+
+        If CType(Settings.NumberOfCores, Int32) <= 16 Then
+            cbb_Number_Of_Cores.SelectedValue = Settings.NumberOfCores
+            cbb_Number_Of_Cores.Text = Settings.NumberOfCores
         End If
 
-        If Settings.highways = True Then
-            chb_highways.IsChecked = True
-        ElseIf Settings.highways = False Then
-            chb_highways.IsChecked = False
-        End If
+        chb_Keep_Temporary_Files.IsChecked = Settings.KeepTemporaryFiles
 
-        If Settings.streets = True Then
-            chb_streets.IsChecked = True
-        ElseIf Settings.streets = False Then
-            chb_streets.IsChecked = False
-        End If
-
-        If Settings.small_streets = True Then
-            chb_small_streets.IsChecked = True
-        ElseIf Settings.streets = False Then
-            chb_small_streets.IsChecked = False
-        End If
-
-        If Settings.buildings = True Then
-            chb_buildings.IsChecked = True
-        ElseIf Settings.buildings = False Then
-            chb_buildings.IsChecked = False
-        End If
-
-        If Settings.farms = True Then
-            chb_farms.IsChecked = True
-        ElseIf Settings.farms = False Then
-            chb_farms.IsChecked = False
-        End If
-
-        If Settings.meadows = True Then
-            chb_meadows.IsChecked = True
-        ElseIf Settings.meadows = False Then
-            chb_meadows.IsChecked = False
-        End If
-
-        If Settings.quarrys = True Then
-            chb_quarrys.IsChecked = True
-        ElseIf Settings.quarrys = False Then
-            chb_quarrys.IsChecked = False
-        End If
-
-        If Settings.rivers = True Then
-            chb_rivers.IsChecked = True
-        ElseIf Settings.rivers = False Then
-            chb_rivers.IsChecked = False
-        End If
-
-        If Settings.streams = True Then
-            chb_streams.IsChecked = True
-        ElseIf Settings.streams = False Then
-            chb_streams.IsChecked = False
-        End If
+        chb_cmd_Visibility.IsChecked = Settings.cmdVisibility
 
         txb_Proxy.Text = Settings.Proxy
 
@@ -276,13 +266,17 @@ Public Class SettingsWindow
         If File.Exists(txb_PathToPBF.Text) Then
             LocalSettings.PathToPBF = txb_PathToPBF.Text
         End If
-        If cbb_BlocksPerTile.Text = "512" Or cbb_BlocksPerTile.Text = "1024" Or cbb_BlocksPerTile.Text = "2048" Or cbb_BlocksPerTile.Text = "3072" Or cbb_BlocksPerTile.Text = "4096" Or cbb_BlocksPerTile.Text = "10240" Then
+        If Not txb_worldName.Text = "" Then
+            LocalSettings.WorldName = RemoveIllegalFileNameChars(txb_worldName.Text)
+            txb_worldName.Text = RemoveIllegalFileNameChars(txb_worldName.Text)
+        End If
+        If CType(cbb_BlocksPerTile.Text, Int16) Mod 512 = 0.0 Then
             LocalSettings.BlocksPerTile = cbb_BlocksPerTile.Text
         End If
         If cbb_VerticalScale.Text = "200" Or cbb_VerticalScale.Text = "100" Or cbb_VerticalScale.Text = "50" Or cbb_VerticalScale.Text = "33" Or cbb_VerticalScale.Text = "25" Or cbb_VerticalScale.Text = "10" Or cbb_VerticalScale.Text = "5" Then
             LocalSettings.VerticalScale = cbb_VerticalScale.Text
         End If
-        If cbb_TilesperMap.Text = "1" Or cbb_TilesperMap.Text = "2" Or cbb_TilesperMap.Text = "3" Or cbb_TilesperMap.Text = "5" Or cbb_TilesperMap.Text = "10" Or cbb_TilesperMap.Text = "15" Or cbb_TilesperMap.Text = "30" Or cbb_TilesperMap.Text = "45" Or cbb_TilesperMap.Text = "90" Then
+        If 90 Mod CType(cbb_TilesperMap.Text, Int16) = 0.0 Then
             LocalSettings.TilesPerMap = cbb_TilesperMap.Text
         End If
         If cbb_TerrainMapping.Text = "Default" Or cbb_TerrainMapping.Text = "Custom" Then
@@ -292,13 +286,17 @@ Public Class SettingsWindow
             LocalSettings.MapVersion = cbb_MapVersion.Text
         End If
 
-        If cbb_Borders.Text = "None" Or cbb_Borders.Text = "2000bc" Or cbb_Borders.Text = "1000bc" Or cbb_Borders.Text = "500bc" Or cbb_Borders.Text = "323bc" Or cbb_Borders.Text = "200bc" Or cbb_Borders.Text = "1bc" Or cbb_Borders.Text = "400" Or cbb_Borders.Text = "600" Or cbb_Borders.Text = "800" Or cbb_Borders.Text = "1000" Or cbb_Borders.Text = "1279" Or cbb_Borders.Text = "1482" Or cbb_Borders.Text = "1530" Or cbb_Borders.Text = "1650" Or cbb_Borders.Text = "1715" Or cbb_Borders.Text = "1783" Or cbb_Borders.Text = "1815" Or cbb_Borders.Text = "1880" Or cbb_Borders.Text = "1914" Or cbb_Borders.Text = "1920" Or cbb_Borders.Text = "1938" Or cbb_Borders.Text = "1945" Or cbb_Borders.Text = "1994" Or cbb_Borders.Text = "2020" Then
+        LocalSettings.bordersBoolean = CBool(chb_Borders.IsChecked)
+
+        If cbb_Borders.Text = "2000bc" Or cbb_Borders.Text = "1000bc" Or cbb_Borders.Text = "500bc" Or cbb_Borders.Text = "323bc" Or cbb_Borders.Text = "200bc" Or cbb_Borders.Text = "1bc" Or cbb_Borders.Text = "400" Or cbb_Borders.Text = "600" Or cbb_Borders.Text = "800" Or cbb_Borders.Text = "1000" Or cbb_Borders.Text = "1279" Or cbb_Borders.Text = "1482" Or cbb_Borders.Text = "1530" Or cbb_Borders.Text = "1650" Or cbb_Borders.Text = "1715" Or cbb_Borders.Text = "1783" Or cbb_Borders.Text = "1815" Or cbb_Borders.Text = "1880" Or cbb_Borders.Text = "1914" Or cbb_Borders.Text = "1920" Or cbb_Borders.Text = "1938" Or cbb_Borders.Text = "1945" Or cbb_Borders.Text = "1994" Or cbb_Borders.Text = "2020" Then
             LocalSettings.borders = cbb_Borders.Text
         End If
 
         LocalSettings.Heightmap_Error_Correction = CBool(chb_Heightmap_Error_Correction.IsChecked)
 
         LocalSettings.geofabrik = CBool(chb_geofabrik.IsChecked)
+        LocalSettings.geofabrikalreadygenerated = CBool(chb_geofabrikalreadygenerated.IsChecked)
+        LocalSettings.bathymetry = CBool(chb_bathymetry.IsChecked)
         LocalSettings.highways = CBool(chb_highways.IsChecked)
         LocalSettings.streets = CBool(chb_streets.IsChecked)
         LocalSettings.buildings = CBool(chb_buildings.IsChecked)
@@ -306,8 +304,22 @@ Public Class SettingsWindow
         LocalSettings.farms = CBool(chb_farms.IsChecked)
         LocalSettings.meadows = CBool(chb_meadows.IsChecked)
         LocalSettings.quarrys = CBool(chb_quarrys.IsChecked)
-        LocalSettings.rivers = CBool(chb_rivers.IsChecked)
+        LocalSettings.aerodrome = CBool(chb_aerodrome.IsChecked)
+        LocalSettings.mobSpawner = CBool(chb_mob_spawner.IsChecked)
+        LocalSettings.animalSpawner = CBool(chb_animal_spawner.IsChecked)
+        LocalSettings.riversBoolean = CBool(chb_rivers.IsChecked)
         LocalSettings.streams = CBool(chb_streams.IsChecked)
+
+        If cbb_Rivers.Text = "small" Or cbb_Rivers.Text = "medium" Or cbb_Rivers.Text = "large" Then
+            LocalSettings.rivers = cbb_Rivers.Text
+        End If
+
+        If CType(cbb_Number_Of_Cores.Text, Int32) <= 16 Then
+            LocalSettings.NumberOfCores = cbb_Number_Of_Cores.Text
+        End If
+
+        LocalSettings.KeepTemporaryFiles = CBool(chb_Keep_Temporary_Files.IsChecked)
+        LocalSettings.cmdVisibility = CBool(chb_cmd_Visibility.IsChecked)
 
         LocalSettings.Proxy = txb_Proxy.Text
 
@@ -317,24 +329,13 @@ Public Class SettingsWindow
     Private Sub Calculate_Scale()
         If Not cbb_BlocksPerTile Is Nothing And Not cbb_TilesperMap Is Nothing Then
             If Not cbb_BlocksPerTile.Text = "" And Not cbb_TilesperMap.Text = "" Then
-                Dim ScaleCalc As Int16 = 0
-                Select Case cbb_BlocksPerTile.Text
-                    Case "512"
-                        ScaleCalc = 500
-                    Case "1024"
-                        ScaleCalc = 1000
-                    Case "2048"
-                        ScaleCalc = 2000
-                    Case "3072"
-                        ScaleCalc = 3000
-                    Case "4096"
-                        ScaleCalc = 4000
-                    Case "10240"
-                        ScaleCalc = 10000
-                End Select
-                lbl_Scale_Quantity.Content = "1:" & (Math.Round(100000 / (ScaleCalc / CType(cbb_TilesperMap.Text, Int16)))).ToString
+                Dim ScaleCalc As Double = (CType(cbb_BlocksPerTile.Text, Int16)) / 1.024
 
-                If Math.Round(100000 / (ScaleCalc / CType(cbb_TilesperMap.Text, Int16))) >= 200 Then
+                lbl_Scale_Quantity.Content = "1 : " & (Math.Round(40075000 / ((CType(cbb_BlocksPerTile.Text, Int16) * (360 / CType(cbb_TilesperMap.Text, Int16)))), 1)).ToString
+                lbl_Scale_rounded_Quantity.Content = "1 : " & (Math.Round(36768000 / ((CType(cbb_BlocksPerTile.Text, Int16) * (360 / CType(cbb_TilesperMap.Text, Int16)))), 1)).ToString
+
+
+                If 36768000 / ((CType(cbb_BlocksPerTile.Text, Int16) * (360 / CType(cbb_TilesperMap.Text, Int16)))) >= 100 Then
                     chb_small_streets.IsEnabled = False
                     chb_small_streets.IsChecked = False
                     chb_farms.IsEnabled = False
@@ -357,6 +358,12 @@ Public Class SettingsWindow
             End If
         End If
     End Sub
+
+    Public Shared Function RemoveIllegalFileNameChars(input As String, Optional replacement As String = "_") As String
+        Dim regexSearch = New String(Path.GetInvalidFileNameChars()) & New String(Path.GetInvalidPathChars())
+        Dim r = New Regex(String.Format("[{0}]", Regex.Escape(regexSearch)))
+        Return r.Replace(input, replacement)
+    End Function
 
 #End Region
 

@@ -5,7 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MinecraftEarthTiles_TileSelector"
         mc:Ignorable="d"
-        Title="Minecraft Tile Selector" Height="420" Width="255" MinWidth="250" Loaded="Window_Loaded">
+        Title="Minecraft Earth Tiles"
+        Height="210"
+        MinHeight="210"
+        Width="255"
+        MinWidth="255"
+        Loaded="Window_Loaded"
+        ResizeMode="CanMinimize">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File">
@@ -14,23 +20,16 @@
             <MenuItem Header="Help" Click="Help_Click"/>
         </Menu>
         <ScrollViewer>
-            <Grid MinHeight="359">
+            <Grid>
 
                 <Button x:Name="btn_Settings" Content="Settings" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="Btn_Settings_Click"/>
                 <Label x:FieldModifier="public" x:Name="lbl_Setting_Status" Content="Status: incomplete" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,7,0,0"/>
-                <Button x:Name="btn_Selection" Content="Selection" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="75" Click="Btn_Selection_Click"/>
+                <Button x:Name="btn_Selection" Content="Selection" HorizontalAlignment="Left" Margin="10,35,0,0" Width="75" Click="Btn_Selection_Click" Height="20" VerticalAlignment="Top"/>
                 <Label x:FieldModifier="public" x:Name="lbl_Selection_Numbers" Content="Tiles selected: 0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,32,0,0"/>
 
-
-                <Button x:Name="btn_osmbatExport" Content="Export '1-osmconvert.bat'" Margin="10,77,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Left" Width="205" Click="Btn_osmbatExport_Click" IsEnabled="False"/>
-                <Button x:Name="btn_QgisExport" Content="Export '2-qgis.bat'" Margin="10,104,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Left" Width="205" Click="Btn_QgisExport_Click" IsEnabled="False"/>
-                <Button x:Name="btn_tartool" Content="Export '3-tartool.bat'" Margin="10,131,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Left" Width="205" Click="Btn_tartool_Click" IsEnabled="False"/>
-                <Button x:Name="btn_gdalExport" Content="Export '4-gdal.bat'" Margin="10,158,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Left" Width="205" Click="Btn_gdalExport_Click" IsEnabled="False"/>
-                <Button x:Name="btn_WPScriptExport" Content="Export '6-wpscript.bat'" Margin="10,214,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Left" Width="205" Click="Btn_WPScriptExport_Click" IsEnabled="False"/>
-                <Button x:Name="btn_Magick_Export" Content="Export '5-magick.bat'" Margin="10,186,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Left" Width="205" Click="Btn_magick_Export_Click" IsEnabled="False"/>
-                <Button x:Name="btn_CombineExport" Content="Export '7-combine.bat'" Margin="10,241,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Left" Width="205" Click="Btn_CombineExport_Click" IsEnabled="False"/>
-                <Button x:Name="btn_CleanUpExport" Content="Export '8-cleanup.bat'" Margin="10,268,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="22" HorizontalAlignment="Left" Width="205" Click="Btn_CleanUpExport_Click" IsEnabled="False"/>
-                <Button x:Name="btn_AllExport" Content="Export All" Margin="10,295,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="54" HorizontalAlignment="Left" Width="205" Click="Btn_AllExport_Click" IsEnabled="False"/>
+                <Label x:FieldModifier="public" x:Name="lbl_World_Size_Label" Content="Estimated world size:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,60,0,0"/>
+                <Label x:FieldModifier="public" x:Name="lbl_World_Size_Content" Content="0 kb" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="131,60,0,0"/>
+                <Button x:Name="btn_AllExport" Content="Generation" Margin="10,91,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="45" HorizontalAlignment="Left" Width="205" Click="Btn_Generation_Click" IsEnabled="False"/>
 
             </Grid>
         </ScrollViewer>
