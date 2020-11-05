@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MinecraftEarthTiles_TileSelector"
         mc:Ignorable="d"
-        Title="Tile Settings" Width="560" Height="928.167" MinWidth="560" Loaded="Window_Loaded">
+        Title="Tile Settings" Width="560" Height="960" MinWidth="560" Loaded="Window_Loaded">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File">
@@ -26,7 +26,7 @@
             <ScrollViewer>
                 <Grid MinHeight="510">
 
-                    <GroupBox Header="Required tools" Height="190" Margin="0,0,0,0" VerticalAlignment="Top">
+                    <GroupBox Header="Path to tools and folders" Height="220" Margin="0,0,0,0" VerticalAlignment="Top">
                         <Grid>
 
                             <Label x:Name="lbl_PathToScriptsFolder" Content="Path to scripts folder" Margin="90,13,0,0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Width="119"/>
@@ -49,10 +49,14 @@
                             <TextBox x:Name="txb_PathToPBF" HorizontalAlignment="Left" Height="20" Margin="209,137,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="280" IsReadOnly="True" />
                             <Button x:Name="btn_PathToPBF" Content="..." Margin="489,137,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="24" Click="Btn_PathToPBF_Click"/>
 
+                            <Label x:Name="lbl_PathToExport" Content="Export folder" Margin="131,165,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                            <TextBox x:Name="txb_PathToExport" HorizontalAlignment="Left" Height="20" Margin="209,167,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="280" IsReadOnly="True" />
+                            <Button x:Name="btn_PathToExport" Content="..." Margin="489,167,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="24" Click="Btn_PathToExport_Click"/>
+
                         </Grid>
                     </GroupBox>
 
-                    <GroupBox Header="World settings" Height="180" Margin="0,190,0,0" VerticalAlignment="Top">
+                    <GroupBox Header="World settings" Height="180" Margin="0,220,0,0" VerticalAlignment="Top">
                         <Grid>
 
                             <Label x:Name="lbl_BlocksPerTile" Content="Blocks per Tile" HorizontalAlignment="Left" Margin="123,14,0,0" VerticalAlignment="Top"/>
@@ -129,7 +133,7 @@
                             <Label x:Name="lbl_MapVersion" Content="Map Format" HorizontalAlignment="Left" Margin="134,95,0,0" VerticalAlignment="Top"/>
                             <ComboBox x:Name="cbb_MapVersion" Margin="209,97,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="83">
                                 <ComboBoxItem IsSelected="True" Content="1.12"/>
-                                <ComboBoxItem Content="1.12 with Cubic Chunks"/>
+                                <ComboBoxItem Content="1.12 with Cubic Chunks"  IsEnabled="false"/>
                                 <ComboBoxItem Content="1.16+"/>
                             </ComboBox>
 
@@ -144,28 +148,24 @@
                         </Grid>
                     </GroupBox>
 
-                    <GroupBox Header="Osm settings" Height="240" Margin="0,370,0,0" VerticalAlignment="Top">
+                    <GroupBox Header="Map features" Height="240" Margin="0,400,0,0" VerticalAlignment="Top">
                         <Grid>
 
-                            <CheckBox x:Name="chb_geofabrik" Content="pbf from Geofabrik or planet.osm.pbf" HorizontalAlignment="Left" Margin="6,16,0,0" VerticalAlignment="Top" FlowDirection="RightToLeft" RenderTransformOrigin="0.486,2.514"  IsChecked="True" />
-                            <CheckBox x:Name="chb_geofabrikalreadygenerated" HorizontalAlignment="Left" Margin="224,16,0,0" VerticalAlignment="Top" FlowDirection="LeftToRight" RenderTransformOrigin="0.486,2.514"  IsChecked="false" >
-                                <CheckBox.ToolTip>
-                                    <TextBlock>Only check if you have already generated some Tiles and want to use the same *.pbf file again!</TextBlock>
-                                </CheckBox.ToolTip>
-                            </CheckBox>
-                            <CheckBox x:Name="chb_Heightmap_Error_Correction" Content="Heightmap Error Correction" HorizontalAlignment="Left" Margin="57,36,0,0" VerticalAlignment="Top" FlowDirection="RightToLeft"  IsChecked="True" />
-                            <CheckBox x:Name="chb_bathymetry" Content="Bathymetry" HorizontalAlignment="Left" Margin="144,56,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
+                            <CheckBox x:Name="chb_geofabrik" Content="pbf from Geofabrik or planet.osm.pbf" HorizontalAlignment="Left" Margin="10,16,0,0" VerticalAlignment="Top" FlowDirection="RightToLeft" RenderTransformOrigin="0.486,2.514"  IsChecked="True" />
+                            <CheckBox x:Name="chb_geofabrikalreadygenerated" Content="re-use an already filtered *.pbf file" HorizontalAlignment="Left" Margin="28,36,0,0" VerticalAlignment="Top" FlowDirection="RightToLeft" RenderTransformOrigin="0.486,2.514"  IsChecked="false" />
+                            <CheckBox x:Name="chb_Heightmap_Error_Correction" Content="Heightmap Error Correction" HorizontalAlignment="Left" Margin="61,56,0,0" VerticalAlignment="Top" FlowDirection="RightToLeft"  IsChecked="True" />
+                            <CheckBox x:Name="chb_bathymetry" Content="Bathymetry" HorizontalAlignment="Left" Margin="148,76,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
 
-                            <CheckBox x:Name="chb_rivers" Content="Rivers" HorizontalAlignment="Left" Margin="173,86,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
-                            <ComboBox x:Name="cbb_Rivers" Margin="229,82,0,0" HorizontalAlignment="Left" Width="83" Height="22" VerticalAlignment="Top">
+                            <CheckBox x:Name="chb_rivers" Content="Rivers" HorizontalAlignment="Left" Margin="177,104,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
+                            <ComboBox x:Name="cbb_Rivers" Margin="233,100,0,0" HorizontalAlignment="Left" Width="70" Height="22" VerticalAlignment="Top">
                                 <ComboBoxItem Content="small"/>
                                 <ComboBoxItem IsSelected="True" Content="medium"/>
                                 <ComboBoxItem Content="large"/>
                             </ComboBox>
-                            <CheckBox x:Name="chb_streams" Content="Streams" HorizontalAlignment="Left" Margin="162,106,0,0" VerticalAlignment="Top" IsChecked="false" FlowDirection="RightToLeft"/>
+                            <CheckBox x:Name="chb_streams" Content="Streams" HorizontalAlignment="Left" Margin="166,124,0,0" VerticalAlignment="Top" IsChecked="false" FlowDirection="RightToLeft"/>
 
-                            <CheckBox x:Name="chb_Borders" Content="Borders" HorizontalAlignment="Left" Margin="162,136,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
-                            <ComboBox x:Name="cbb_Borders" Margin="228,132,0,0" HorizontalAlignment="Left" Width="83" Height="22" VerticalAlignment="Top">
+                            <CheckBox x:Name="chb_Borders" Content="Borders" HorizontalAlignment="Left" Margin="166,154,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
+                            <ComboBox x:Name="cbb_Borders" Margin="232,150,0,0" HorizontalAlignment="Left" Width="71" Height="22" VerticalAlignment="Top">
                                 <ComboBoxItem IsSelected="True" Content="2020"/>
                                 <ComboBoxItem Content="1994"/>
                                 <ComboBoxItem Content="1945"/>
@@ -191,7 +191,9 @@
                                 <ComboBoxItem Content="1000bc"/>
                                 <ComboBoxItem Content="2000bc"/>
                             </ComboBox>
-                            <CheckBox x:Name="chb_buildings" Content="Urban" HorizontalAlignment="Left" Margin="171,156,0,0" VerticalAlignment="Top" IsChecked="False" FlowDirection="RightToLeft"/>
+                            <CheckBox x:Name="chb_buildings" Content="Urban" HorizontalAlignment="Left" Margin="175,174,0,0" VerticalAlignment="Top" IsChecked="False" FlowDirection="RightToLeft"/>
+                            <CheckBox x:Name="chb_ores" Content="Additional Ores" HorizontalAlignment="Left" Margin="125,194,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
+
 
                             <CheckBox x:Name="chb_highways" Content="Highways" HorizontalAlignment="Left" Margin="379,16,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
                             <CheckBox x:Name="chb_streets" Content="Streets" HorizontalAlignment="Left" Margin="394,36,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
@@ -200,7 +202,7 @@
                             <CheckBox x:Name="chb_farms" Content="Farms" HorizontalAlignment="Left" Margin="399,86,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
                             <CheckBox x:Name="chb_meadows" Content="Meadows" HorizontalAlignment="Left" Margin="379,106,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
                             <CheckBox x:Name="chb_quarrys" Content="Quarry" HorizontalAlignment="Left" Margin="394,126,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
-                            
+
                             <CheckBox x:Name="chb_aerodrome" Content="End-Portals" HorizontalAlignment="Left" Margin="370,156,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
                             <CheckBox x:Name="chb_mob_spawner" Content="Random Mob-Spawners" HorizontalAlignment="Left" Margin="302,176,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft" />
                             <CheckBox x:Name="chb_animal_spawner" Content="Random Animal-Spawners" HorizontalAlignment="Left" Margin="290,196,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft" />
@@ -208,7 +210,7 @@
                         </Grid>
                     </GroupBox>
 
-                    <GroupBox Header="Miscellaneous" Height="210" Margin="0,610,0,0" VerticalAlignment="Top">
+                    <GroupBox Header="Miscellaneous" Height="210" Margin="0,640,0,0" VerticalAlignment="Top">
                         <Grid>
 
                             <Label x:Name="lbl_TerrainMapping" Content="Terrain Mapping" HorizontalAlignment="Left" Margin="112,14,0,0" VerticalAlignment="Top"/>
@@ -242,12 +244,13 @@
 
                             <CheckBox x:Name="chb_Keep_Temporary_Files" Content="Keep temporary files" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="false" FlowDirection="RightToLeft" Margin="95,95,0,0"/>
                             <CheckBox x:Name="chb_cmd_Visibility" Content="Show cmd prompt during generation" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="False" FlowDirection="RightToLeft" Margin="7,115,0,0"/>
+                            <CheckBox x:Name="chb_continue" Content="Continue, even if a single Tile fails" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="False" FlowDirection="RightToLeft" Margin="26,135,0,0"/>
 
-                            <Label x:Name="lbl_Warning" Content="" HorizontalAlignment="Left" Margin="10,140,0,0" VerticalAlignment="Top" Width="503" />
+                            <Label x:Name="lbl_Warning" Content="" HorizontalAlignment="Left" Margin="10,160,0,0" VerticalAlignment="Top" Width="503" />
 
                         </Grid>
                     </GroupBox>
-                    
+
                 </Grid>
             </ScrollViewer>
             <Grid Grid.Row="2" Height="40" VerticalAlignment="Bottom" Background="LightGray">

@@ -1319,7 +1319,7 @@ root = QgsProject.instance().layerTreeRoot()
 for alllayer in alllayers:
     node = root.findLayer(alllayer.id())
     node.setItemVisibilityChecked(Qt.Unchecked)
-   
+
 ####################################################################################
 
 alllayers = []
@@ -1368,6 +1368,546 @@ settings.flags = context.flags()
 
 #create image
 ret = exporter.exportToImage(path + 'image_exports/' + tile + '/' + tile + '_easter_eggs.png', settings)
+assert ret==0
+    
+#at last, disable all layers
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+
+####################################################################################
+
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+    
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+    
+layers = []
+for layer in QgsProject.instance().mapLayers().values():
+    if layer.name().startswith("gold"):
+        layers.append(layer)
+        
+for layer in layers:
+    node = root.findLayer(layer.id())
+    node.setItemVisibilityChecked(Qt.Checked)
+    
+project = QgsProject().instance()
+layout = QgsPrintLayout(project)
+layout.initializeDefaults()
+    
+#select all pages and change the first one to the right dimension
+pages = layout.pageCollection()
+pages.page(0).setPageSize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+    
+#create a map inside the layout
+map = QgsLayoutItemMap(layout)
+map.setRect(0, 0, scale, scale)
+map.setExtent(QgsRectangle(xMin, yMin, xMax, yMax))
+map.attemptMove(QgsLayoutPoint(0,0,QgsUnitTypes.LayoutPixels))
+map.attemptResize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+layout.addLayoutItem(map)
+    
+#create exporter with settings
+exporter = QgsLayoutExporter(layout)
+settings = QgsLayoutExporter.ImageExportSettings()
+settings.imageSize = (QSize(scale,scale))
+    
+#disable Antialiasing
+context = QgsLayoutRenderContext(layout)
+context.setFlag(context.FlagAntialiasing, False)
+settings.flags = context.flags()
+
+#create image
+ret = exporter.exportToImage(path + 'image_exports/' + tile + '/' + tile + '_gold.png', settings)
+assert ret==0
+    
+#at last, disable all layers
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+
+####################################################################################
+
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+    
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+    
+layers = []
+for layer in QgsProject.instance().mapLayers().values():
+    if layer.name().startswith("diamond"):
+        layers.append(layer)
+        
+for layer in layers:
+    node = root.findLayer(layer.id())
+    node.setItemVisibilityChecked(Qt.Checked)
+    
+project = QgsProject().instance()
+layout = QgsPrintLayout(project)
+layout.initializeDefaults()
+    
+#select all pages and change the first one to the right dimension
+pages = layout.pageCollection()
+pages.page(0).setPageSize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+    
+#create a map inside the layout
+map = QgsLayoutItemMap(layout)
+map.setRect(0, 0, scale, scale)
+map.setExtent(QgsRectangle(xMin, yMin, xMax, yMax))
+map.attemptMove(QgsLayoutPoint(0,0,QgsUnitTypes.LayoutPixels))
+map.attemptResize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+layout.addLayoutItem(map)
+    
+#create exporter with settings
+exporter = QgsLayoutExporter(layout)
+settings = QgsLayoutExporter.ImageExportSettings()
+settings.imageSize = (QSize(scale,scale))
+    
+#disable Antialiasing
+context = QgsLayoutRenderContext(layout)
+context.setFlag(context.FlagAntialiasing, False)
+settings.flags = context.flags()
+
+#create image
+ret = exporter.exportToImage(path + 'image_exports/' + tile + '/' + tile + '_diamond.png', settings)
+assert ret==0
+    
+#at last, disable all layers
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+
+####################################################################################
+
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+    
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+    
+layers = []
+for layer in QgsProject.instance().mapLayers().values():
+    if layer.name().startswith("iron"):
+        layers.append(layer)
+        
+for layer in layers:
+    node = root.findLayer(layer.id())
+    node.setItemVisibilityChecked(Qt.Checked)
+    
+project = QgsProject().instance()
+layout = QgsPrintLayout(project)
+layout.initializeDefaults()
+    
+#select all pages and change the first one to the right dimension
+pages = layout.pageCollection()
+pages.page(0).setPageSize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+    
+#create a map inside the layout
+map = QgsLayoutItemMap(layout)
+map.setRect(0, 0, scale, scale)
+map.setExtent(QgsRectangle(xMin, yMin, xMax, yMax))
+map.attemptMove(QgsLayoutPoint(0,0,QgsUnitTypes.LayoutPixels))
+map.attemptResize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+layout.addLayoutItem(map)
+    
+#create exporter with settings
+exporter = QgsLayoutExporter(layout)
+settings = QgsLayoutExporter.ImageExportSettings()
+settings.imageSize = (QSize(scale,scale))
+    
+#disable Antialiasing
+context = QgsLayoutRenderContext(layout)
+context.setFlag(context.FlagAntialiasing, False)
+settings.flags = context.flags()
+
+#create image
+ret = exporter.exportToImage(path + 'image_exports/' + tile + '/' + tile + '_iron.png', settings)
+assert ret==0
+    
+#at last, disable all layers
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+
+####################################################################################
+
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+    
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+    
+layers = []
+for layer in QgsProject.instance().mapLayers().values():
+    if layer.name().startswith("redstone"):
+        layers.append(layer)
+        
+for layer in layers:
+    node = root.findLayer(layer.id())
+    node.setItemVisibilityChecked(Qt.Checked)
+    
+project = QgsProject().instance()
+layout = QgsPrintLayout(project)
+layout.initializeDefaults()
+    
+#select all pages and change the first one to the right dimension
+pages = layout.pageCollection()
+pages.page(0).setPageSize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+    
+#create a map inside the layout
+map = QgsLayoutItemMap(layout)
+map.setRect(0, 0, scale, scale)
+map.setExtent(QgsRectangle(xMin, yMin, xMax, yMax))
+map.attemptMove(QgsLayoutPoint(0,0,QgsUnitTypes.LayoutPixels))
+map.attemptResize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+layout.addLayoutItem(map)
+    
+#create exporter with settings
+exporter = QgsLayoutExporter(layout)
+settings = QgsLayoutExporter.ImageExportSettings()
+settings.imageSize = (QSize(scale,scale))
+    
+#disable Antialiasing
+context = QgsLayoutRenderContext(layout)
+context.setFlag(context.FlagAntialiasing, False)
+settings.flags = context.flags()
+
+#create image
+ret = exporter.exportToImage(path + 'image_exports/' + tile + '/' + tile + '_redstone.png', settings)
+assert ret==0
+    
+#at last, disable all layers
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+
+####################################################################################
+
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+    
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+    
+layers = []
+for layer in QgsProject.instance().mapLayers().values():
+    if layer.name().startswith("copper"):
+        layers.append(layer)
+        
+for layer in layers:
+    node = root.findLayer(layer.id())
+    node.setItemVisibilityChecked(Qt.Checked)
+    
+project = QgsProject().instance()
+layout = QgsPrintLayout(project)
+layout.initializeDefaults()
+    
+#select all pages and change the first one to the right dimension
+pages = layout.pageCollection()
+pages.page(0).setPageSize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+    
+#create a map inside the layout
+map = QgsLayoutItemMap(layout)
+map.setRect(0, 0, scale, scale)
+map.setExtent(QgsRectangle(xMin, yMin, xMax, yMax))
+map.attemptMove(QgsLayoutPoint(0,0,QgsUnitTypes.LayoutPixels))
+map.attemptResize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+layout.addLayoutItem(map)
+    
+#create exporter with settings
+exporter = QgsLayoutExporter(layout)
+settings = QgsLayoutExporter.ImageExportSettings()
+settings.imageSize = (QSize(scale,scale))
+    
+#disable Antialiasing
+context = QgsLayoutRenderContext(layout)
+context.setFlag(context.FlagAntialiasing, False)
+settings.flags = context.flags()
+
+#create image
+ret = exporter.exportToImage(path + 'image_exports/' + tile + '/' + tile + '_copper.png', settings)
+assert ret==0
+    
+#at last, disable all layers
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+
+####################################################################################
+
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+    
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+    
+layers = []
+for layer in QgsProject.instance().mapLayers().values():
+    if layer.name().startswith("netherite"):
+        layers.append(layer)
+        
+for layer in layers:
+    node = root.findLayer(layer.id())
+    node.setItemVisibilityChecked(Qt.Checked)
+    
+project = QgsProject().instance()
+layout = QgsPrintLayout(project)
+layout.initializeDefaults()
+    
+#select all pages and change the first one to the right dimension
+pages = layout.pageCollection()
+pages.page(0).setPageSize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+    
+#create a map inside the layout
+map = QgsLayoutItemMap(layout)
+map.setRect(0, 0, scale, scale)
+map.setExtent(QgsRectangle(xMin, yMin, xMax, yMax))
+map.attemptMove(QgsLayoutPoint(0,0,QgsUnitTypes.LayoutPixels))
+map.attemptResize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+layout.addLayoutItem(map)
+    
+#create exporter with settings
+exporter = QgsLayoutExporter(layout)
+settings = QgsLayoutExporter.ImageExportSettings()
+settings.imageSize = (QSize(scale,scale))
+    
+#disable Antialiasing
+context = QgsLayoutRenderContext(layout)
+context.setFlag(context.FlagAntialiasing, False)
+settings.flags = context.flags()
+
+#create image
+ret = exporter.exportToImage(path + 'image_exports/' + tile + '/' + tile + '_netherite.png', settings)
+assert ret==0
+    
+#at last, disable all layers
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+
+####################################################################################
+
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+    
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+    
+layers = []
+for layer in QgsProject.instance().mapLayers().values():
+    if layer.name().startswith("coal"):
+        layers.append(layer)
+        
+for layer in layers:
+    node = root.findLayer(layer.id())
+    node.setItemVisibilityChecked(Qt.Checked)
+    
+project = QgsProject().instance()
+layout = QgsPrintLayout(project)
+layout.initializeDefaults()
+    
+#select all pages and change the first one to the right dimension
+pages = layout.pageCollection()
+pages.page(0).setPageSize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+    
+#create a map inside the layout
+map = QgsLayoutItemMap(layout)
+map.setRect(0, 0, scale, scale)
+map.setExtent(QgsRectangle(xMin, yMin, xMax, yMax))
+map.attemptMove(QgsLayoutPoint(0,0,QgsUnitTypes.LayoutPixels))
+map.attemptResize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+layout.addLayoutItem(map)
+    
+#create exporter with settings
+exporter = QgsLayoutExporter(layout)
+settings = QgsLayoutExporter.ImageExportSettings()
+settings.imageSize = (QSize(scale,scale))
+    
+#disable Antialiasing
+context = QgsLayoutRenderContext(layout)
+context.setFlag(context.FlagAntialiasing, False)
+settings.flags = context.flags()
+
+#create image
+ret = exporter.exportToImage(path + 'image_exports/' + tile + '/' + tile + '_coal.png', settings)
+assert ret==0
+    
+#at last, disable all layers
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+
+####################################################################################
+
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+    
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+    
+layers = []
+for layer in QgsProject.instance().mapLayers().values():
+    if layer.name().startswith("quarz"):
+        layers.append(layer)
+        
+for layer in layers:
+    node = root.findLayer(layer.id())
+    node.setItemVisibilityChecked(Qt.Checked)
+    
+project = QgsProject().instance()
+layout = QgsPrintLayout(project)
+layout.initializeDefaults()
+    
+#select all pages and change the first one to the right dimension
+pages = layout.pageCollection()
+pages.page(0).setPageSize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+    
+#create a map inside the layout
+map = QgsLayoutItemMap(layout)
+map.setRect(0, 0, scale, scale)
+map.setExtent(QgsRectangle(xMin, yMin, xMax, yMax))
+map.attemptMove(QgsLayoutPoint(0,0,QgsUnitTypes.LayoutPixels))
+map.attemptResize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+layout.addLayoutItem(map)
+    
+#create exporter with settings
+exporter = QgsLayoutExporter(layout)
+settings = QgsLayoutExporter.ImageExportSettings()
+settings.imageSize = (QSize(scale,scale))
+    
+#disable Antialiasing
+context = QgsLayoutRenderContext(layout)
+context.setFlag(context.FlagAntialiasing, False)
+settings.flags = context.flags()
+
+#create image
+ret = exporter.exportToImage(path + 'image_exports/' + tile + '/' + tile + '_quarz.png', settings)
+assert ret==0
+    
+#at last, disable all layers
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+
+####################################################################################
+
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+    
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+    
+layers = []
+for layer in QgsProject.instance().mapLayers().values():
+    if layer.name().startswith("clay"):
+        layers.append(layer)
+        
+for layer in layers:
+    node = root.findLayer(layer.id())
+    node.setItemVisibilityChecked(Qt.Checked)
+    
+project = QgsProject().instance()
+layout = QgsPrintLayout(project)
+layout.initializeDefaults()
+    
+#select all pages and change the first one to the right dimension
+pages = layout.pageCollection()
+pages.page(0).setPageSize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+    
+#create a map inside the layout
+map = QgsLayoutItemMap(layout)
+map.setRect(0, 0, scale, scale)
+map.setExtent(QgsRectangle(xMin, yMin, xMax, yMax))
+map.attemptMove(QgsLayoutPoint(0,0,QgsUnitTypes.LayoutPixels))
+map.attemptResize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+layout.addLayoutItem(map)
+    
+#create exporter with settings
+exporter = QgsLayoutExporter(layout)
+settings = QgsLayoutExporter.ImageExportSettings()
+settings.imageSize = (QSize(scale,scale))
+    
+#disable Antialiasing
+context = QgsLayoutRenderContext(layout)
+context.setFlag(context.FlagAntialiasing, False)
+settings.flags = context.flags()
+
+#create image
+ret = exporter.exportToImage(path + 'image_exports/' + tile + '/' + tile + '_clay.png', settings)
 assert ret==0
     
 #at last, disable all layers

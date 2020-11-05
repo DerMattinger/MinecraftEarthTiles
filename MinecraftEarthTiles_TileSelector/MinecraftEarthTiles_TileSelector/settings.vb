@@ -4,6 +4,7 @@
     Public PathToQGIS As String
     Public PathToMagick As String
     Public PathToPBF As String
+    Public PathToExport As String
     Public WorldName As String
     Public BlocksPerTile As String
     Public TilesPerMap As String
@@ -19,6 +20,7 @@
     Public streets As Boolean
     Public small_streets As Boolean
     Public buildings As Boolean
+    Public ores As Boolean
     Public farms As Boolean
     Public meadows As Boolean
     Public quarrys As Boolean
@@ -33,6 +35,7 @@
     Public KeepTemporaryFiles As Boolean
     Public NumberOfCores As String
     Public cmdVisibility As Boolean
+    Public continueGeneration As Boolean
 
     ''' <summary>
     ''' Standard values for settings
@@ -43,6 +46,7 @@
         PathToQGIS = ""
         PathToMagick = ""
         PathToPBF = ""
+        PathToExport = ""
         WorldName = "world"
         BlocksPerTile = "1024"
         TilesPerMap = "1"
@@ -56,6 +60,7 @@
         streets = True
         small_streets = False
         buildings = True
+        ores = True
         bordersBoolean = True
         borders = "2020"
         farms = True
@@ -67,11 +72,12 @@
         riversBoolean = True
         rivers = "medium"
         streams = False
-        MapVersion = "1.12"
+        MapVersion = "1.16+"
         Proxy = ""
         KeepTemporaryFiles = False
         NumberOfCores = "2"
         cmdVisibility = False
+        continueGeneration = False
     End Sub
 
 End Class

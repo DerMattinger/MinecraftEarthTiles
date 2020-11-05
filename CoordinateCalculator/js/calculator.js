@@ -37,11 +37,13 @@ $("#latitude_dec").change(function() {
 $("#longitude_dec").change(function() {
 	displayDEC();
 });
-$("#scale").change(function() {
+$("#blocks").change(function() {
 	displayDMS();
+	calcScale();
 });
 $("#tiles").change(function() {
 	displayDMS();
+	calcScale();
 });
 $("#xcoord").change(function() {
 	displayCoords();
@@ -59,7 +61,7 @@ function displayDMS(){
 	var longitude_minute = $("#longitude_minute").val();
 	var longitude_second = $("#longitude_second").val();
 	var longitude_direction = $("#longitude_direction").val();
-	var scale = $("#scale").val();
+	var scale = $("#blocks").val();
 	var tiles = $("#tiles").val();
 	
 	var latitude_dec = 0;
@@ -97,7 +99,7 @@ function displayDMS(){
 function displayDEC(){
 	var latitude_dec = $("#latitude_dec").val();
 	var longitude_dec = $("#longitude_dec").val();
-	var scale = $("#scale").val();
+	var scale = $("#blocks").val();
 	var tiles = $("#tiles").val();
 	
 	var latitude_direction = "north";
@@ -161,7 +163,7 @@ function displayDEC(){
 function displayCoords(){
 	var xcoord = $("#xcoord").val();
 	var zcoord = $("#zcoord").val();
-	var scale = $("#scale").val();
+	var scale = $("#blocks").val();
 	var tiles = $("#tiles").val();
 
 	var longitude_dec = 0;
@@ -224,6 +226,10 @@ function displayCoords(){
 	$("#command").val( "/tp <name> " + xcoord + " 255 " + zcoord );
 }
 
+function calcScale() {
+	$("#scaleEqu").text(parseFloat(40075000 / ( $("#blocks").val() * ( 360 / $("#tiles").val() ) ) ).toFixed(1) );
+	$("#scaleTOC").text(parseFloat(36768000 / ( $("#blocks").val() * ( 360 / $("#tiles").val() ) ) ).toFixed(1) );
+}
 
 function round_six(x) {
   return Number.parseFloat(x).toFixed(6);

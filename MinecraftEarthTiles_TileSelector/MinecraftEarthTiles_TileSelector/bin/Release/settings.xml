@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Settings>
+  <PathToScriptsFolder>E:\osm</PathToScriptsFolder>
+  <PathToWorldPainterFolder>E:\osm\WorldPainter\wpscript.exe</PathToWorldPainterFolder>
+  <PathToQGIS>C:\Program Files\QGIS 3.14</PathToQGIS>
+  <PathToMagick>C:\Program Files\ImageMagick-7.0.10-Q16-HDRI\magick.exe</PathToMagick>
+  <PathToPBF>C:\Users\brenne05\Desktop\alps-latest.osm.pbf</PathToPBF>
+  <PathToExport>C:\Users\brenne05\Desktop</PathToExport>
+  <WorldName>alps</WorldName>
+  <BlocksPerTile>512</BlocksPerTile>
+  <TilesPerMap>1</TilesPerMap>
+  <VerticalScale>50</VerticalScale>
+  <Terrain>Standard</Terrain>
+  <Heightmap_Error_Correction>true</Heightmap_Error_Correction>
+  <bordersBoolean>true</bordersBoolean>
+  <borders>2020</borders>
+  <geofabrik>true</geofabrik>
+  <geofabrikalreadygenerated>false</geofabrikalreadygenerated>
+  <bathymetry>false</bathymetry>
+  <highways>false</highways>
+  <streets>false</streets>
+  <small_streets>false</small_streets>
+  <buildings>false</buildings>
+  <farms>false</farms>
+  <meadows>false</meadows>
+  <quarrys>false</quarrys>
+  <aerodrome>true</aerodrome>
+  <mobSpawner>true</mobSpawner>
+  <animalSpawner>true</animalSpawner>
+  <riversBoolean>true</riversBoolean>
+  <rivers>small</rivers>
+  <streams>false</streams>
+  <MapVersion>1.12</MapVersion>
+  <Proxy>webproxy.bs.ptb.de:8080</Proxy>
+  <KeepTemporaryFiles>true</KeepTemporaryFiles>
+  <NumberOfCores>1</NumberOfCores>
+  <cmdVisibility>false</cmdVisibility>
+  <continueGeneration>true</continueGeneration>
+</Settings>

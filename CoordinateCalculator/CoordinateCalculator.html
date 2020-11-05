@@ -7,8 +7,9 @@
 
 <body>
 	<h3>Scale</h3>
-	<label for="scale">Blocks per Tile</label>
-	<select id="scale">		
+	<div>
+	<label for="blocks">Blocks per Tile</label>
+	<select id="blocks">		
 		<option value="512">512</option>
 		<option value="1024" selected>1024</option>
 		<option value="1536">1536</option>
@@ -50,7 +51,9 @@
 		<option value="19968">19968</option>
 		<option value="20480">20480</option>
 	</select>
-	<hr>
+	</div>
+	<br>
+	<div>
 	<label for="tiles">Tiles per Map</label>
 	<select id="tiles">
 		<option value="1" selected>1</option>
@@ -66,6 +69,11 @@
 		<option value="45">45</option>
 		<option value="90">90</option>
 	</select>
+	</div>
+	<div>
+	<p>Scale (at Equator): <b id="scaleEqu">108.7</b></p>
+	<p>(at Tropic of Cancer): <b id="scaleTOC">99.7</b></p>
+	</div>
 	<hr>
 	<h3>DD (decimal degrees)</h3>
 	<div>

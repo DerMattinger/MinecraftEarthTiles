@@ -122,6 +122,15 @@ Public Class SettingsWindow
         End If
     End Sub
 
+    Private Sub Btn_PathToExport_Click(sender As Object, e As RoutedEventArgs)
+        Dim MyFolderBrowserDialog As New Forms.FolderBrowserDialog With {
+            .SelectedPath = My.Application.Info.DirectoryPath
+        }
+        If MyFolderBrowserDialog.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
+            txb_PathToExport.Text = MyFolderBrowserDialog.SelectedPath
+        End If
+    End Sub
+
 #End Region
 
 #Region "Save/Cancel"
@@ -158,6 +167,7 @@ Public Class SettingsWindow
         txb_PathToQGIS.Text = Settings.PathToQGIS
         txb_PathToMagick.Text = Settings.PathToMagick
         txb_PathToPBF.Text = Settings.PathToPBF
+        txb_PathToExport.Text = Settings.PathToExport
 
         If Not Settings.WorldName = "" Then
             txb_worldName.Text = Settings.WorldName
@@ -213,6 +223,8 @@ Public Class SettingsWindow
 
         chb_buildings.IsChecked = Settings.buildings
 
+        chb_ores.IsChecked = Settings.ores
+
         chb_farms.IsChecked = Settings.farms
 
         chb_meadows.IsChecked = Settings.meadows
@@ -243,6 +255,8 @@ Public Class SettingsWindow
 
         chb_cmd_Visibility.IsChecked = Settings.cmdVisibility
 
+        chb_continue.IsChecked = Settings.continueGeneration
+
         txb_Proxy.Text = Settings.Proxy
 
         Calculate_Scale()
@@ -265,6 +279,9 @@ Public Class SettingsWindow
         End If
         If File.Exists(txb_PathToPBF.Text) Then
             LocalSettings.PathToPBF = txb_PathToPBF.Text
+        End If
+        If Directory.Exists(txb_PathToExport.Text) Then
+            LocalSettings.PathToExport = txb_PathToExport.Text
         End If
         If Not txb_worldName.Text = "" Then
             LocalSettings.WorldName = RemoveIllegalFileNameChars(txb_worldName.Text)
@@ -300,6 +317,7 @@ Public Class SettingsWindow
         LocalSettings.highways = CBool(chb_highways.IsChecked)
         LocalSettings.streets = CBool(chb_streets.IsChecked)
         LocalSettings.buildings = CBool(chb_buildings.IsChecked)
+        LocalSettings.ores = CBool(chb_ores.IsChecked)
         LocalSettings.small_streets = CBool(chb_small_streets.IsChecked)
         LocalSettings.farms = CBool(chb_farms.IsChecked)
         LocalSettings.meadows = CBool(chb_meadows.IsChecked)
@@ -320,6 +338,7 @@ Public Class SettingsWindow
 
         LocalSettings.KeepTemporaryFiles = CBool(chb_Keep_Temporary_Files.IsChecked)
         LocalSettings.cmdVisibility = CBool(chb_cmd_Visibility.IsChecked)
+        LocalSettings.continueGeneration = CBool(chb_continue.IsChecked)
 
         LocalSettings.Proxy = txb_Proxy.Text
 

@@ -70,14 +70,14 @@ Public Class StartupWindow
     End Sub
 
     Private Sub Btn_Generation_Click(sender As Object, e As RoutedEventArgs)
-        Btn_osmbatExport_Click(sender, e)
-        Btn_QgisExport_Click(sender, e)
-        Btn_tartool_Click(sender, e)
-        Btn_gdalExport_Click(sender, e)
-        Btn_magick_Export_Click(sender, e)
-        Btn_WPScriptExport_Click(sender, e)
-        Btn_CombineExport_Click(sender, e)
-        Btn_CleanUpExport_Click(sender, e)
+        ''Btn_osmbatExport_Click(sender, e)
+        ''Btn_QgisExport_Click(sender, e)
+        ''Btn_tartool_Click(sender, e)
+        ''Btn_gdalExport_Click(sender, e)
+        ''Btn_magick_Export_Click(sender, e)
+        ''Btn_WPScriptExport_Click(sender, e)
+        ''Btn_CombineExport_Click(sender, e)
+        ''Btn_CleanUpExport_Click(sender, e)
         Dim TilesList As List(Of String) = MySelection.TilesList
         If TilesList.Count = 0 Then
             Throw New System.Exception("No Tiles selected.")
@@ -911,7 +911,10 @@ Public Class StartupWindow
                             ScriptBatchFile.WriteLine("""" & MySettings.PathToMagick & """ convert """ & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & "_removed_invalid.png"" -channel A -morphology EdgeIn Diamond -depth 16 """ & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & "_edges.png""")
                             ScriptBatchFile.WriteLine("""" & MySettings.PathToMagick & """ convert """ & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & "_edges.png"" " & NumberOfResize & " -layers RemoveDups -filter Gaussian -resize " & MySettings.BlocksPerTile & "x" & MySettings.BlocksPerTile & "! -reverse -background None -flatten -alpha off -depth 16 """ & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & "_invalid_filled.png""")
                             ScriptBatchFile.WriteLine("""" & MySettings.PathToMagick & """ convert """ & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & "_invalid_filled.png"" """ & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & "_removed_invalid.png"" -compose over -composite -depth 16 """ & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & "_unsmoothed.png""")
-                            ScriptBatchFile.WriteLine("""" & MySettings.PathToMagick & """ convert """ & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_water.png"" -threshold 5%% -alpha off -depth 16 """ & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_water_mask.png""")
+                            ScriptBatchFile.WriteLine("""" & MySettings.PathToMagick & """ convert -negate """ & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_water.png"" -threshold 50%% -depth 16 """ & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_water_mask.png""")
+                            ScriptBatchFile.WriteLine("""" & MySettings.PathToMagick & """ convert -negate """ & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_river.png"" -threshold 50%% -depth 16 """ & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_river_mask.png""")
+                            ScriptBatchFile.WriteLine("""" & MySettings.PathToMagick & """ composite -gravity center """ & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_water_mask.png"" """ & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_river_mask.png"" """ & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_combined_mask.png""")
+                            ScriptBatchFile.WriteLine("""" & MySettings.PathToMagick & """ convert -negate """ & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_combined_mask.png"" -alpha off """ & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_combined_mask.png""")
                             ScriptBatchFile.WriteLine("""" & MySettings.PathToMagick & """ convert """ & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_water_mask.png"" -transparent white -depth 16 """ & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & "_water_transparent.png""")
                             ScriptBatchFile.WriteLine("""" & MySettings.PathToMagick & """ convert """ & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & "_unsmoothed.png"" """ & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & "_water_transparent.png"" -compose over -composite -depth 16 """ & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & "_water_blacked.png""")
                             ScriptBatchFile.WriteLine("""" & MySettings.PathToMagick & """ convert """ & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & "_water_blacked.png"" -transparent black -depth 16 """ & MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\heightmap\" & NewTile & "_water_removed.png""")
@@ -1020,6 +1023,11 @@ Public Class StartupWindow
                 ScriptBatchFile.WriteLine("copy """ & MySettings.PathToScriptsFolder & "\wpscript\exports\" & MySelection.SpawnTile & "\level.dat"" """ & MySettings.PathToScriptsFolder & "\" & MySettings.WorldName & Chr(34))
                 ScriptBatchFile.WriteLine("copy """ & MySettings.PathToScriptsFolder & "\wpscript\exports\" & MySelection.SpawnTile & "\session.lock"" """ & MySettings.PathToScriptsFolder & "\" & MySettings.WorldName & Chr(34))
                 ScriptBatchFile.WriteLine("pushd """ & MySettings.PathToScriptsFolder & "\wpscript\exports\""")
+                If MySettings.PathToExport = "" Then
+                    ScriptBatchFile.WriteLine("For /r %%i in (*.mca) do  xcopy /Y ""%%i"" """ & MySettings.PathToScriptsFolder & "\" & MySettings.WorldName & "\region\""")
+                Else
+                    ScriptBatchFile.WriteLine("For /r %%i in (*.mca) do  xcopy /Y ""%%i"" """ & MySettings.PathToExport & "\" & MySettings.WorldName & "\region\""")
+                End If
                 ScriptBatchFile.WriteLine("For /r %%i in (*.mca) do  xcopy /Y ""%%i"" """ & MySettings.PathToScriptsFolder & "\" & MySettings.WorldName & "\region\""")
                 ScriptBatchFile.WriteLine("popd")
                 ScriptBatchFile.Close()
