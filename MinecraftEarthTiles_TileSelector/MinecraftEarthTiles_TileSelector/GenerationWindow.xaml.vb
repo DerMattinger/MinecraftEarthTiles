@@ -33,6 +33,7 @@ Public Class GenerationWindow
     End Sub
 
     Private Sub Cancel_Click(sender As Object, e As RoutedEventArgs)
+        keepRunning = False
         Close()
     End Sub
 
@@ -44,6 +45,7 @@ Public Class GenerationWindow
     End Sub
 
     Private Sub Stop_Click(sender As Object, e As RoutedEventArgs)
+        keepRunning = False
         Try
             cts.Cancel()
         Catch ex As Exception
@@ -57,7 +59,6 @@ Public Class GenerationWindow
             End If
         Catch ex As Exception
         End Try
-        keepRunning = False
         Close()
     End Sub
 
@@ -289,13 +290,19 @@ Public Class GenerationWindow
 
                                     If Directory.Exists(Path.GetTempPath) Then
                                         For Each _file As String In Directory.GetFiles(Path.GetTempPath, "*QGIS*")
-                                            File.Delete(_file)
+                                            Try
+                                                File.Delete(_file)
+                                            Catch ex As Exception
+                                            End Try
                                         Next
                                     End If
 
                                     If Directory.Exists(Path.GetTempPath) Then
                                         For Each _file As String In Directory.GetFiles(Path.GetTempPath, "*osm*")
-                                            File.Delete(_file)
+                                            Try
+                                                File.Delete(_file)
+                                            Catch ex As Exception
+                                            End Try
                                         Next
                                     End If
 
@@ -587,12 +594,16 @@ Public Class GenerationWindow
             End If
 
         Catch ex As Exception
-            MsgBox("File '1-osmconvert.bat' could not be saved\n" & ex.Message)
+            Throw New Exception("File '1-osmconvert.bat' could not be saved. " & ex.Message)
         End Try
     End Sub
 
     Private Sub osmbatExport(Tile As String)
         Try
+
+            If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\")) Then
+                System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\")
+            End If
 
             If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")) Then
                 System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")
@@ -910,15 +921,23 @@ Public Class GenerationWindow
 
             End If
         Catch ex As Exception
-            MsgBox("File '1-osmconvert.bat' could not be saved\n" & ex.Message)
+            Throw New Exception("File '1-osmconvert.bat' could not be saved. " & ex.Message)
         End Try
     End Sub
 
     Private Sub QgisExport(Tile As String)
         Try
 
+            If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\")) Then
+                System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\")
+            End If
+
             If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")) Then
                 System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")
+            End If
+
+            If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\python\")) Then
+                System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\python\")
             End If
 
             Dim pythonFile As System.IO.StreamWriter
@@ -1005,7 +1024,7 @@ Public Class GenerationWindow
             ScriptBatchFile.Close()
 
         Catch ex As Exception
-            MsgBox("File '2-qgis.bat' could not be saved\n" & ex.Message)
+            Throw New Exception("File '2-qgis.bat' could not be saved. " & ex.Message)
         End Try
     End Sub
 
@@ -1013,15 +1032,15 @@ Public Class GenerationWindow
         Try
             If CType(StartupWindow.MySettings.TilesPerMap, Int16) = 1 Then
 
+                If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\")) Then
+                    System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\")
+                End If
+
                 If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")) Then
                     System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")
                 End If
 
                 Dim ScriptBatchFile As System.IO.StreamWriter
-
-                If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")) Then
-                    System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")
-                End If
 
                 ScriptBatchFile = My.Computer.FileSystem.OpenTextFileWriter(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\3-log-tartool.bat", False, System.Text.Encoding.ASCII)
                 ScriptBatchFile.WriteLine("CALL """ & StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\3-tartool.bat"" >> """ & StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\log.txt""")
@@ -1121,7 +1140,7 @@ Public Class GenerationWindow
 
             End If
         Catch ex As Exception
-            MsgBox("File '3-tartool.bat' could not be saved\n" & ex.Message)
+            Throw New Exception("File '3-tartool.bat' could not be saved. " & ex.Message)
         End Try
     End Sub
 
@@ -1129,15 +1148,15 @@ Public Class GenerationWindow
         If CType(StartupWindow.MySettings.TilesPerMap, Int16) = 1 Then
             Try
 
+                If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\")) Then
+                    System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\")
+                End If
+
                 If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")) Then
                     System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")
                 End If
 
                 Dim ScriptBatchFile As System.IO.StreamWriter
-
-                If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")) Then
-                    System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")
-                End If
 
                 ScriptBatchFile = My.Computer.FileSystem.OpenTextFileWriter(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\4-log-gdal.bat", False, System.Text.Encoding.ASCII)
                 ScriptBatchFile.WriteLine("CALL """ & StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\4-gdal.bat"" >> """ & StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\log.txt""")
@@ -1235,13 +1254,17 @@ Public Class GenerationWindow
                 ScriptBatchFile.Close()
 
             Catch ex As Exception
-                MsgBox("File '4-gdal.bat' could not be saved\n" & ex.Message)
+                Throw New Exception("File '4-gdal.bat' could not be saved. " & ex.Message)
             End Try
         End If
     End Sub
 
     Private Sub imagemagickExport(Tile As String)
         Try
+
+            If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\")) Then
+                System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\")
+            End If
 
             If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")) Then
                 System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")
@@ -1296,22 +1319,22 @@ Public Class GenerationWindow
             ScriptBatchFile.Close()
 
         Catch ex As Exception
-            MsgBox("File '5-magick.bat' could not be saved\n" & ex.Message)
+            Throw New Exception("File '5-magick.bat' could not be saved. " & ex.Message)
         End Try
     End Sub
 
     Private Sub wpScriptExport(Tile As String)
         Try
 
+            If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\")) Then
+                System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\")
+            End If
+
             If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")) Then
                 System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")
             End If
 
             Dim ScriptBatchFile As System.IO.StreamWriter
-
-            If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")) Then
-                System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")
-            End If
 
             ScriptBatchFile = My.Computer.FileSystem.OpenTextFileWriter(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\6-log-wpscript.bat", False, System.Text.Encoding.ASCII)
             ScriptBatchFile.WriteLine("CALL """ & StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\6-wpscript.bat"" >> """ & StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\log.txt""")
@@ -1340,26 +1363,26 @@ Public Class GenerationWindow
                 Case "1.16+"
                     MapVersionShort = "1-16"
             End Select
-            ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToWorldPainterFolder & """ """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript.js"" """ & StartupWindow.MySettings.PathToScriptsFolder.Replace("\", "/") & "/"" " & ReplacedString & " " & StartupWindow.MySettings.BlocksPerTile & " " & StartupWindow.MySettings.TilesPerMap & " " & StartupWindow.MySettings.VerticalScale & " " & StartupWindow.MySettings.highways.ToString & " " & StartupWindow.MySettings.streets.ToString & " " & StartupWindow.MySettings.small_streets.ToString & " " & StartupWindow.MySettings.buildings.ToString & " " & StartupWindow.MySettings.ores.ToString & " " & StartupWindow.MySettings.borders & " " & StartupWindow.MySettings.farms.ToString & " " & StartupWindow.MySettings.meadows.ToString & " " & StartupWindow.MySettings.quarrys.ToString & " " & StartupWindow.MySettings.aerodrome.ToString & " " & StartupWindow.MySettings.mobSpawner.ToString & " " & StartupWindow.MySettings.animalSpawner.ToString & " " & StartupWindow.MySettings.rivers.ToString & " " & StartupWindow.MySettings.streams.ToString & " " & MapVersionShort)
+            ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToWorldPainterFolder & """ """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript.js"" """ & StartupWindow.MySettings.PathToScriptsFolder.Replace("\", "/") & "/"" " & ReplacedString & " " & StartupWindow.MySettings.BlocksPerTile & " " & StartupWindow.MySettings.TilesPerMap & " " & StartupWindow.MySettings.VerticalScale & " " & StartupWindow.MySettings.highways.ToString & " " & StartupWindow.MySettings.streets.ToString & " " & StartupWindow.MySettings.small_streets.ToString & " " & StartupWindow.MySettings.buildings.ToString & " " & StartupWindow.MySettings.ores.ToString & " " & StartupWindow.MySettings.farms.ToString & " " & StartupWindow.MySettings.meadows.ToString & " " & StartupWindow.MySettings.quarrys.ToString & " " & StartupWindow.MySettings.aerodrome.ToString & " " & StartupWindow.MySettings.mobSpawner.ToString & " " & StartupWindow.MySettings.animalSpawner.ToString & " " & StartupWindow.MySettings.riversBoolean.ToString & " " & StartupWindow.MySettings.streams.ToString & " " & MapVersionShort)
 
             ScriptBatchFile.Close()
         Catch ex As Exception
-            MsgBox("File '6-wpscript.bat' could not be saved\n" & ex.Message)
+            Throw New Exception("File '6-wpscript.bat' could not be saved. " & ex.Message)
         End Try
     End Sub
 
     Private Sub CleanUpExport(Tile As String)
         Try
 
+            If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\")) Then
+                System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\")
+            End If
+
             If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")) Then
                 System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")
             End If
 
             Dim ScriptBatchFile As System.IO.StreamWriter
-
-            If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")) Then
-                System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")
-            End If
 
             ScriptBatchFile = My.Computer.FileSystem.OpenTextFileWriter(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\8-log-cleanup.bat", False, System.Text.Encoding.ASCII)
             ScriptBatchFile.WriteLine("CALL """ & StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\8-cleanup.bat"" >> """ & StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\log.txt""")
@@ -1372,12 +1395,16 @@ Public Class GenerationWindow
             ScriptBatchFile.Close()
 
         Catch ex As Exception
-            MsgBox("File '8-cleanup.bat' could not be saved\n" & ex.Message)
+            Throw New Exception("File '8-cleanup.bat' could not be saved. " & ex.Message)
         End Try
     End Sub
 
     Private Sub combineExport()
         Try
+
+            If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\")) Then
+                System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\")
+            End If
 
             Dim ScriptBatchFile As System.IO.StreamWriter
 
@@ -1390,9 +1417,7 @@ Public Class GenerationWindow
 
             If StartupWindow.MySettings.PathToExport = "" Then
                 ScriptBatchFile.WriteLine("If Not exist """ & StartupWindow.MySettings.PathToScriptsFolder & "\" & StartupWindow.MySettings.WorldName & """ mkdir """ & StartupWindow.MySettings.PathToScriptsFolder & "\" & StartupWindow.MySettings.WorldName & """")
-                ScriptBatchFile.WriteLine("rmdir /Q /S """ & StartupWindow.MySettings.PathToScriptsFolder & "\" & StartupWindow.MySettings.WorldName & """")
-                ScriptBatchFile.WriteLine("mkdir """ & StartupWindow.MySettings.PathToScriptsFolder & "\" & StartupWindow.MySettings.WorldName & """")
-                ScriptBatchFile.WriteLine("mkdir """ & StartupWindow.MySettings.PathToScriptsFolder & "\" & StartupWindow.MySettings.WorldName & "\region""")
+                ScriptBatchFile.WriteLine("If Not exist """ & StartupWindow.MySettings.PathToScriptsFolder & "\" & StartupWindow.MySettings.WorldName & "\region"" mkdir """ & StartupWindow.MySettings.PathToScriptsFolder & "\" & StartupWindow.MySettings.WorldName & "\region""")
                 ScriptBatchFile.WriteLine("copy """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript\exports\" & StartupWindow.MySelection.SpawnTile & "\level.dat"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\" & StartupWindow.MySettings.WorldName & """")
                 ScriptBatchFile.WriteLine("copy """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript\exports\" & StartupWindow.MySelection.SpawnTile & "\session.lock"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\" & StartupWindow.MySettings.WorldName & """")
                 ScriptBatchFile.WriteLine("pushd """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript\exports\""")
@@ -1400,9 +1425,7 @@ Public Class GenerationWindow
                 ScriptBatchFile.WriteLine("popd")
             Else
                 ScriptBatchFile.WriteLine("If Not exist """ & StartupWindow.MySettings.PathToExport & "\" & StartupWindow.MySettings.WorldName & """ mkdir """ & StartupWindow.MySettings.PathToExport & "\" & StartupWindow.MySettings.WorldName & """")
-                ScriptBatchFile.WriteLine("rmdir /Q /S """ & StartupWindow.MySettings.PathToExport & "\" & StartupWindow.MySettings.WorldName & """")
-                ScriptBatchFile.WriteLine("mkdir """ & StartupWindow.MySettings.PathToExport & "\" & StartupWindow.MySettings.WorldName & """")
-                ScriptBatchFile.WriteLine("mkdir """ & StartupWindow.MySettings.PathToExport & "\" & StartupWindow.MySettings.WorldName & "\region""")
+                ScriptBatchFile.WriteLine("If Not exist """ & StartupWindow.MySettings.PathToExport & "\" & StartupWindow.MySettings.WorldName & "\region"" mkdir """ & StartupWindow.MySettings.PathToExport & "\" & StartupWindow.MySettings.WorldName & "\region""")
                 ScriptBatchFile.WriteLine("copy """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript\exports\" & StartupWindow.MySelection.SpawnTile & "\level.dat"" """ & StartupWindow.MySettings.PathToExport & "\" & StartupWindow.MySettings.WorldName & """")
                 ScriptBatchFile.WriteLine("copy """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript\exports\" & StartupWindow.MySelection.SpawnTile & "\session.lock"" """ & StartupWindow.MySettings.PathToExport & "\" & StartupWindow.MySettings.WorldName & """")
                 ScriptBatchFile.WriteLine("pushd """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript\exports\""")
@@ -1412,12 +1435,16 @@ Public Class GenerationWindow
             ScriptBatchFile.Close()
 
         Catch ex As Exception
-            MsgBox("File '7-combine.bat' could not be saved\n" & ex.Message)
+            Throw New Exception("File '7-combine.bat' could not be saved. " & ex.Message)
         End Try
     End Sub
 
     Private Sub CleanUpFinalExport()
         Try
+
+            If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\")) Then
+                System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\")
+            End If
 
             Dim ScriptBatchFile As System.IO.StreamWriter
 
@@ -1444,7 +1471,7 @@ Public Class GenerationWindow
             ScriptBatchFile.WriteLine("mkdir """ & StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles""")
             ScriptBatchFile.Close()
         Catch ex As Exception
-            MsgBox("File '8-cleanup.bat' could not be saved\n" & ex.Message)
+            Throw New Exception("File '8-cleanup.bat' could not be saved. " & ex.Message)
         End Try
     End Sub
 

@@ -94,6 +94,61 @@ for alllayer in alllayers:
     
 layers = []
 for layer in QgsProject.instance().mapLayers().values():
+    if layer.name().startswith("slope"):
+        layers.append(layer)
+
+for layer in QgsProject.instance().mapLayers().values():
+    if layer.name().startswith("heightmap_background"):
+        layers.append(layer)
+
+for layer in layers:
+    node = root.findLayer(layer.id())
+    node.setItemVisibilityChecked(Qt.Checked)
+    
+project = QgsProject().instance()
+layout = QgsPrintLayout(project)
+layout.initializeDefaults()
+    
+#select all pages and change the first one to the right dimension
+pages = layout.pageCollection()
+pages.page(0).setPageSize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+    
+#create a map inside the layout
+map = QgsLayoutItemMap(layout)
+map.setRect(0, 0, scale, scale)
+map.setExtent(QgsRectangle(xMin, yMin, xMax, yMax))
+map.attemptMove(QgsLayoutPoint(0,0,QgsUnitTypes.LayoutPixels))
+map.attemptResize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+layout.addLayoutItem(map)
+    
+#create exporter with settings
+exporter = QgsLayoutExporter(layout)
+settings = QgsLayoutExporter.ImageExportSettings()
+settings.imageSize = (QSize(scale,scale))
+    
+#disable Antialiasing
+context = QgsLayoutRenderContext(layout)
+context.setFlag(context.FlagAntialiasing, False)
+settings.flags = context.flags()
+
+#create image
+ret = exporter.exportToImage(path + 'image_exports/' + tile + '/' + tile + '_slope.png', settings)
+assert ret==0
+
+##################################################################################
+
+#at first, disable all layers
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+    
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+    
+layers = []
+for layer in QgsProject.instance().mapLayers().values():
     if layer.name().startswith("land_polygons"):
         layers.append(layer)
     elif layer.name().startswith("bathymetry"):
@@ -876,6 +931,58 @@ settings.flags = context.flags()
 
 #create image
 ret = exporter.exportToImage(path + 'image_exports/' + tile + '/' + tile + '_herbs.png', settings)
+assert ret==0
+
+####################################################################################
+
+alllayers = []
+for alllayer in QgsProject.instance().mapLayers().values():
+    alllayers.append(alllayer)
+    
+root = QgsProject.instance().layerTreeRoot()
+for alllayer in alllayers:
+    node = root.findLayer(alllayer.id())
+    node.setItemVisibilityChecked(Qt.Unchecked)
+    
+layers = []
+for layer in QgsProject.instance().mapLayers().values():
+    if layer.name().startswith("Snow"):
+        layers.append(layer)
+    elif layer.name().startswith("vegetation_background"):
+        layers.append(layer)
+        
+for layer in layers:
+    node = root.findLayer(layer.id())
+    node.setItemVisibilityChecked(Qt.Checked)
+    
+project = QgsProject().instance()
+layout = QgsPrintLayout(project)
+layout.initializeDefaults()
+    
+#select all pages and change the first one to the right dimension
+pages = layout.pageCollection()
+pages.page(0).setPageSize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+    
+#create a map inside the layout
+map = QgsLayoutItemMap(layout)
+map.setRect(0, 0, scale, scale)
+map.setExtent(QgsRectangle(xMin, yMin, xMax, yMax))
+map.attemptMove(QgsLayoutPoint(0,0,QgsUnitTypes.LayoutPixels))
+map.attemptResize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+layout.addLayoutItem(map)
+    
+#create exporter with settings
+exporter = QgsLayoutExporter(layout)
+settings = QgsLayoutExporter.ImageExportSettings()
+settings.imageSize = (QSize(scale,scale))
+    
+#disable Antialiasing
+context = QgsLayoutRenderContext(layout)
+context.setFlag(context.FlagAntialiasing, False)
+settings.flags = context.flags()
+
+#create image
+ret = exporter.exportToImage(path + 'image_exports/' + tile + '/' + tile + '_snow.png', settings)
 assert ret==0
 
 ####################################################################################
@@ -1813,7 +1920,7 @@ for alllayer in alllayers:
     
 layers = []
 for layer in QgsProject.instance().mapLayers().values():
-    if layer.name().startswith("quarz"):
+    if layer.name().startswith("quartz"):
         layers.append(layer)
         
 for layer in layers:
@@ -1847,7 +1954,7 @@ context.setFlag(context.FlagAntialiasing, False)
 settings.flags = context.flags()
 
 #create image
-ret = exporter.exportToImage(path + 'image_exports/' + tile + '/' + tile + '_quarz.png', settings)
+ret = exporter.exportToImage(path + 'image_exports/' + tile + '/' + tile + '_quartz.png', settings)
 assert ret==0
     
 #at last, disable all layers
