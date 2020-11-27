@@ -211,8 +211,6 @@ Public Class SettingsWindow
 
         chb_geofabrik.IsChecked = Settings.geofabrik
 
-        chb_geofabrikalreadygenerated.IsChecked = Settings.geofabrikalreadygenerated
-
         chb_bathymetry.IsChecked = Settings.bathymetry
 
         chb_highways.IsChecked = Settings.highways
@@ -224,6 +222,8 @@ Public Class SettingsWindow
         chb_buildings.IsChecked = Settings.buildings
 
         chb_ores.IsChecked = Settings.ores
+
+        chb_netherrite.IsChecked = Settings.netherite
 
         chb_farms.IsChecked = Settings.farms
 
@@ -246,12 +246,22 @@ Public Class SettingsWindow
 
         chb_streams.IsChecked = Settings.streams
 
+        chb_volcanos.IsChecked = Settings.volcanos
+        chb_shrubs.IsChecked = Settings.shrubs
+        chb_crops.IsChecked = Settings.crops
+
         If CType(Settings.NumberOfCores, Int32) <= 16 Then
             cbb_Number_Of_Cores.SelectedValue = Settings.NumberOfCores
             cbb_Number_Of_Cores.Text = Settings.NumberOfCores
         End If
 
-        chb_Keep_Temporary_Files.IsChecked = Settings.KeepTemporaryFiles
+        chb_keepPbfFiles.IsChecked = Settings.keepPbfFile
+        chb_reUsePbfFiles.IsChecked = Settings.reUsePbfFile
+        chb_keepOsmFiles.IsChecked = Settings.keepOsmFiles
+        chb_reUseOsmFiles.IsChecked = Settings.reUseOsmFiles
+        chb_keepImages.IsChecked = Settings.keepImageFiles
+        chb_reUseImages.IsChecked = Settings.reUseImageFiles
+        chb_keepWorldPainter.IsChecked = Settings.keepWorldPainterFiles
 
         chb_cmd_Visibility.IsChecked = Settings.cmdVisibility
 
@@ -312,12 +322,12 @@ Public Class SettingsWindow
         LocalSettings.Heightmap_Error_Correction = CBool(chb_Heightmap_Error_Correction.IsChecked)
 
         LocalSettings.geofabrik = CBool(chb_geofabrik.IsChecked)
-        LocalSettings.geofabrikalreadygenerated = CBool(chb_geofabrikalreadygenerated.IsChecked)
         LocalSettings.bathymetry = CBool(chb_bathymetry.IsChecked)
         LocalSettings.highways = CBool(chb_highways.IsChecked)
         LocalSettings.streets = CBool(chb_streets.IsChecked)
         LocalSettings.buildings = CBool(chb_buildings.IsChecked)
         LocalSettings.ores = CBool(chb_ores.IsChecked)
+        LocalSettings.netherite = CBool(chb_netherrite.IsChecked)
         LocalSettings.small_streets = CBool(chb_small_streets.IsChecked)
         LocalSettings.farms = CBool(chb_farms.IsChecked)
         LocalSettings.meadows = CBool(chb_meadows.IsChecked)
@@ -327,6 +337,9 @@ Public Class SettingsWindow
         LocalSettings.animalSpawner = CBool(chb_animal_spawner.IsChecked)
         LocalSettings.riversBoolean = CBool(chb_rivers.IsChecked)
         LocalSettings.streams = CBool(chb_streams.IsChecked)
+        LocalSettings.volcanos = CBool(chb_volcanos.IsChecked)
+        LocalSettings.shrubs = CBool(chb_shrubs.IsChecked)
+        LocalSettings.crops = CBool(chb_crops.IsChecked)
 
         If cbb_Rivers.Text = "small" Or cbb_Rivers.Text = "medium" Or cbb_Rivers.Text = "large" Then
             LocalSettings.rivers = cbb_Rivers.Text
@@ -336,7 +349,14 @@ Public Class SettingsWindow
             LocalSettings.NumberOfCores = cbb_Number_Of_Cores.Text
         End If
 
-        LocalSettings.KeepTemporaryFiles = CBool(chb_Keep_Temporary_Files.IsChecked)
+        LocalSettings.keepPbfFile = CBool(chb_keepPbfFiles.IsChecked)
+        LocalSettings.reUsePbfFile = CBool(chb_reUsePbfFiles.IsChecked)
+        LocalSettings.keepOsmFiles = CBool(chb_keepOsmFiles.IsChecked)
+        LocalSettings.reUseOsmFiles = CBool(chb_reUseOsmFiles.IsChecked)
+        LocalSettings.keepImageFiles = CBool(chb_keepImages.IsChecked)
+        LocalSettings.reUseImageFiles = CBool(chb_reUseImages.IsChecked)
+        LocalSettings.keepWorldPainterFiles = CBool(chb_keepWorldPainter.IsChecked)
+
         LocalSettings.cmdVisibility = CBool(chb_cmd_Visibility.IsChecked)
         LocalSettings.continueGeneration = CBool(chb_continue.IsChecked)
 

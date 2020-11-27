@@ -442,12 +442,14 @@ Public Class SelectionWindow
         ').ToList
         'If TilesList.Count > 25 Then
         'btn_Save_Selection.IsEnabled = False
+        'btnSaveClose.IsEnabled = False
         'Dim MyToolTip As ToolTip = New ToolTip
         'MyToolTip.Placement = Primitives.PlacementMode.Mouse
         'MyToolTip.Content = "You can't create more then 25 Tiles in the demo version."
         'grd_Buttons.ToolTip = MyToolTip
         'Else
         'btn_Save_Selection.IsEnabled = True
+        'btnSaveClose.IsEnabled = True
         'grd_Buttons.ToolTip = New ToolTip
         'End If
     End Sub

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MinecraftEarthTiles_TileSelector"
         mc:Ignorable="d"
-        Title="Tile Settings" Width="560" Height="960" MinWidth="560" Loaded="Window_Loaded">
+        Title="Tile Settings" Width="560" Height="470.683" MinWidth="560" Loaded="Window_Loaded">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File">
@@ -23,44 +23,43 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <ScrollViewer>
-                <Grid MinHeight="510">
+            <Grid>
 
-                    <GroupBox Header="Path to tools and folders" Height="220" Margin="0,0,0,0" VerticalAlignment="Top">
-                        <Grid>
+                <TabControl>
+                    <TabItem Header="Folder and path settings">
+                        <Grid Background="#FFFFFFFF">
 
-                            <Label x:Name="lbl_PathToScriptsFolder" Content="Path to scripts folder" Margin="90,13,0,0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Width="119"/>
-                            <TextBox x:Name="txb_PathToScriptsFolder" Height="20" Margin="209,16,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" IsReadOnly="True" HorizontalAlignment="Left" Width="280" />
-                            <Button x:Name="btn_PathToScriptsFolder" Content="..." Margin="489,16,0,0" VerticalAlignment="Top" RenderTransformOrigin="-13.542,0.8" HorizontalAlignment="Left" Width="24" Click="Btn_PathToScriptFolder_Click"/>
+                            <Label x:Name="lbl_PathToScriptsFolder" Content="Path to scripts folder" Margin="42,12,0,0" Height="26" VerticalAlignment="Top" HorizontalAlignment="Left" Width="119"/>
+                            <TextBox x:Name="txb_PathToScriptsFolder" Height="20" Margin="161,15,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" IsReadOnly="True" HorizontalAlignment="Left" Width="328" />
+                            <Button x:Name="btn_PathToScriptsFolder" Content="..." Margin="489,15,0,0" VerticalAlignment="Top" RenderTransformOrigin="-13.542,0.8" HorizontalAlignment="Left" Width="24" Click="Btn_PathToScriptFolder_Click"/>
 
-                            <Label x:Name="lbl_PathToWorldPainterFolder" Content="Path to &quot;wpscript.exe&quot;" Margin="83,41,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                            <TextBox x:Name="txb_PathToWorldPainterFile" HorizontalAlignment="Left" Height="20" Margin="209,44,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="280" IsReadOnly="True" />
-                            <Button x:Name="btn_PathToWorldPainter" Content="..." Margin="489,44,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="24" Click="Btn_PathToWorldPainter_Click"/>
+                            <Label x:Name="lbl_PathToWorldPainterFolder" Content="Path to &quot;wpscript.exe&quot;" Margin="35,42,0,0" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                            <TextBox x:Name="txb_PathToWorldPainterFile" HorizontalAlignment="Left" Height="20" Margin="161,45,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="328" IsReadOnly="True" />
+                            <Button x:Name="btn_PathToWorldPainter" Content="..." Margin="489,45,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="24" Click="Btn_PathToWorldPainter_Click"/>
 
-                            <Label x:Name="lbl_PathToQGIS" Content="Path to &quot;QGIS install folder&quot;" Margin="53,72,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                            <TextBox x:Name="txb_PathToQGIS" HorizontalAlignment="Left" Height="20" Margin="209,75,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="280" IsReadOnly="True" />
+                            <Label x:Name="lbl_PathToQGIS" Content="Path to &quot;QGIS install folder&quot;" Margin="5,72,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                            <TextBox x:Name="txb_PathToQGIS" HorizontalAlignment="Left" Height="20" Margin="161,75,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="328" IsReadOnly="True" />
                             <Button x:Name="btn_PathToQGIS" Content="..." Margin="489,75,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="24" Click="Btn_PathToQGIS_Click"/>
 
-                            <Label x:Name="lbl_PathToMagick" Content="Path to &quot;magick.exe&quot;" Margin="90,103,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                            <TextBox x:Name="txb_PathToMagick" HorizontalAlignment="Left" Height="20" Margin="209,106,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="280" IsReadOnly="True" />
-                            <Button x:Name="btn_PathToMagick" Content="..." Margin="489,106,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="24" Click="Btn_PathToMagick_Click"/>
+                            <Label x:Name="lbl_PathToMagick" Content="Path to &quot;magick.exe&quot;" Margin="42,102,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                            <TextBox x:Name="txb_PathToMagick" HorizontalAlignment="Left" Height="20" Margin="161,105,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="328" IsReadOnly="True" />
+                            <Button x:Name="btn_PathToMagick" Content="..." Margin="489,105,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="24" Click="Btn_PathToMagick_Click"/>
 
-                            <Label x:Name="lbl_PathToPBF" Content="Path to &quot;*.pbf&quot; File" Margin="102,134,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                            <TextBox x:Name="txb_PathToPBF" HorizontalAlignment="Left" Height="20" Margin="209,137,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="280" IsReadOnly="True" />
-                            <Button x:Name="btn_PathToPBF" Content="..." Margin="489,137,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="24" Click="Btn_PathToPBF_Click"/>
+                            <Label x:Name="lbl_PathToPBF" Content="Path to &quot;*.pbf&quot; File" Margin="54,132,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                            <TextBox x:Name="txb_PathToPBF" HorizontalAlignment="Left" Height="20" Margin="161,135,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="328" IsReadOnly="True" />
+                            <Button x:Name="btn_PathToPBF" Content="..." Margin="489,135,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="24" Click="Btn_PathToPBF_Click"/>
 
-                            <Label x:Name="lbl_PathToExport" Content="Export folder" Margin="131,165,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                            <TextBox x:Name="txb_PathToExport" HorizontalAlignment="Left" Height="20" Margin="209,167,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="280" IsReadOnly="True" />
-                            <Button x:Name="btn_PathToExport" Content="..." Margin="489,167,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="24" Click="Btn_PathToExport_Click"/>
+                            <Label x:Name="lbl_PathToExport" Content="Export folder" Margin="83,162,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                            <TextBox x:Name="txb_PathToExport" HorizontalAlignment="Left" Height="20" Margin="161,165,0,0" TextWrapping="NoWrap" Text="" VerticalAlignment="Top" Width="328" IsReadOnly="True" />
+                            <Button x:Name="btn_PathToExport" Content="..." Margin="489,165,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="24" Click="Btn_PathToExport_Click"/>
 
                         </Grid>
-                    </GroupBox>
+                    </TabItem>
+                    <TabItem Header="Export settings">
+                        <Grid Background="#FFFFFFFF">
 
-                    <GroupBox Header="World settings" Height="180" Margin="0,220,0,0" VerticalAlignment="Top">
-                        <Grid>
-
-                            <Label x:Name="lbl_BlocksPerTile" Content="Blocks per Tile" HorizontalAlignment="Left" Margin="123,14,0,0" VerticalAlignment="Top"/>
-                            <ComboBox x:Name="cbb_BlocksPerTile" Margin="209,16,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="82" DropDownClosed="Calculate_Scale">
+                            <Label x:Name="lbl_BlocksPerTile" Content="Blocks per Tile" HorizontalAlignment="Left" Margin="22,14,0,0" VerticalAlignment="Top"/>
+                            <ComboBox x:Name="cbb_BlocksPerTile" Margin="108,16,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="117" DropDownClosed="Calculate_Scale">
                                 <ComboBoxItem Content="512"/>
                                 <ComboBoxItem IsSelected="True" Content="1024"/>
                                 <ComboBoxItem Content="1536"/>
@@ -103,8 +102,8 @@
                                 <ComboBoxItem Content="20480"/>
                             </ComboBox>
 
-                            <Label x:Name="lbl_TilesperMap" Content="Dagrees per Tile" HorizontalAlignment="Left" Margin="115,41,0,0" VerticalAlignment="Top"/>
-                            <ComboBox x:Name="cbb_TilesperMap" Margin="209,43,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="83" DropDownClosed="Calculate_Scale">
+                            <Label x:Name="lbl_TilesperMap" Content="Dagrees per Tile" HorizontalAlignment="Left" Margin="14,41,0,0" VerticalAlignment="Top"/>
+                            <ComboBox x:Name="cbb_TilesperMap" Margin="108,43,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="117" DropDownClosed="Calculate_Scale">
                                 <ComboBoxItem IsSelected="True" Content="1"/>
                                 <ComboBoxItem Content="2"/>
                                 <ComboBoxItem Content="3"/>
@@ -119,8 +118,8 @@
                                 <ComboBoxItem Content="90"/>
                             </ComboBox>
 
-                            <Label x:Name="lbl_verticalScale" Content="Vertical Scale: 1 :" HorizontalAlignment="Left" Margin="112,67,0,0" VerticalAlignment="Top"/>
-                            <ComboBox x:Name="cbb_VerticalScale" Margin="209,70,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="83">
+                            <Label x:Name="lbl_verticalScale" Content="Vertical Scale: 1 :" HorizontalAlignment="Left" Margin="11,68,0,0" VerticalAlignment="Top"/>
+                            <ComboBox x:Name="cbb_VerticalScale" Margin="108,70,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="117">
                                 <ComboBoxItem Content="5"/>
                                 <ComboBoxItem Content="10"/>
                                 <ComboBoxItem Content="25"/>
@@ -130,42 +129,44 @@
                                 <ComboBoxItem Content="200"/>
                             </ComboBox>
 
-                            <Label x:Name="lbl_MapVersion" Content="Map Format" HorizontalAlignment="Left" Margin="134,95,0,0" VerticalAlignment="Top"/>
-                            <ComboBox x:Name="cbb_MapVersion" Margin="209,97,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="83">
+                            <Label x:Name="lbl_MapVersion" Content="Map Format" HorizontalAlignment="Left" Margin="33,95,0,0" VerticalAlignment="Top"/>
+                            <ComboBox x:Name="cbb_MapVersion" Margin="108,97,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="117">
                                 <ComboBoxItem IsSelected="True" Content="1.12"/>
                                 <ComboBoxItem Content="1.12 with Cubic Chunks"  IsEnabled="false"/>
                                 <ComboBoxItem Content="1.16+"/>
                             </ComboBox>
 
-                            <Label x:Name="lbl_worldName" Content="World name" Margin="134,119,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-                            <TextBox x:Name="txb_worldName" HorizontalAlignment="Left" Height="20" Margin="209,124,0,0" TextWrapping="NoWrap" Text="world" VerticalAlignment="Top" Width="83" />
+                            <Label x:Name="lbl_worldName" Content="World name" Margin="33,120,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                            <TextBox x:Name="txb_worldName" HorizontalAlignment="Left" Height="20" Margin="108,124,0,0" TextWrapping="NoWrap" Text="world" VerticalAlignment="Top" Width="117" />
 
-                            <Label x:Name="lbl_Scale" Content="Scale (at Equator):" HorizontalAlignment="Left" Margin="318,14,0,0" VerticalAlignment="Top"/>
-                            <Label x:Name="lbl_Scale_Quantity" Content="1 : ?" HorizontalAlignment="Left" Margin="428,14,0,0" VerticalAlignment="Top"/>
-                            <Label x:Name="lbl_Scale_rounded" Content="(at Tropic of Cancer):" HorizontalAlignment="Left" Margin="304,41,0,0" VerticalAlignment="Top"/>
-                            <Label x:Name="lbl_Scale_rounded_Quantity" Content="1 : ?" HorizontalAlignment="Left" Margin="428,41,0,0" VerticalAlignment="Top"/>
+                            <Label x:Name="lbl_TerrainMapping" Content="Terrain Mapping" HorizontalAlignment="Left" Margin="11,147,0,0" VerticalAlignment="Top"/>
+                            <ComboBox x:Name="cbb_TerrainMapping" Margin="108,149,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="117">
+                                <ComboBoxItem IsSelected="True" Content="Standard"/>
+                                <ComboBoxItem Content="Custom"/>
+                            </ComboBox>
+
+                            <Label x:Name="lbl_Scale" Content="Scale (at Equator):" HorizontalAlignment="Left" Margin="26,191,0,0" VerticalAlignment="Top"/>
+                            <Label x:Name="lbl_Scale_Quantity" Content="1 : ?" HorizontalAlignment="Left" Margin="136,191,0,0" VerticalAlignment="Top"/>
+                            <Label x:Name="lbl_Scale_rounded" Content="(at Tropic of Cancer):" HorizontalAlignment="Left" Margin="12,217,0,0" VerticalAlignment="Top"/>
+                            <Label x:Name="lbl_Scale_rounded_Quantity" Content="1 : ?" HorizontalAlignment="Left" Margin="136,217,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.516,0.769"/>
 
                         </Grid>
-                    </GroupBox>
+                    </TabItem>
+                    <TabItem Header="Map features">
+                        <Grid Background="#FFFFFFFF">
+                            <CheckBox x:Name="chb_Heightmap_Error_Correction" Content="Heightmap Error Correction" HorizontalAlignment="Left" Margin="61,16,0,0" VerticalAlignment="Top" FlowDirection="RightToLeft"  IsChecked="True" />
+                            <CheckBox x:Name="chb_bathymetry" Content="Bathymetry" HorizontalAlignment="Left" Margin="148,36,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
 
-                    <GroupBox Header="Map features" Height="240" Margin="0,400,0,0" VerticalAlignment="Top">
-                        <Grid>
-
-                            <CheckBox x:Name="chb_geofabrik" Content="pbf from Geofabrik or planet.osm.pbf" HorizontalAlignment="Left" Margin="10,16,0,0" VerticalAlignment="Top" FlowDirection="RightToLeft" RenderTransformOrigin="0.486,2.514"  IsChecked="True" />
-                            <CheckBox x:Name="chb_geofabrikalreadygenerated" Content="re-use an already filtered *.pbf file" HorizontalAlignment="Left" Margin="28,36,0,0" VerticalAlignment="Top" FlowDirection="RightToLeft" RenderTransformOrigin="0.486,2.514"  IsChecked="false" />
-                            <CheckBox x:Name="chb_Heightmap_Error_Correction" Content="Heightmap Error Correction" HorizontalAlignment="Left" Margin="61,56,0,0" VerticalAlignment="Top" FlowDirection="RightToLeft"  IsChecked="True" />
-                            <CheckBox x:Name="chb_bathymetry" Content="Bathymetry" HorizontalAlignment="Left" Margin="148,76,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
-
-                            <CheckBox x:Name="chb_rivers" Content="Rivers" HorizontalAlignment="Left" Margin="177,104,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
-                            <ComboBox x:Name="cbb_Rivers" Margin="233,100,0,0" HorizontalAlignment="Left" Width="70" Height="22" VerticalAlignment="Top">
+                            <CheckBox x:Name="chb_rivers" Content="Rivers" HorizontalAlignment="Left" Margin="177,66,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
+                            <ComboBox x:Name="cbb_Rivers" Margin="233,62,0,0" HorizontalAlignment="Left" Width="83" Height="22" VerticalAlignment="Top">
                                 <ComboBoxItem Content="small"/>
                                 <ComboBoxItem IsSelected="True" Content="medium"/>
                                 <ComboBoxItem Content="large"/>
                             </ComboBox>
-                            <CheckBox x:Name="chb_streams" Content="Streams" HorizontalAlignment="Left" Margin="166,124,0,0" VerticalAlignment="Top" IsChecked="false" FlowDirection="RightToLeft"/>
+                            <CheckBox x:Name="chb_streams" Content="Streams" HorizontalAlignment="Left" Margin="166,86,0,0" VerticalAlignment="Top" IsChecked="false" FlowDirection="RightToLeft"/>
 
-                            <CheckBox x:Name="chb_Borders" Content="Borders" HorizontalAlignment="Left" Margin="166,154,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
-                            <ComboBox x:Name="cbb_Borders" Margin="232,150,0,0" HorizontalAlignment="Left" Width="71" Height="22" VerticalAlignment="Top">
+                            <CheckBox x:Name="chb_Borders" Content="Borders" HorizontalAlignment="Left" Margin="166,116,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
+                            <ComboBox x:Name="cbb_Borders" Margin="232,112,0,0" HorizontalAlignment="Left" Width="84" Height="22" VerticalAlignment="Top">
                                 <ComboBoxItem IsSelected="True" Content="2020"/>
                                 <ComboBoxItem Content="1994"/>
                                 <ComboBoxItem Content="1945"/>
@@ -191,8 +192,16 @@
                                 <ComboBoxItem Content="1000bc"/>
                                 <ComboBoxItem Content="2000bc"/>
                             </ComboBox>
-                            <CheckBox x:Name="chb_buildings" Content="Urban" HorizontalAlignment="Left" Margin="175,174,0,0" VerticalAlignment="Top" IsChecked="False" FlowDirection="RightToLeft"/>
-                            <CheckBox x:Name="chb_ores" Content="Additional Ores" HorizontalAlignment="Left" Margin="125,194,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
+                            <CheckBox x:Name="chb_buildings" Content="Urban Groundcover" HorizontalAlignment="Left" Margin="103,146,0,0" VerticalAlignment="Top" IsChecked="False" FlowDirection="RightToLeft"/>
+                            <CheckBox x:Name="chb_ruins" Content="Ruins" HorizontalAlignment="Left" Margin="179,166,0,0" VerticalAlignment="Top" IsChecked="False" IsEnabled="False" FlowDirection="RightToLeft"/>
+
+                            <CheckBox x:Name="chb_ores" Content="Additional Ores" HorizontalAlignment="Left" Margin="126,196,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
+                            <CheckBox x:Name="chb_netherrite" Content="Rare Netherite in the Overworld" HorizontalAlignment="Left" Margin="39,216,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
+
+                            <CheckBox x:Name="chb_aerodrome" Content="End-Portals" HorizontalAlignment="Left" Margin="147,246,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
+                            <CheckBox x:Name="chb_mob_spawner" Content="Random Mob-Spawners" HorizontalAlignment="Left" Margin="79,266,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft" />
+                            <CheckBox x:Name="chb_animal_spawner" Content="Random Animal-Spawners" HorizontalAlignment="Left" Margin="67,286,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft" />
+
 
 
                             <CheckBox x:Name="chb_highways" Content="Highways" HorizontalAlignment="Left" Margin="379,16,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
@@ -203,27 +212,20 @@
                             <CheckBox x:Name="chb_meadows" Content="Meadows" HorizontalAlignment="Left" Margin="379,106,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
                             <CheckBox x:Name="chb_quarrys" Content="Quarry" HorizontalAlignment="Left" Margin="394,126,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
 
-                            <CheckBox x:Name="chb_aerodrome" Content="End-Portals" HorizontalAlignment="Left" Margin="370,156,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
-                            <CheckBox x:Name="chb_mob_spawner" Content="Random Mob-Spawners" HorizontalAlignment="Left" Margin="302,176,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft" />
-                            <CheckBox x:Name="chb_animal_spawner" Content="Random Animal-Spawners" HorizontalAlignment="Left" Margin="290,196,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft" />
-
+                            <Label x:Name="lbl_Warning" Content="" HorizontalAlignment="Left" Margin="10,318,0,0" Width="526" Height="26" VerticalAlignment="Top" />
+                            <CheckBox x:Name="chb_volcanos" Content="Volcanos" HorizontalAlignment="Left" Margin="383,156,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
+                            <CheckBox x:Name="chb_shrubs" Content="Shrubs" HorizontalAlignment="Left" Margin="394,186,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
+                            <CheckBox x:Name="chb_crops" Content="Random Crops" HorizontalAlignment="Left" Margin="351,206,0,0" VerticalAlignment="Top" IsChecked="True" FlowDirection="RightToLeft"/>
                         </Grid>
-                    </GroupBox>
+                    </TabItem>
+                    <TabItem Header="Map generation">
+                        <Grid Background="#FFFFFFFF">
 
-                    <GroupBox Header="Miscellaneous" Height="210" Margin="0,640,0,0" VerticalAlignment="Top">
-                        <Grid>
+                            <Label x:Name="lbl_Proxy" Content="Proxy Server" Margin="282,7,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" RenderTransformOrigin="0.709,0.449"/>
+                            <TextBox x:Name="txb_Proxy" Text="" Height="20" Margin="358,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="167" />
 
-                            <Label x:Name="lbl_TerrainMapping" Content="Terrain Mapping" HorizontalAlignment="Left" Margin="112,14,0,0" VerticalAlignment="Top"/>
-                            <ComboBox x:Name="cbb_TerrainMapping" Margin="209,16,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="83">
-                                <ComboBoxItem IsSelected="True" Content="Standard"/>
-                                <ComboBoxItem Content="Custom"/>
-                            </ComboBox>
-
-                            <Label x:Name="lbl_Proxy" Content="Proxy Server" Margin="133,40,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" RenderTransformOrigin="0.709,0.449"/>
-                            <TextBox x:Name="txb_Proxy" Text="" Height="20" Margin="209,43,0,0" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left" Width="212" />
-
-                            <Label x:Name="lbl_Number_Of_Cores" Content="Number of Cores" HorizontalAlignment="Left" Margin="108,66,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.494,0.615"/>
-                            <ComboBox x:Name="cbb_Number_Of_Cores" Margin="209,68,0,0" HorizontalAlignment="Left" Width="83" Height="22" VerticalAlignment="Top">
+                            <Label x:Name="lbl_Number_Of_Cores" Content="Number of parallel generations" HorizontalAlignment="Left" Margin="267,33,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.494,0.615"/>
+                            <ComboBox x:Name="cbb_Number_Of_Cores" Margin="442,35,0,0" HorizontalAlignment="Left" Width="83" Height="22" VerticalAlignment="Top">
                                 <ComboBoxItem Content="1"/>
                                 <ComboBoxItem IsSelected="True" Content="2"/>
                                 <ComboBoxItem Content="3"/>
@@ -242,17 +244,25 @@
                                 <ComboBoxItem Content="16"/>
                             </ComboBox>
 
-                            <CheckBox x:Name="chb_Keep_Temporary_Files" Content="Keep temporary files" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="false" FlowDirection="RightToLeft" Margin="95,95,0,0"/>
-                            <CheckBox x:Name="chb_cmd_Visibility" Content="Show cmd prompt during generation" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="False" FlowDirection="RightToLeft" Margin="7,115,0,0"/>
-                            <CheckBox x:Name="chb_continue" Content="Continue, even if a single Tile fails" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="False" FlowDirection="RightToLeft" Margin="26,135,0,0"/>
+                            <CheckBox x:Name="chb_cmd_Visibility" Content="Show cmd prompt during generation" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="False" FlowDirection="RightToLeft" Margin="308,64,0,0"/>
+                            <CheckBox x:Name="chb_continue" Content="Continue, even if a single Tile fails" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="False" FlowDirection="RightToLeft" Margin="327,84,0,0"/>
 
-                            <Label x:Name="lbl_Warning" Content="" HorizontalAlignment="Left" Margin="10,160,0,0" VerticalAlignment="Top" Width="503" />
+                            <CheckBox x:Name="chb_geofabrik" Content="pbf from Geofabrik or planet.osm.pbf" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FlowDirection="RightToLeft" RenderTransformOrigin="0.486,2.514"  IsChecked="True" />
+                            <CheckBox x:Name="chb_keepPbfFiles" Content="Keep filtered *.pbf file" HorizontalAlignment="Left" Margin="93,30,0,0" VerticalAlignment="Top" FlowDirection="RightToLeft" RenderTransformOrigin="0.486,2.514"  IsChecked="True" />
+                            <CheckBox x:Name="chb_reUsePbfFiles" Content="Re-use filtered *.pbf file" HorizontalAlignment="Left" Margin="83,50,0,0" VerticalAlignment="Top" FlowDirection="RightToLeft" RenderTransformOrigin="0.486,2.514"  IsChecked="false" />
+
+                            <CheckBox x:Name="chb_keepOsmFiles" Content="Keep *.osm files for each Tile" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="false" FlowDirection="RightToLeft" Margin="56,70,0,0"/>
+                            <CheckBox x:Name="chb_reUseOsmFiles" Content="Re-use *.osm files for each Tile" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="false" FlowDirection="RightToLeft" Margin="46,90,0,0"/>
+
+                            <CheckBox x:Name="chb_keepImages" Content="Keep images for each Tile" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="false" FlowDirection="RightToLeft" Margin="73,110,0,0"/>
+                            <CheckBox x:Name="chb_reUseImages" Content="Re-use images for each Tile" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="false" FlowDirection="RightToLeft" Margin="63,130,0,0"/>
+                            <CheckBox x:Name="chb_keepWorldPainter" Content="Keep WorldPainter files for each Tile" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="false" FlowDirection="RightToLeft" Margin="18,150,0,0"/>
 
                         </Grid>
-                    </GroupBox>
+                    </TabItem>
+                </TabControl>
 
-                </Grid>
-            </ScrollViewer>
+            </Grid>
             <Grid Grid.Row="2" Height="40" VerticalAlignment="Bottom" Background="LightGray">
                 <Button x:Name="btn_Save_Settings" Content="Save" Margin="0,0,90,10" Click="Save_Click" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75"/>
                 <Button x:Name="btn_Cancel_Settings" Content="Cancel" Margin="0,0,10,10" Click="Cancel_Click" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75"/>

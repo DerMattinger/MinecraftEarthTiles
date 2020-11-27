@@ -90,7 +90,7 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File">
-                <MenuItem Header="Save and close" Click="Save_Click"/>
+                <MenuItem Name="btnSaveClose" Header="Save and close" Click="Save_Click"/>
                 <MenuItem Header="Clear selection" Click="Reset_Selection_Click"/>
                 <MenuItem Header="Load selection from file" Click="Load_Selection_Click"/>
                 <MenuItem Header="Save selection to file" Click="Save_Selection_Click"/>

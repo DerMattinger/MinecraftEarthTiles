@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MinecraftEarthTiles_TileSelector"
         mc:Ignorable="d"
-        Title="Tile Generation" Height="520" Width="470">
+        Title="Tile Generation" Height="520" Width="599.115">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File">
@@ -22,7 +22,7 @@
             <ScrollViewer x:Name="ScrollViewer" PanningMode="Both" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" >
                 <DataGrid x:Name="dgr_Tiles" CanUserAddRows="False" AutoGenerateColumns="False" ItemsSource="{Binding Path=., Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}">
                     <DataGrid.Columns>
-                        <DataGridTemplateColumn Header="Tile">
+                        <DataGridTemplateColumn Header="Tile" Width="100">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBox Text="{Binding Path=TileName, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"/>
@@ -36,10 +36,17 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTemplateColumn Header="Info" Width="180">
+                        <DataGridTemplateColumn Header="Info" Width="200">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBox Text="{Binding Path=Comment, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Header="Log" Width="80">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="{Binding Path=TileName, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Click="Log_Click"></Button>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>

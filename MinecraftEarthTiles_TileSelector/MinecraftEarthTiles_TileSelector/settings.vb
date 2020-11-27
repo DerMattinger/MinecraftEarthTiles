@@ -14,13 +14,13 @@
     Public bordersBoolean As Boolean
     Public borders As String
     Public geofabrik As Boolean
-    Public geofabrikalreadygenerated As Boolean
     Public bathymetry As Boolean
     Public highways As Boolean
     Public streets As Boolean
     Public small_streets As Boolean
     Public buildings As Boolean
     Public ores As Boolean
+    Public netherite As Boolean
     Public farms As Boolean
     Public meadows As Boolean
     Public quarrys As Boolean
@@ -30,9 +30,18 @@
     Public riversBoolean As Boolean
     Public rivers As String
     Public streams As Boolean
+    Public volcanos As Boolean
+    Public shrubs As Boolean
+    Public crops As Boolean
     Public MapVersion As String
     Public Proxy As String
-    Public KeepTemporaryFiles As Boolean
+    Public keepPbfFile As Boolean
+    Public reUsePbfFile As Boolean
+    Public keepOsmFiles As Boolean
+    Public reUseOsmFiles As Boolean
+    Public keepImageFiles As Boolean
+    Public reUseImageFiles As Boolean
+    Public keepWorldPainterFiles As Boolean
     Public NumberOfCores As String
     Public cmdVisibility As Boolean
     Public continueGeneration As Boolean
@@ -54,13 +63,13 @@
         Terrain = "Standard"
         Heightmap_Error_Correction = False
         geofabrik = False
-        geofabrikalreadygenerated = False
         bathymetry = True
         highways = True
         streets = True
         small_streets = False
         buildings = True
         ores = True
+        netherite = True
         bordersBoolean = True
         borders = "2020"
         farms = True
@@ -72,9 +81,18 @@
         riversBoolean = True
         rivers = "medium"
         streams = False
+        volcanos = True
+        shrubs = True
+        crops = True
         MapVersion = "1.16+"
         Proxy = ""
-        KeepTemporaryFiles = False
+        keepPbfFile = True
+        reUsePbfFile = False
+        keepOsmFiles = False
+        reUseOsmFiles = False
+        keepImageFiles = False
+        reUseImageFiles = False
+        keepWorldPainterFiles = False
         NumberOfCores = "2"
         cmdVisibility = False
         continueGeneration = False
