@@ -332,7 +332,7 @@ Public Class GenerationWindow
 
                                     If (StartupWindow.MySettings.reUseImageFiles = False) Then
 
-                                        Dim timer As Int16 = CType(Math.Ceiling(Rnd() * 30) + 1, Int16)
+                                        Dim timer As Int16 = CType(Math.Ceiling(Rnd() * 10000) + 5000, Int16)
                                         Threading.Thread.Sleep(timer)
 
                                         While stateQGIS = True
@@ -351,6 +351,15 @@ Public Class GenerationWindow
                                                 currentParallelProcess.WaitForExit()
                                                 processList.Remove(currentParallelProcess)
                                                 currentParallelProcess.Close()
+                                                If My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\python\" & Tile.TileName & "_error") Then
+                                                    Tile.GenerationProgress = 30
+                                                    Tile.Comment = "Error in the python environment"
+                                                    If StartupWindow.MySettings.continueGeneration Then
+                                                        keepRunningLocal = False
+                                                    Else
+                                                        keepRunning = False
+                                                    End If
+                                                End If
                                                 Tile.GenerationProgress = 30
                                             Else
                                                 Tile.GenerationProgress = 30
@@ -590,7 +599,6 @@ Public Class GenerationWindow
         End If
 
     End Sub
-
 
 #Region "Create Batch Files"
 
@@ -1046,11 +1054,15 @@ Public Class GenerationWindow
 
             Dim pythonFile As System.IO.StreamWriter
             pythonFile = My.Computer.FileSystem.OpenTextFileWriter(StartupWindow.MySettings.PathToScriptsFolder & "\python\" & Tile & "_repair.py", False, System.Text.Encoding.ASCII)
-            pythonFile.WriteLine("import os" & Environment.NewLine &
-                                "from PyQt5.QtCore import *" & Environment.NewLine &
-                                "import processing")
-
             Dim PathReversedSlash = Replace(StartupWindow.MySettings.PathToScriptsFolder, "\", "/")
+            pythonFile.WriteLine("try:" & Environment.NewLine &
+                                vbTab & "import os" & Environment.NewLine &
+                                vbTab & "from PyQt5.QtCore import *" & Environment.NewLine &
+                                vbTab & "import processing" & Environment.NewLine &
+                                "except:" & Environment.NewLine &
+                                vbTab & "with open(os.path.join('" & PathReversedSlash & "/python', '" & Tile & "_error'), 'w') as fp:" & Environment.NewLine &
+                                vbTab & vbTab & "pass" & Environment.NewLine &
+                                vbTab & "os.kill(os.getpid(), 9)" & Environment.NewLine)
             pythonFile.WriteLine("processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/urban.osm|layername=multipolygons','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/urban.shp'})")
             pythonFile.WriteLine("processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/forest.osm|layername=multipolygons|subset=\""other_tags\"" = \'\""leaf_type\""=>\""broadleaved\""\'','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/broadleaved.shp'})")
             pythonFile.WriteLine("processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/forest.osm|layername=multipolygons|subset=\""other_tags\"" = \'\""leaf_type\""=>\""needleleaved\""\'','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/needleleaved.shp'})")
@@ -1111,6 +1123,7 @@ Public Class GenerationWindow
 
             ScriptBatchFile = My.Computer.FileSystem.OpenTextFileWriter(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\2-qgis.bat", False, System.Text.Encoding.ASCII)
 
+            ScriptBatchFile.WriteLine("SLEEP 5")
             ScriptBatchFile.WriteLine("if not exist """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\"" mkdir """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\""")
             ScriptBatchFile.WriteLine("if not exist """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & Tile & """ mkdir """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & Tile & """")
             ScriptBatchFile.WriteLine("if not exist """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & Tile & "\heightmap"" mkdir """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & Tile & "\heightmap""")
@@ -1436,7 +1449,7 @@ Public Class GenerationWindow
             If scale < 25 Then
                 ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png"" -sample 3.125%% -magnify -magnify -magnify -magnify -magnify """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png""")
             ElseIf scale < 50 Then
-                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png"" -sample 5.25%% -magnify -magnify -magnify -magnify """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png""")
+                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png"" -sample 6.25%% -magnify -magnify -magnify -magnify """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png""")
             ElseIf scale < 100 Then
                 ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png"" -sample 12.5%% -magnify -magnify -magnify """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png""")
             ElseIf scale < 200 Then
@@ -1448,9 +1461,9 @@ Public Class GenerationWindow
             If scale < 50 Then
                 ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_ocean_temp.png"" -sample 1.5625%% -magnify -magnify -magnify -magnify -magnify -magnify """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_ocean_temp.png""")
             ElseIf scale < 100 Then
-                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_ocean_temp.png"" -sample 5.25%% -magnify -magnify -magnify -magnify """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_ocean_temp.png""")
+                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_ocean_temp.png"" -sample 3.125%% -magnify -magnify -magnify -magnify """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_ocean_temp.png""")
             ElseIf scale < 200 Then
-                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_ocean_temp.png"" -sample 5.25%% -magnify -magnify -magnify -magnify """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_ocean_temp.png""")
+                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_ocean_temp.png"" -sample 6.25%% -magnify -magnify -magnify -magnify """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_ocean_temp.png""")
             ElseIf scale < 500 Then
                 ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_ocean_temp.png"" -sample 12.5%% -magnify -magnify -magnify """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_ocean_temp.png""")
             ElseIf scale < 1000 Then
@@ -1459,7 +1472,7 @@ Public Class GenerationWindow
                 ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_ocean_temp.png"" -sample 50%% -magnify """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_ocean_temp.png""")
             End If
 
-            ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_ocean_temp.png"" -dither None -remap """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript\terrain\" & StartupWindow.MySettings.Terrain & ".png"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_terrain_reduced_colors.png""")
+            ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_terrain.png"" -dither None -remap """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript\terrain\" & StartupWindow.MySettings.Terrain & ".png"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_terrain_reduced_colors.png""")
             ScriptBatchFile.Close()
 
         Catch ex As Exception
