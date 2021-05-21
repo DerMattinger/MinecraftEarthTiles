@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:MinecraftEarthTiles_TileSelector"
         mc:Ignorable="d"
         Title="Minecraft Earth Tiles"
-        Height="210"
-        MinHeight="210"
+        Height="220"
+        MinHeight="220"
         Width="255"
         MinWidth="255"
         Loaded="Window_Loaded"
@@ -30,7 +30,7 @@
                 <Label x:FieldModifier="public" x:Name="lbl_World_Size_Label" Content="Estimated world size:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,60,0,0"/>
                 <Label x:FieldModifier="public" x:Name="lbl_World_Size_Content" Content="0 kb" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="131,60,0,0"/>
                 <Button x:Name="btn_AllExport" Content="Generation" Margin="10,91,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="45" HorizontalAlignment="Left" Width="205" Click="Btn_Generation_Click" IsEnabled="False"/>
-
+                <Label x:Name="lbl_Version" Content="Full Version: 1.1.2" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
             </Grid>
         </ScrollViewer>
     </DockPanel>

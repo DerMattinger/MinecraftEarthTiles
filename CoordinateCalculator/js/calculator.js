@@ -37,6 +37,10 @@ $("#latitude_dec").change(function() {
 $("#longitude_dec").change(function() {
 	displayDEC();
 });
+$("#scale").change(function() {
+	preDefinedScales();
+	calcScale();
+});
 $("#blocks").change(function() {
 	displayDMS();
 	calcScale();
@@ -52,6 +56,47 @@ $("#zcoord").change(function() {
 	displayCoords();
 });
 
+function preDefinedScales(){
+	var scale = $("#scale").val();
+	var blocks = 1024;
+	var tiles = 1;
+	switch (scale) {
+		case "100":
+			blocks = 1024;
+			tiles = 1;
+			break;
+		case "200":
+			blocks = 512;
+			tiles = 1;
+			break;
+		case "500":
+			blocks = 3072;
+			tiles = 15;
+			break;
+		case "1000":
+			blocks = 3072;
+			tiles = 30;
+			break;
+		case "2000":
+			blocks = 1536;
+			tiles = 30;
+			break;
+		case "6000":
+			blocks = 512;
+			tiles = 30;
+			break;
+		case "18000":
+			blocks = 512;
+			tiles = 90;
+			break;
+		default:
+			blocks = 1024;
+			tiles = 1;
+	}
+	$("#blocks").val( blocks );
+	$("#tiles").val( tiles );		
+}
+
 function displayDMS(){
 	var latitude_hour = $("#latitude_hour").val();
 	var latitude_minute = $("#latitude_minute").val();
@@ -61,7 +106,7 @@ function displayDMS(){
 	var longitude_minute = $("#longitude_minute").val();
 	var longitude_second = $("#longitude_second").val();
 	var longitude_direction = $("#longitude_direction").val();
-	var scale = $("#blocks").val();
+	var blocks = $("#blocks").val();
 	var tiles = $("#tiles").val();
 	
 	var latitude_dec = 0;
@@ -82,10 +127,10 @@ function displayDMS(){
 	longitude_dec = round_six(longitude_dec);
 	
 	var x_coord = 0;
-	xcoord = Math.round(longitude_dec * scale / tiles);
+	xcoord = Math.round(longitude_dec * blocks / tiles);
 	
 	var z_coord = 0;
-	zcoord = -1 * Math.round(latitude_dec * scale / tiles);
+	zcoord = -1 * Math.round(latitude_dec * blocks / tiles);
 	
 	$("#latitude_dec").val( latitude_dec );
 	$("#longitude_dec").val( longitude_dec );
@@ -99,7 +144,7 @@ function displayDMS(){
 function displayDEC(){
 	var latitude_dec = $("#latitude_dec").val();
 	var longitude_dec = $("#longitude_dec").val();
-	var scale = $("#blocks").val();
+	var blocks = $("#blocks").val();
 	var tiles = $("#tiles").val();
 	
 	var latitude_direction = "north";
@@ -148,10 +193,10 @@ function displayDEC(){
 	$("#longitude_direction").val( longitude_direction );
 
 	var x_coord = 0;
-	xcoord = Math.round(longitude_dec * scale / tiles);
+	xcoord = Math.round(longitude_dec * blocks / tiles);
 	
 	var z_coord = 0;
-	zcoord = -1 * Math.round(latitude_dec * scale / tiles);
+	zcoord = -1 * Math.round(latitude_dec * blocks / tiles);
 		
 	$("#xcoord").val( xcoord );
 	$("#zcoord").val( zcoord );
@@ -163,14 +208,14 @@ function displayDEC(){
 function displayCoords(){
 	var xcoord = $("#xcoord").val();
 	var zcoord = $("#zcoord").val();
-	var scale = $("#blocks").val();
+	var blocks = $("#blocks").val();
 	var tiles = $("#tiles").val();
 
 	var longitude_dec = 0;
-	longitude_dec = xcoord * scale / tiles;
+	longitude_dec = xcoord / blocks * tiles;
 	
 	var latitude_dec = 0;
-	latitude_dec = -1 * zcoord * scale / tiles;
+	latitude_dec = -1 * zcoord / blocks * tiles;
 	
 	latitude_dec = round_six(latitude_dec);
 	longitude_dec = round_six(longitude_dec);
@@ -185,14 +230,14 @@ function displayCoords(){
 	if(latitude_dec < 0){
 		latitude_direction = "south";
 		latitude_hour = Math.floor(-1 * latitude_dec);
-		latitude_minute = Math.floor((-1 * latitude_dec - latitude_hour) * 60);
-		latitude_second = (latitude_dec - (latitude_hour + latitude_minute / 60)) * 3600;
+		latitude_minute = Math.floor(((-1 * latitude_dec) - latitude_hour) * 60);
+		latitude_second = ((-1 * latitude_dec) - (latitude_hour + (latitude_minute / 60))) * 3600;
 		latitude_second = round_three(latitude_second);
 	}else{
 		latitude_direction = "north";
 		latitude_hour = Math.floor(latitude_dec);
 		latitude_minute = Math.floor((latitude_dec - latitude_hour) * 60);
-		latitude_second = (-1 * latitude_dec - (latitude_hour + latitude_minute / 60)) * 3600;
+		latitude_second = (latitude_dec - (latitude_hour + (latitude_minute / 60))) * 3600;
 		latitude_second = round_three(latitude_second);
 	}
 	
@@ -203,14 +248,14 @@ function displayCoords(){
 	if(longitude_dec < 0){
 		longitude_direction = "west";
 		longitude_hour = Math.floor(-1 * longitude_dec);
-		longitude_minute = Math.floor((-1 * longitude_dec - longitude_hour) * 60);
-		longitude_second = (longitude_dec - (longitude_hour + longitude_minute / 60)) * 3600;
+		longitude_minute = Math.floor(((-1 * longitude_dec) - longitude_hour) * 60);
+		longitude_second = ((-1 * longitude_dec) - (longitude_hour + (longitude_minute / 60))) * 3600;
 		longitude_second = round_three(longitude_second);
 	}else{
 		longitude_direction = "east";
 		longitude_hour = Math.floor(longitude_dec);
 		longitude_minute = Math.floor((longitude_dec - longitude_hour) * 60);
-		longitude_second = (-1 * longitude_dec - (longitude_hour + longitude_minute / 60)) * 3600;
+		longitude_second = (longitude_dec - (longitude_hour + (longitude_minute / 60))) * 3600;
 		longitude_second = round_three(longitude_second);
 	}
 	

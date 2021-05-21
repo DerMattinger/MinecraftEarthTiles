@@ -1,4 +1,5 @@
 ﻿Public Class Settings
+    Public version As String
     Public PathToScriptsFolder As String
     Public PathToWorldPainterFolder As String
     Public PathToQGIS As String
@@ -15,6 +16,7 @@
     Public borders As String
     Public geofabrik As Boolean
     Public bathymetry As Boolean
+    Public offlineTerrain As Boolean
     Public highways As Boolean
     Public streets As Boolean
     Public small_streets As Boolean
@@ -24,6 +26,7 @@
     Public farms As Boolean
     Public meadows As Boolean
     Public quarrys As Boolean
+    Public forests As Boolean
     Public aerodrome As Boolean
     Public mobSpawner As Boolean
     Public animalSpawner As Boolean
@@ -45,11 +48,14 @@
     Public NumberOfCores As String
     Public cmdVisibility As Boolean
     Public continueGeneration As Boolean
+    Public mapOffset As String
+    Public vanillaGeneration As String
 
     ''' <summary>
     ''' Standard values for settings
     ''' </summary>
     Public Sub New()
+        version = "1.1.2"
         PathToScriptsFolder = My.Application.Info.DirectoryPath
         PathToWorldPainterFolder = ""
         PathToQGIS = ""
@@ -64,6 +70,7 @@
         Heightmap_Error_Correction = False
         geofabrik = False
         bathymetry = True
+        offlineTerrain = True
         highways = True
         streets = True
         small_streets = False
@@ -75,6 +82,7 @@
         farms = True
         meadows = True
         quarrys = True
+        forests = True
         aerodrome = True
         mobSpawner = True
         animalSpawner = True
@@ -96,6 +104,8 @@
         NumberOfCores = "2"
         cmdVisibility = False
         continueGeneration = False
+        mapOffset = "0"
+        vanillaGeneration = "Off"
     End Sub
 
 End Class

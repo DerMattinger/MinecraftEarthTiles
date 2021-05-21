@@ -3,15 +3,27 @@ $("#verticalScale").change(function() {
 });
 
 $("#horizontalScale").change(function() {
-	calculatePrice();
+	calculateRoughPrice();
 });
 
 $("#longitude").change(function() {
-	calculatePrice();
+	calculateRoughPrice();
 });
 
 $("#latitude").change(function() {
-	calculatePrice();
+	calculateRoughPrice();
+});
+
+$("#blocks").change(function() {
+	calculateCorrectPrice();
+});
+
+$("#tiles").change(function() {
+	calculateCorrectPrice();
+});
+
+$("#amount").change(function() {
+	calculateCorrectPrice();
 });
 
 function verticalScaleWarning(){
@@ -23,7 +35,49 @@ function verticalScaleWarning(){
 	}
 }
 
-function calculatePrice(){
+function calculateCorrectPrice(){
+	var mapPrice = 0;
+	var finalPrice = 0;
+	var finalTime = 0;
+	var fileSize = 0;
+	var blocks = $("#blocks").val();
+	var tiles = $("#tiles").val();
+	var amount = $("#amount").val();
+	
+	horizontalScale = round(36768000 / (blocks * (360 / tiles)));
+
+	mapSize = 5.0 * (blocks / 512) * (blocks / 512) * amount / 20;
+	
+	mapPrice = mapSize * 0.01;
+	finalTime = mapSize * 0.04;
+	fileSize = mapSize * 0.02;
+	
+	$("#mapPrice").text(round2(mapPrice));
+	
+	if(horizontalScale <= 200){
+		finalPrice = mapPrice * 1.2;
+		finalTime = finalTime * 1.2;
+		$("#scaleFactor").text(1.2);
+	}else{
+		finalPrice = mapPrice * 1;
+		$("#scaleFactor").text(1);
+	}
+	
+	finalPrice = finalPrice +5;
+	
+	if(finalPrice <= 10){
+		finalPrice = 10;
+		$("#info").text("The minimum price is 10 $.");
+	}else{
+		$("#info").text("");
+	}
+	
+	$("#finalPrice").text(round2(finalPrice));
+	$("#finalTime").text(round(finalTime));
+	$("#fileSize").text(round2(fileSize));
+}
+
+function calculateRoughPrice(){
 	var finalPrice = 0;
 	var finalTime = 0;
 	var fileSize = 0;
@@ -33,13 +87,28 @@ function calculatePrice(){
 	
 	var mapSize = (latitude * longitude) / (horizontalScale * horizontalScale);
 	
-	finalPrice = mapSize * 0.02;
-	finalTime = mapSize * 0.03;
-	fileSize = mapSize * 0.016;
+	mapPrice = mapSize * 0.01;
+	finalTime = mapSize * 0.04;
+	fileSize = mapSize * 0.02;
+	
+	$("#mapPrice").text(round2(mapPrice));
 	
 	if(horizontalScale <= 200){
-		finalPrice = finalPrice * 1.2
-		finalTime = finalTime * 1.2
+		finalPrice = mapPrice * 1.2;
+		finalTime = finalTime * 1.2;
+		$("#scaleFactor").text(1.2);
+	}else{
+		finalPrice = mapPrice * 1;
+		$("#scaleFactor").text(1);
+	}
+	
+	finalPrice = finalPrice +5;
+	
+	if(finalPrice <= 10){
+		finalPrice = 10;
+		$("#info").text("The minimum price is 10 $.");
+	}else{
+		$("#info").text("");
 	}
 	
 	$("#finalPrice").text(round2(finalPrice));

@@ -93,6 +93,7 @@ Public Class StartupWindow
 
         Dim GenerationWindow As New GenerationWindow
         GenerationWindow.ShowDialog()
+        Check()
     End Sub
 
 #End Region

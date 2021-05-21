@@ -436,22 +436,24 @@ Public Class SelectionWindow
     End Sub
 
     Public Sub CheckForMaximumTiles()
-        'Dim TilesList = (
-        'From T In Me.Tiles.Children.OfType(Of CheckBox)()
-        'Where T.IsChecked Select T.Name
-        ').ToList
-        'If TilesList.Count > 25 Then
-        'btn_Save_Selection.IsEnabled = False
-        'btnSaveClose.IsEnabled = False
-        'Dim MyToolTip As ToolTip = New ToolTip
-        'MyToolTip.Placement = Primitives.PlacementMode.Mouse
-        'MyToolTip.Content = "You can't create more then 25 Tiles in the demo version."
-        'grd_Buttons.ToolTip = MyToolTip
-        'Else
-        'btn_Save_Selection.IsEnabled = True
-        'btnSaveClose.IsEnabled = True
-        'grd_Buttons.ToolTip = New ToolTip
-        'End If
+#If False Then
+        Dim TilesList = (
+        From T In Me.Tiles.Children.OfType(Of CheckBox)()
+        Where T.IsChecked Select T.Name
+        ).ToList
+        If TilesList.Count > 25 Then
+            btn_Save_Selection.IsEnabled = False
+            btnSaveClose.IsEnabled = False
+            Dim MyToolTip As ToolTip = New ToolTip
+            MyToolTip.Placement = Primitives.PlacementMode.Mouse
+            MyToolTip.Content = "You can't create more then 25 Tiles in the demo version."
+            grd_Buttons.ToolTip = MyToolTip
+        Else
+            btn_Save_Selection.IsEnabled = True
+            btnSaveClose.IsEnabled = True
+            grd_Buttons.ToolTip = New ToolTip
+        End If
+#End If
     End Sub
 
 #End Region

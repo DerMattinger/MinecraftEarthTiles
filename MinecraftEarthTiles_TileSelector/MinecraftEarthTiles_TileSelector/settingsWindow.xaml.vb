@@ -96,7 +96,11 @@ Public Class SettingsWindow
             .SelectedPath = My.Application.Info.DirectoryPath
         }
         If MyFolderBrowserDialog.ShowDialog() = System.Windows.Forms.DialogResult.OK Then
-            txb_PathToQGIS.Text = MyFolderBrowserDialog.SelectedPath
+            If My.Computer.FileSystem.FileExists(MyFolderBrowserDialog.SelectedPath & "\bin\qgis-bin.exe") Or My.Computer.FileSystem.FileExists(MyFolderBrowserDialog.SelectedPath & "\bin\qgis-ltr-bin.exe") Then
+                txb_PathToQGIS.Text = MyFolderBrowserDialog.SelectedPath
+            Else
+                MsgBox("QGIS not found. Maybe it is in another folder!")
+            End If
         End If
     End Sub
 
@@ -213,6 +217,8 @@ Public Class SettingsWindow
 
         chb_bathymetry.IsChecked = Settings.bathymetry
 
+        chb_offlineTerrain.IsChecked = Settings.offlineTerrain
+
         chb_highways.IsChecked = Settings.highways
 
         chb_streets.IsChecked = Settings.streets
@@ -231,6 +237,8 @@ Public Class SettingsWindow
 
         chb_quarrys.IsChecked = Settings.quarrys
 
+        chb_forest.IsChecked = Settings.forests
+
         chb_aerodrome.IsChecked = Settings.aerodrome
 
         chb_mob_spawner.IsChecked = Settings.mobSpawner
@@ -239,9 +247,14 @@ Public Class SettingsWindow
 
         chb_rivers.IsChecked = Settings.riversBoolean
 
-        If Settings.rivers = "small" Or Settings.rivers = "medium" Or Settings.rivers = "large" Then
+        If Settings.rivers = "small" Or Settings.rivers = "medium" Or Settings.rivers = "large" Or Settings.rivers = "major" Then
             cbb_Rivers.SelectedValue = Settings.rivers
             cbb_Rivers.Text = Settings.rivers
+        End If
+
+        If Settings.vanillaGeneration = "Off" Or Settings.vanillaGeneration = "Only Features" Or Settings.vanillaGeneration = "Features and Caves" Or Settings.vanillaGeneration = "Features, Caves, Structures" Then
+            cbb_VanillaGeneration.SelectedValue = Settings.vanillaGeneration
+            cbb_VanillaGeneration.Text = Settings.vanillaGeneration
         End If
 
         chb_streams.IsChecked = Settings.streams
@@ -269,7 +282,13 @@ Public Class SettingsWindow
 
         txb_Proxy.Text = Settings.Proxy
 
+        If Settings.mapOffset = "-1" Or Settings.mapOffset = "0" Or Settings.mapOffset = "1" Then
+            cbb_Map_Offset.SelectedValue = Settings.mapOffset
+            cbb_Map_Offset.Text = Settings.mapOffset
+        End If
+
         Calculate_Scale()
+        ReUseChanged()
 
     End Sub
 
@@ -323,6 +342,7 @@ Public Class SettingsWindow
 
         LocalSettings.geofabrik = CBool(chb_geofabrik.IsChecked)
         LocalSettings.bathymetry = CBool(chb_bathymetry.IsChecked)
+        LocalSettings.offlineTerrain = CBool(chb_offlineTerrain.IsChecked)
         LocalSettings.highways = CBool(chb_highways.IsChecked)
         LocalSettings.streets = CBool(chb_streets.IsChecked)
         LocalSettings.buildings = CBool(chb_buildings.IsChecked)
@@ -332,6 +352,7 @@ Public Class SettingsWindow
         LocalSettings.farms = CBool(chb_farms.IsChecked)
         LocalSettings.meadows = CBool(chb_meadows.IsChecked)
         LocalSettings.quarrys = CBool(chb_quarrys.IsChecked)
+        LocalSettings.forests = CBool(chb_forest.IsChecked)
         LocalSettings.aerodrome = CBool(chb_aerodrome.IsChecked)
         LocalSettings.mobSpawner = CBool(chb_mob_spawner.IsChecked)
         LocalSettings.animalSpawner = CBool(chb_animal_spawner.IsChecked)
@@ -341,8 +362,12 @@ Public Class SettingsWindow
         LocalSettings.shrubs = CBool(chb_shrubs.IsChecked)
         LocalSettings.crops = CBool(chb_crops.IsChecked)
 
-        If cbb_Rivers.Text = "small" Or cbb_Rivers.Text = "medium" Or cbb_Rivers.Text = "large" Then
+        If cbb_Rivers.Text = "small" Or cbb_Rivers.Text = "medium" Or cbb_Rivers.Text = "large" Or cbb_Rivers.Text = "major" Then
             LocalSettings.rivers = cbb_Rivers.Text
+        End If
+
+        If cbb_VanillaGeneration.Text = "Off" Or cbb_VanillaGeneration.Text = "Only Features" Or cbb_VanillaGeneration.Text = "Features and Caves" Or cbb_VanillaGeneration.Text = "Features, Caves, Structures" Then
+            LocalSettings.vanillaGeneration = cbb_VanillaGeneration.Text
         End If
 
         If CType(cbb_Number_Of_Cores.Text, Int32) <= 16 Then
@@ -362,6 +387,10 @@ Public Class SettingsWindow
 
         LocalSettings.Proxy = txb_Proxy.Text
 
+        If cbb_Map_Offset.Text = "-1" Or cbb_Map_Offset.Text = "0" Or cbb_Map_Offset.Text = "1" Then
+            LocalSettings.mapOffset = cbb_Map_Offset.Text
+        End If
+
         Return LocalSettings
     End Function
 
@@ -373,8 +402,7 @@ Public Class SettingsWindow
                 lbl_Scale_Quantity.Content = "1 : " & (Math.Round(40075000 / ((CType(cbb_BlocksPerTile.Text, Int16) * (360 / CType(cbb_TilesperMap.Text, Int16)))), 1)).ToString
                 lbl_Scale_rounded_Quantity.Content = "1 : " & (Math.Round(36768000 / ((CType(cbb_BlocksPerTile.Text, Int16) * (360 / CType(cbb_TilesperMap.Text, Int16)))), 1)).ToString
 
-
-                If 36768000 / ((CType(cbb_BlocksPerTile.Text, Int16) * (360 / CType(cbb_TilesperMap.Text, Int16)))) >= 100 Then
+                If 36768000 / ((CType(cbb_BlocksPerTile.Text, Int16) * (360 / CType(cbb_TilesperMap.Text, Int16)))) >= 500 Then
                     chb_small_streets.IsEnabled = False
                     chb_small_streets.IsChecked = False
                     chb_farms.IsEnabled = False
@@ -383,6 +411,8 @@ Public Class SettingsWindow
                     chb_meadows.IsChecked = False
                     chb_quarrys.IsEnabled = False
                     chb_quarrys.IsChecked = False
+                    chb_forest.IsEnabled = False
+                    chb_forest.IsChecked = False
                     chb_streams.IsEnabled = False
                     chb_streams.IsChecked = False
                     lbl_Warning.Content = "Some features are only available on larger scales."
@@ -391,6 +421,7 @@ Public Class SettingsWindow
                     chb_farms.IsEnabled = True
                     chb_meadows.IsEnabled = True
                     chb_quarrys.IsEnabled = True
+                    chb_forest.IsEnabled = True
                     chb_streams.IsEnabled = True
                     lbl_Warning.Content = ""
                 End If
@@ -403,6 +434,14 @@ Public Class SettingsWindow
         Dim r = New Regex(String.Format("[{0}]", Regex.Escape(regexSearch)))
         Return r.Replace(input, replacement)
     End Function
+
+    Private Sub ReUseChanged()
+        If chb_reUsePbfFiles.IsChecked = True Or chb_reUseOsmFiles.IsChecked = True Or chb_reUseImages.IsChecked = True Then
+            lbl_reuse_warning.Visibility = Visibility.Visible
+        Else
+            lbl_reuse_warning.Visibility = Visibility.Hidden
+        End If
+    End Sub
 
 #End Region
 

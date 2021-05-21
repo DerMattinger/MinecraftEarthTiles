@@ -1,0 +1,199 @@
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="MattiBorchers">
+</head>
+<body>
+	<h3>Export Settings</h3>
+	<div>
+		<label for="horizontalScale">Horizontal Scale</label>
+		<select id="horizontalScale">		
+			<option value="10">1:10</option>
+			<option value="20">1:20</option>
+			<option value="25">1:25</option>
+			<option value="30">1:30</option>
+			<option value="33">1:33</option>
+			<option value="40">1:40</option>
+			<option value="50">1:50</option>
+			<option value="66">1:66</option>
+			<option value="100">1:100</option>
+			<option value="200">1:200</option>
+			<option value="250">1:250</option>
+			<option value="333">1:333</option>
+			<option value="400">1:400</option>
+			<option value="500" selected>1:500</option>
+			<option value="600">1:600</option>
+			<option value="666">1:666</option>
+			<option value="750">1:750</option>
+			<option value="900">1:900</option>
+			<option value="1000">1:1000</option>
+			<option value="1200">1:1200</option>
+			<option value="1500">1:1500</option>
+			<option value="1800">1:1800</option>
+			<option value="2000">1:2000</option>
+			<option value="3000">1:3000</option>
+			<option value="6000">1:6000</option>
+		</select>
+	</div>
+	<br>
+	<div>
+		<label for="verticalScale">Verticle Scale</label>
+		<select id="verticalScale">
+			<option value="5">5</option>
+			<option value="10">10</option>
+			<option value="25">25</option>
+			<option value="33">33</option>
+			<option value="50" selected>50</option>
+			<option value="100">100</option>
+			<option value="200">200</option>
+		</select>
+	</div>
+	<br>
+	<div>
+		<label for="mapFormat">Map Format</label>
+		<select id="mapFormat">
+			<option value="1.12.2">1.12.2</option>
+			<option value="1.16+" selected>1.16+</option>
+		</select>
+	</div>
+	<br>
+	<div>
+		<p id="verticalScaleInfo"></p>
+	</div>
+	<hr>
+	<h3>Map Settings</h3>
+	<div>
+		<label for="rivers">Rivers</label>
+		<select id="rivers">
+			<option value="none">None</option>
+			<option value="small">small</option>
+			<option value="medium" selected>medium</option>
+			<option value="large">large</option>
+		</select>
+	</div>
+	<br>
+	<div>
+		<label for="streams">Streams</label>
+		<input type="checkbox" id="scales">
+	</div>
+	<br>
+	<div>
+		<label for="borders">Borders</label>
+		<select id="borders">
+			<option value="none">None</option>
+			<option value="2020" selected>2020</option>
+			<option value="1994">1994</option>
+			<option value="1945">1945</option>
+			<option value="1938">1938</option>
+			<option value="1920">1920</option>
+			<option value="1914">1914</option>
+			<option value="1880">1880</option>
+			<option value="1815">1815</option>
+			<option value="1783">1783</option>
+			<option value="1715">1715</option>
+			<option value="1650">1650</option>
+			<option value="1530">1530</option>
+			<option value="1482">1482</option>
+			<option value="1279">1279</option>
+			<option value="1000">1000</option>
+			<option value="800">800</option>
+			<option value="600">600</option>
+			<option value="400">400</option>
+			<option value="1bc">1bc</option>
+			<option value="200bc">200bc</option>
+			<option value="323bc">323bc</option>
+			<option value="500bc">500bc</option>
+			<option value="1000bc">1000bc</option>
+			<option value="2000bc">2000bc</option>
+		</select>
+	</div>
+	<br>
+	<div>
+		<label for="urban">Urban Groundcover</label>
+		<input type="checkbox" id="urban" checked>
+	</div>
+	<br>
+	<div>
+		<label for="ores">Additional Ores</label>
+		<input type="checkbox" id="ores" checked>
+	</div>
+	<br>
+	<div>
+		<label for="netherite">Rare Netherite</label>
+		<input type="checkbox" id="netherite" checked>
+	</div>
+	<br>
+	<div>
+		<label for="endportals">End-Portals</label>
+		<input type="checkbox" id="endportals" checked>
+	</div>
+	<br>
+	<div>
+		<label for="mobspawner">Random Mob-Spawners</label>
+		<input type="checkbox" id="mobspawner" checked>
+	</div>
+	<br>
+	<div>
+		<label for="animalspawner">Random Animal-Spawners</label>
+		<input type="checkbox" id="animalspawner" checked>
+	</div>
+	<br>
+	<div>
+		<label for="highways">Highways</label>
+		<input type="checkbox" id="highways" checked>
+	</div>
+	<br>
+	<div>
+		<label for="streets">Streets</label>
+		<input type="checkbox" id="streets" checked>
+	</div>
+	<br>
+	<div>
+		<label for="smallstreets">Small streets</label>
+		<input type="checkbox" id="smallstreets">
+	</div>
+	<br>
+	<div>
+		<label for="farms">Farms</label>
+		<input type="checkbox" id="farms">
+	</div>
+	<br>
+	<div>
+		<label for="meadows">Meadows</label>
+		<input type="checkbox" id="meadows">
+	</div>
+	<br>
+	<div>
+		<label for="quarrys">Quarrys</label>
+		<input type="checkbox" id="quarrys">
+	</div>
+	<br>
+	<div>
+		<label for="volcanos">Volcanos</label>
+		<input type="checkbox" id="volcanos" checked>
+	</div>
+	<br>
+	<div>
+		<label for="shrubs">Shrubs</label>
+		<input type="checkbox" id="shrubs" checked>
+	</div>
+	<br>
+	<div>
+		<label for="randomcrops">Random Crops</label>
+		<input type="checkbox" id="randomcrops" checked>
+	</div>
+	<br>
+	<div>
+		<button id="generate">Generate Code</button>
+		<a id="mail">Send Mail</a>
+	</div>
+	<hr>
+	<h3>Export Settings</h3>
+	<div>
+		<textarea id="output" rows="22" cols="50">
+		</textarea>
+	</div>
+  <script src="js/jquery.js"></script>
+  <script src="js/settings.js"></script>
+</body>
+</html>

@@ -61,36 +61,77 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Sucht eine lokalisierte Zeichenfolge, die latDir = tile[0:1]
-        '''latNumber = float(tile[1:3])
-        '''longDir = tile[3:4]
-        '''longNumber = float(tile[4:7])
+        '''  Sucht eine lokalisierte Zeichenfolge, die 	latDir = tile[0:1]
+        '''	latNumber = float(tile[1:3])
+        '''	longDir = tile[3:4]
+        '''	longNumber = float(tile[4:7])
         '''
-        '''if latDir == &quot;N&quot;:
-        '''    yMax = latNumber + 1
-        '''elif latDir == &quot;S&quot;:
-        '''    yMax = (latNumber - 1) * -1
-        '''else:
-        '''    yMax = 0
+        '''	if latDir == &quot;N&quot;:
+        '''		yMax = latNumber + 1
+        '''	elif latDir == &quot;S&quot;:
+        '''		yMax = (latNumber - 1) * -1
+        '''	else:
+        '''		yMax = 0
         '''
-        '''yMin = yMax - ( 1 * TilesPerMap )
+        '''	yMin = yMax - ( 1 * TilesPerMap )
         '''
-        '''if longDir == &quot;E&quot;:
-        '''    xMax = longNumber + 1
-        '''elif longDir == &quot;W&quot;:
-        '''    xMax = (longNumber - 1) * -1
-        '''else:
-        '''    xMax = 0
+        '''	if longDir == &quot;E&quot;:
+        '''		xMin = longNumber
+        '''	elif longDir == &quot;W&quot;:
+        '''		xMin = longNumber * -1
+        '''	else:
+        '''		xMax = 0
         '''
-        '''xMin = xMax - ( 1 * TilesPerMap )
+        '''	xMax = xMin + ( 1 * TilesPerMap )
         '''
-        '''#create missing folders
-        '''folder = path + &apos;image_exports/&apos;
-        '''if not os.path.exists(folde [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
+        '''	#create missing folders
+        '''	folder = path + &apos;image_exports/&apos;
+        '''	if not os.path.exists(folder):
+        '''		 [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
         '''</summary>
         Friend ReadOnly Property basescript() As String
             Get
                 Return ResourceManager.GetString("basescript", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die # -*- coding: utf-8 -*-
+        '''
+        '''&quot;&quot;&quot;
+        '''***************************************************************************
+        '''    utils.py
+        '''    ---------------------
+        '''    Date                 : November 2009
+        '''    Copyright            : (C) 2009 by Martin Dobias
+        '''    Email                : wonder dot sk at gmail dot com
+        '''***************************************************************************
+        '''*                                                                         *
+        '''*   This program is free software; you can redistribute it and/o [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
+        '''</summary>
+        Friend ReadOnly Property utils() As String
+            Get
+                Return ResourceManager.GetString("utils", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die # -*- coding: utf-8 -*-
+        '''
+        '''&quot;&quot;&quot;
+        '''***************************************************************************
+        '''    utils.py
+        '''    ---------------------
+        '''    Date                 : November 2009
+        '''    Copyright            : (C) 2009 by Martin Dobias
+        '''    Email                : wonder dot sk at gmail dot com
+        '''***************************************************************************
+        '''*                                                                         *
+        '''*   This program is free software; you can redistribute it and/o [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
+        '''</summary>
+        Friend ReadOnly Property utils_orig() As String
+            Get
+                Return ResourceManager.GetString("utils_orig", resourceCulture)
             End Get
         End Property
     End Module

@@ -8,14 +8,27 @@
 <body>
 	<h3>Scale</h3>
 	<div>
+	<label for="scale">Scale</label>
+	<select id="scale">
+		<option value="100">1:100</option>
+		<option value="200">1:200</option>
+		<option value="500" selected>1:500</option>
+		<option value="1000">1:1000</option>
+		<option value="2000">1:2000</option>
+		<option value="6000">1:6000</option>
+		<option value="18000">1:18000</option>
+	</select>
+	</div>
+	<br>
+	<div>
 	<label for="blocks">Blocks per Tile</label>
 	<select id="blocks">		
 		<option value="512">512</option>
-		<option value="1024" selected>1024</option>
+		<option value="1024">1024</option>
 		<option value="1536">1536</option>
 		<option value="2048">2048</option>
 		<option value="2560">2560</option>
-		<option value="3072">3072</option>
+		<option value="3072" selected>3072</option>
 		<option value="3584">3584</option>
 		<option value="4096">4096</option>
 		<option value="4608">4608</option>
@@ -56,14 +69,14 @@
 	<div>
 	<label for="tiles">Tiles per Map</label>
 	<select id="tiles">
-		<option value="1" selected>1</option>
+		<option value="1">1</option>
 		<option value="2">2</option>
 		<option value="3">3</option>
 		<option value="5">5</option>
 		<option value="6">6</option>
 		<option value="9">9</option>
 		<option value="10">10</option>
-		<option value="15">15</option>
+		<option value="15" selected>15</option>
 		<option value="18">18</option>
 		<option value="30">30</option>
 		<option value="45">45</option>
@@ -71,8 +84,8 @@
 	</select>
 	</div>
 	<div>
-	<p>Scale (at Equator): <b id="scaleEqu">108.7</b></p>
-	<p>(at Tropic of Cancer): <b id="scaleTOC">99.7</b></p>
+	<p>Scale (at Equator): <b id="scaleEqu">543.6</b></p>
+	<p>(at Tropic of Cancer): <b id="scaleTOC">498.7</b></p>
 	</div>
 	<hr>
 	<h3>DD (decimal degrees)</h3>

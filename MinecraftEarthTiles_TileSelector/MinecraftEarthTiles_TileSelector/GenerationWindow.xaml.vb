@@ -8,6 +8,8 @@ Public Class GenerationWindow
     Private Property stateQGIS As Boolean = False
     Private Property keepRunning As Boolean = True
 
+    Private Property pause As Boolean = False
+
     Private neuerthread As System.Threading.Thread
     Private cts As CancellationTokenSource = New CancellationTokenSource
     Private myOptions As ParallelOptions = New ParallelOptions()
@@ -16,6 +18,8 @@ Public Class GenerationWindow
 
     Private tilesReady As Int32 = 0
     Private maxTiles As Int32 = StartupWindow.MySelection.TilesList.Count + 3
+
+    Private startTime As DateTime = DateTime.Now
 
     Private Sub Window_Loaded() Handles MyBase.Loaded
         InitializeComponent()
@@ -37,7 +41,24 @@ Public Class GenerationWindow
         Close()
     End Sub
 
+    Private Sub BatchFiles_Click(sender As Object, e As RoutedEventArgs)
+        CleanUpFinalExport()
+        osmbatExportPrepare()
+        For Each Tile In StartupWindow.MySelection.TilesList
+            osmbatExport(Tile)
+            QgisExport(Tile)
+            tartoolExport(Tile)
+            gdalExport(Tile)
+            imagemagickExport(Tile)
+            wpScriptExport(Tile)
+            nbtChunkStatusChangerExport(Tile)
+            CleanUpExport(Tile)
+        Next
+        combineExport()
+    End Sub
+
     Private Sub Start_Click(sender As Object, e As RoutedEventArgs)
+        startTime = DateTime.Now
         keepRunning = True
         btn_Start_Selection.IsEnabled = False
         neuerthread = New System.Threading.Thread(AddressOf Me.Tile_Generation)
@@ -51,7 +72,7 @@ Public Class GenerationWindow
         Catch ex As Exception
         End Try
         For Each SingleProcess In processList
-            SingleProcess.Close()
+            SingleProcess.Kill()
         Next
         Try
             If Not neuerthread Is Nothing Then
@@ -90,14 +111,25 @@ Public Class GenerationWindow
             currentProcessInfo.UseShellExecute = False
         End If
 
+        Dim projectName As String = ""
+        If StartupWindow.MySettings.bathymetry And StartupWindow.MySettings.offlineTerrain Then
+            projectName = "MinecraftEarthTiles.qgz"
+        ElseIf Not StartupWindow.MySettings.bathymetry And StartupWindow.MySettings.offlineTerrain Then
+            projectName = "MinecraftEarthTiles_no_bathymetry.qgz"
+        ElseIf StartupWindow.MySettings.bathymetry And Not StartupWindow.MySettings.offlineTerrain Then
+            projectName = "MinecraftEarthTiles_no_terrain.qgz"
+        ElseIf StartupWindow.MySettings.bathymetry And Not StartupWindow.MySettings.offlineTerrain Then
+            projectName = "MinecraftEarthTiles_no_terrain_no_bathymetry.qgz"
+        Else
+            projectName = "MinecraftEarthTiles.qgz"
+        End If
+
         If keepRunning Then
             For Each Tile In StartupWindow.MyGeneration
                 Try
                     If Tile.TileName = "Convert pbf" Then
 
-                        Dispatcher.Invoke(Sub()
-                                              Title = "Tile Generation - " & Math.Round((tilesReady / maxTiles) * 100, 1) & "%"
-                                          End Sub)
+                        CalculateDuration()
 
                         Dim filesList As New List(Of String) From {
                             StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\MinecraftEarthTiles.qgz",
@@ -106,8 +138,42 @@ Public Class GenerationWindow
                             StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\empty.osm"
                         }
                         If StartupWindow.MySettings.bathymetry Then
-                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\MinecraftEarthTiles_no-bathymetry.qgz")
                             filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\bathymetry.tif")
+                        End If
+
+                        If StartupWindow.MySettings.offlineTerrain Then
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.A1.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.A2.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.A3.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.A4.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.B1.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.B2.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.B3.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.B4.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.C1.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.C2.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.C3.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.C4.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.D1.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.D2.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.D3.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.D4.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.E1.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.E2.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.E3.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.E4.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.F1.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.F2.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.F3.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.F4.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.G1.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.G2.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.G3.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.G4.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.H1.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.H2.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.H3.tif")
+                            filesList.Add(StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\TifFiles\terrain\TrueMarble.250m.21600x21600.H4.tif")
                         End If
 
                         For Each myFile In filesList
@@ -117,56 +183,61 @@ Public Class GenerationWindow
                             End If
                         Next
 
-                        CleanUpFinalExport()
-                        If (StartupWindow.MySettings.reUsePbfFile = False And StartupWindow.MySettings.geofabrik = True) Or (StartupWindow.MySettings.reUsePbfFile = True And StartupWindow.MySettings.geofabrik = True And Not My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\osm\output.o5m")) Then
+                        If keepRunning Then
 
-                            If Not My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToPBF) Then
-                                Tile.Comment = "Error: *.pbf file not found"
-                                keepRunning = False
-                            End If
+                            CleanUpFinalExport()
+                            If (StartupWindow.MySettings.reUsePbfFile = False And StartupWindow.MySettings.geofabrik = True) Or (StartupWindow.MySettings.reUsePbfFile = True And StartupWindow.MySettings.geofabrik = True And Not My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\osm\output.o5m")) Then
 
-                            If keepRunning Then
-
-                                osmbatExportPrepare()
-                                If My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\1-log-osmconvert.bat") Then
-                                    currentProcessInfo.FileName = StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\1-log-osmconvert.bat"
-                                    currentProcess = System.Diagnostics.Process.Start(currentProcessInfo)
-                                    Tile.Comment = "Converting OSM data"
-                                    processList.Add(currentProcess)
-                                    currentProcess.WaitForExit()
-                                    processList.Remove(currentProcess)
-                                    currentProcess.Close()
-                                    Tile.GenerationProgress = 100
-                                    tilesReady += 1
-                                    Dispatcher.Invoke(Sub()
-                                                          Title = "Tile Generation - " & Math.Round((tilesReady / maxTiles) * 100, 1) & "%"
-                                                      End Sub)
-                                    Tile.Comment = "Finished"
-                                Else
-                                    Tile.GenerationProgress = 100
-                                    Tile.Comment = "1-osmconvert.bat not found"
-                                End If
-
-                                If Not My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\osm\unfiltered.o5m") Then
-                                    Tile.Comment = "Error: Could not create unfiltered.o5m file"
+                                If Not My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToPBF) Then
+                                    Tile.Comment = "Error: *.pbf file not found"
                                     keepRunning = False
                                 End If
 
-                                If Not My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\osm\output.o5m") Then
-                                    Tile.Comment = "Error: Could not create output.o5m file"
-                                    keepRunning = False
+                                While pause = True
+                                    Tile.Comment = "Pause"
+                                    Threading.Thread.Sleep(10000)
+                                End While
+
+                                If keepRunning Then
+
+                                    osmbatExportPrepare()
+                                    If My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\1-log-osmconvert.bat") Then
+                                        currentProcessInfo.FileName = StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\1-log-osmconvert.bat"
+                                        currentProcess = System.Diagnostics.Process.Start(currentProcessInfo)
+                                        Tile.Comment = "Converting OSM data"
+                                        processList.Add(currentProcess)
+                                        currentProcess.WaitForExit()
+                                        processList.Remove(currentProcess)
+                                        currentProcess.Close()
+                                        Tile.GenerationProgress = 100
+                                        tilesReady += 1
+                                        CalculateDuration()
+                                        Tile.Comment = "Finished"
+                                    Else
+                                        Tile.GenerationProgress = 100
+                                        Tile.Comment = "1-osmconvert.bat not found"
+                                    End If
+
+                                    If Not My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\osm\unfiltered.o5m") Then
+                                        Tile.Comment = "Error: Could not create unfiltered.o5m file"
+                                        keepRunning = False
+                                    End If
+
+                                    If Not My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\osm\output.o5m") Then
+                                        Tile.Comment = "Error: Could not create output.o5m file"
+                                        keepRunning = False
+                                    End If
+
                                 End If
 
+                            Else
+
+                                Tile.GenerationProgress = 100
+                                tilesReady += 1
+                                CalculateDuration()
+                                Tile.Comment = "Skipped"
+
                             End If
-
-                        Else
-
-                            Tile.GenerationProgress = 100
-                            tilesReady += 1
-                            Dispatcher.Invoke(Sub()
-                                                  Title = "Tile Generation - " & Math.Round((tilesReady / maxTiles) * 100, 1) & "%"
-                                              End Sub)
-                            Tile.Comment = "Skipped"
 
                         End If
 
@@ -205,30 +276,19 @@ Public Class GenerationWindow
                                     Dim reUseFilesList As New List(Of String) From {
                                         StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\aerodrome.osm",
                                         StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\bare_rock.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\beach.osm",
                                         StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\big_road.osm",
                                         StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\border.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\farmland.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\forest.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\glacier.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\grass.osm",
                                         StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\highway.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\meadow.osm",
                                         StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\middle_road.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\quarry.osm",
                                         StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\river.osm",
                                         StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\small_road.osm",
                                         StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\stream.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\swamp.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\urban.osm",
                                         StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\vineyard.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\volcano.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\water.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\wetland.osm"
+                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\volcano.osm"
                                     }
 
                                     For Each myFile In reUseFilesList
-                                        If keepRunning And keepRunningLocal And Not My.Computer.FileSystem.FileExists(myFile) Then
+                                        If keepRunning And keepRunningLocal And Not My.Computer.FileSystem.FileExists(myFile) And StartupWindow.MySettings.reUseImageFiles = False Then
                                             StartupWindow.MySettings.reUseOsmFiles = False
                                         End If
                                     Next
@@ -240,6 +300,11 @@ Public Class GenerationWindow
                                             currentParallelProcessInfo.WindowStyle = ProcessWindowStyle.Minimized
                                             currentParallelProcessInfo.UseShellExecute = True
                                         End If
+
+                                        While pause = True
+                                            Tile.Comment = "Pause"
+                                            Threading.Thread.Sleep(10000)
+                                        End While
 
                                         If keepRunning And keepRunningLocal Then
                                             osmbatExport(Tile.TileName)
@@ -292,66 +357,28 @@ Public Class GenerationWindow
                                             currentParallelProcessInfo.UseShellExecute = False
                                         End If
 
-                                    End If
-
-                                    Dim filesList As New List(Of String) From {
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\aerodrome.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\bare_rock.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\beach.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\big_road.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\border.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\farmland.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\forest.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\glacier.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\grass.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\highway.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\meadow.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\middle_road.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\quarry.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\river.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\small_road.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\stream.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\swamp.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\urban.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\vineyard.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\volcano.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\water.osm",
-                                        StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\wetland.osm"
-                                    }
-
-                                    For Each myFile In filesList
-                                        If keepRunning And keepRunningLocal And Not My.Computer.FileSystem.FileExists(myFile) Then
-                                            Tile.Comment = "Error: '" & myFile & "' not found"
-                                            If StartupWindow.MySettings.continueGeneration Then
-                                                keepRunningLocal = False
-                                            Else
-                                                keepRunning = False
-                                            End If
-                                        End If
-                                    Next
-
-                                    If (StartupWindow.MySettings.reUseImageFiles = False) Then
-
-                                        Dim timer As Int16 = CType(Math.Ceiling(Rnd() * 10000) + 5000, Int16)
-                                        Threading.Thread.Sleep(timer)
-
-                                        While stateQGIS = True
-                                            Tile.Comment = "Waiting for QGIS"
-                                            Threading.Thread.Sleep(timer)
+                                        While pause = True
+                                            Tile.Comment = "Pause"
+                                            Threading.Thread.Sleep(10000)
                                         End While
 
-                                        If keepRunning And keepRunningLocal Then
-                                            stateQGIS = True
-                                            QgisExport(Tile.TileName)
-                                            If My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile.TileName & "\2-log-qgis.bat") Then
-                                                Tile.Comment = "Creating images with QGIS"
-                                                currentParallelProcessInfo.FileName = StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile.TileName & "\2-log-qgis.bat"
+                                        If keepRunning Then
+
+                                            QgisRepair(Tile.TileName)
+                                            If My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile.TileName & "\2-1-log-qgis.bat") Then
+
+                                                If File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) & "\QGIS\QGIS3\profiles\default\qgis.db") Then
+                                                    File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) & "\QGIS\QGIS3\profiles\default\qgis.db")
+                                                End If
+
+                                                Tile.Comment = "Repairing OSM with QGIS"
+                                                currentParallelProcessInfo.FileName = StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile.TileName & "\2-1-log-qgis.bat"
                                                 currentParallelProcess = System.Diagnostics.Process.Start(currentParallelProcessInfo)
                                                 processList.Add(currentParallelProcess)
                                                 currentParallelProcess.WaitForExit()
                                                 processList.Remove(currentParallelProcess)
                                                 currentParallelProcess.Close()
-                                                If My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\python\" & Tile.TileName & "_error") Then
+                                                If My.Computer.FileSystem.FileExists(Environment.SpecialFolder.ApplicationData & "\EarthTilesPythonError") Then
                                                     Tile.GenerationProgress = 30
                                                     Tile.Comment = "Error in the python environment"
                                                     If StartupWindow.MySettings.continueGeneration Then
@@ -359,6 +386,159 @@ Public Class GenerationWindow
                                                     Else
                                                         keepRunning = False
                                                     End If
+                                                    File.Delete(Environment.SpecialFolder.ApplicationData & "\EarthTilesPythonError")
+                                                End If
+                                                Tile.GenerationProgress = 33
+                                            Else
+                                                Tile.GenerationProgress = 33
+                                                Tile.Comment = Tile.TileName & "\2-1-qgis.bat not found"
+                                                If StartupWindow.MySettings.continueGeneration Then
+                                                    keepRunningLocal = False
+                                                Else
+                                                    keepRunning = False
+                                                End If
+                                            End If
+
+                                        End If
+
+                                        If My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\beach.dbf") Then
+                                            Try
+                                                File.Delete(StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\beach.osm")
+                                            Catch ex As Exception
+                                            End Try
+                                        End If
+
+                                        If My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\broadleaved.dbf") = True And My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\mixedforest.dbf") = True And My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\needleleaved.dbf") = True Then
+                                            Try
+                                                File.Delete(StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\forest.osm")
+                                            Catch ex As Exception
+                                            End Try
+                                        End If
+
+                                        If My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\farmland.dbf") Then
+                                            Try
+                                                File.Delete(StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\farmland.osm")
+                                            Catch ex As Exception
+                                            End Try
+                                        End If
+
+                                        If My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\glacier.dbf") Then
+                                            Try
+                                                File.Delete(StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\glacier.osm")
+                                            Catch ex As Exception
+                                            End Try
+                                        End If
+
+                                        If My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\grass.dbf") Then
+                                            Try
+                                                File.Delete(StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\grass.osm")
+                                            Catch ex As Exception
+                                            End Try
+                                        End If
+
+                                        If My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\meadow.dbf") Then
+                                            Try
+                                                File.Delete(StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\meadow.osm")
+                                            Catch ex As Exception
+                                            End Try
+                                        End If
+
+                                        If My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\quarry.dbf") Then
+                                            Try
+                                                File.Delete(StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\quarry.osm")
+                                            Catch ex As Exception
+                                            End Try
+                                        End If
+
+                                        If My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\urban.dbf") Then
+                                            Try
+                                                File.Delete(StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\urban.osm")
+                                            Catch ex As Exception
+                                            End Try
+                                        End If
+
+                                        If My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\water.dbf") Then
+                                            Try
+                                                File.Delete(StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\water.osm")
+                                            Catch ex As Exception
+                                            End Try
+                                        End If
+
+                                    End If
+
+                                    If (StartupWindow.MySettings.reUseImageFiles = False) Then
+
+                                        Dim filesList As New List(Of String) From {
+                                            StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\aerodrome.osm",
+                                            StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\bare_rock.osm",
+                                            StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\big_road.osm",
+                                            StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\border.osm",
+                                            StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\highway.osm",
+                                            StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\middle_road.osm",
+                                            StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\river.osm",
+                                            StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\small_road.osm",
+                                            StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\stream.osm",
+                                            StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\vineyard.osm",
+                                            StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile.TileName & "\volcano.osm"
+                                        }
+
+                                        For Each myFile In filesList
+                                            If keepRunning And keepRunningLocal And Not My.Computer.FileSystem.FileExists(myFile) Then
+                                                Tile.Comment = "Error: '" & myFile & "' not found"
+                                                If StartupWindow.MySettings.continueGeneration Then
+                                                    keepRunningLocal = False
+                                                Else
+                                                    keepRunning = False
+                                                End If
+                                            End If
+                                        Next
+
+                                        Dim r As Random = New Random(Tile.TileName.GetHashCode())
+                                        Dim timer As Int32 = r.Next(1, 10000)
+
+                                        Threading.Thread.Sleep(timer)
+
+                                        While stateQGIS = True
+                                            While pause = True
+                                                Tile.Comment = "Pause"
+                                                Threading.Thread.Sleep(10000)
+                                            End While
+                                            Tile.Comment = "Waiting for QGIS"
+                                            Threading.Thread.Sleep(timer)
+                                        End While
+
+                                        If keepRunning And keepRunningLocal Then
+                                            stateQGIS = True
+
+                                            Try
+                                                My.Computer.FileSystem.WriteAllText(StartupWindow.MySettings.PathToQGIS & "\apps\qgis\python\qgis\utils.py", My.Resources.utils, False)
+                                            Catch ex As Exception
+
+                                            End Try
+
+                                            QgisExport(Tile.TileName)
+                                            If My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile.TileName & "\2-2-log-qgis.bat") Then
+
+                                                If File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) & "\QGIS\QGIS3\profiles\default\qgis.db") Then
+                                                    File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) & "\QGIS\QGIS3\profiles\default\qgis.db")
+                                                End If
+
+                                                Tile.Comment = "Creating images with QGIS"
+                                                currentParallelProcessInfo.FileName = StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile.TileName & "\2-2-log-qgis.bat"
+                                                currentParallelProcess = System.Diagnostics.Process.Start(currentParallelProcessInfo)
+                                                processList.Add(currentParallelProcess)
+                                                currentParallelProcess.WaitForExit()
+                                                processList.Remove(currentParallelProcess)
+                                                currentParallelProcess.Close()
+                                                If My.Computer.FileSystem.FileExists(Environment.SpecialFolder.ApplicationData & "\EarthTilesPythonError") Then
+                                                    Tile.GenerationProgress = 30
+                                                    Tile.Comment = "Error in the python environment"
+                                                    If StartupWindow.MySettings.continueGeneration Then
+                                                        keepRunningLocal = False
+                                                    Else
+                                                        keepRunning = False
+                                                    End If
+                                                    File.Delete(Environment.SpecialFolder.ApplicationData & "\EarthTilesPythonError")
                                                 End If
                                                 Tile.GenerationProgress = 30
                                             Else
@@ -391,9 +571,16 @@ Public Class GenerationWindow
                                             Next
                                         End If
 
-                                        If File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) & "\QGIS\QGIS3\profiles\default\qgis.db") Then
-                                            File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) & "\QGIS\QGIS3\profiles\default\qgis.db")
-                                        End If
+                                        Try
+                                            My.Computer.FileSystem.WriteAllText(StartupWindow.MySettings.PathToQGIS & "\apps\qgis\python\qgis\utils.py", My.Resources.utils_orig, False)
+                                        Catch ex As Exception
+
+                                        End Try
+
+                                        While pause = True
+                                            Tile.Comment = "Pause"
+                                            Threading.Thread.Sleep(10000)
+                                        End While
 
                                         If keepRunning And keepRunningLocal And Not My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & Tile.TileName & "\" & Tile.TileName & ".png") Then
                                             Tile.Comment = "Error: " & Tile.TileName & ".png not found"
@@ -405,6 +592,11 @@ Public Class GenerationWindow
                                         End If
 
                                         If CType(StartupWindow.MySettings.TilesPerMap, Int16) = 1 Then
+
+                                            While pause = True
+                                                Tile.Comment = "Pause"
+                                                Threading.Thread.Sleep(10000)
+                                            End While
 
                                             If keepRunning And keepRunningLocal Then
                                                 tartoolExport(Tile.TileName)
@@ -427,6 +619,11 @@ Public Class GenerationWindow
                                                     End If
                                                 End If
                                             End If
+
+                                            While pause = True
+                                                Tile.Comment = "Pause"
+                                                Threading.Thread.Sleep(10000)
+                                            End While
 
                                             If keepRunning And keepRunningLocal Then
                                                 gdalExport(Tile.TileName)
@@ -452,6 +649,11 @@ Public Class GenerationWindow
 
                                         End If
 
+                                        While pause = True
+                                            Tile.Comment = "Pause"
+                                            Threading.Thread.Sleep(10000)
+                                        End While
+
                                         If keepRunning And keepRunningLocal Then
                                             imagemagickExport(Tile.TileName)
                                             If My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile.TileName & "\5-log-magick.bat") Then
@@ -476,6 +678,11 @@ Public Class GenerationWindow
 
                                     End If
 
+                                    While pause = True
+                                        Tile.Comment = "Pause"
+                                        Threading.Thread.Sleep(10000)
+                                    End While
+
                                     If keepRunning And keepRunningLocal And Not My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & Tile.TileName & "\" & Tile.TileName & "_terrain_reduced_colors.png") Then
                                         Tile.Comment = "Error: " & Tile.TileName & "_terrain_reduced_colors.png not found"
                                         If StartupWindow.MySettings.continueGeneration Then
@@ -484,6 +691,11 @@ Public Class GenerationWindow
                                             keepRunning = False
                                         End If
                                     End If
+
+                                    While pause = True
+                                        Tile.Comment = "Pause"
+                                        Threading.Thread.Sleep(10000)
+                                    End While
 
                                     If keepRunning And keepRunningLocal Then
                                         wpScriptExport(Tile.TileName)
@@ -508,6 +720,11 @@ Public Class GenerationWindow
 
                                     End If
 
+                                    While pause = True
+                                        Tile.Comment = "Pause"
+                                        Threading.Thread.Sleep(10000)
+                                    End While
+
                                     If keepRunning And keepRunningLocal And Not My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\wpscript\exports\" & Tile.TileName & "\level.dat") Then
                                         Tile.Comment = "Error: " & Tile.TileName & "\level.dat not found"
                                         If StartupWindow.MySettings.continueGeneration Then
@@ -516,6 +733,39 @@ Public Class GenerationWindow
                                             keepRunning = False
                                         End If
                                     End If
+
+                                    While pause = True
+                                        Tile.Comment = "Pause"
+                                        Threading.Thread.Sleep(10000)
+                                    End While
+
+                                    If keepRunning And keepRunningLocal And Not StartupWindow.MySettings.vanillaGeneration = "Off" Then
+                                        nbtChunkStatusChangerExport(Tile.TileName)
+                                        If My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile.TileName & "\6-1-log-statusChanger.bat") Then
+                                            Tile.Comment = "Changing status in Chunks"
+                                            currentParallelProcessInfo.FileName = StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile.TileName & "\6-1-log-statusChanger.bat"
+                                            currentParallelProcess = System.Diagnostics.Process.Start(currentParallelProcessInfo)
+                                            processList.Add(currentParallelProcess)
+                                            currentParallelProcess.WaitForExit()
+                                            processList.Remove(currentParallelProcess)
+                                            currentParallelProcess.Close()
+                                            Tile.GenerationProgress = 95
+                                        Else
+                                            Tile.GenerationProgress = 95
+                                            Tile.Comment = Tile.TileName & "\6-1-statusChanger.bat not found"
+                                            If StartupWindow.MySettings.continueGeneration Then
+                                                keepRunningLocal = False
+                                            Else
+                                                keepRunning = False
+                                            End If
+                                        End If
+
+                                    End If
+
+                                    While pause = True
+                                        Tile.Comment = "Pause"
+                                        Threading.Thread.Sleep(10000)
+                                    End While
 
                                     If keepRunning And keepRunningLocal Then
                                         CleanUpExport(Tile.TileName)
@@ -530,10 +780,12 @@ Public Class GenerationWindow
                                         End If
                                         Tile.GenerationProgress = 100
                                         tilesReady += 1
-                                        Dispatcher.Invoke(Sub()
-                                                              Title = "Tile Generation - " & Math.Round((tilesReady / maxTiles) * 100, 1) & "%"
-                                                          End Sub)
+                                        CalculateDuration()
                                         Tile.Comment = "Finished"
+
+                                        StartupWindow.MySelection.TilesList.Remove(Tile.TileName)
+                                        SaveCurrentState()
+
                                     End If
 
                                 Catch ex As Exception
@@ -558,9 +810,7 @@ Public Class GenerationWindow
                         currentProcess.Close()
                         Tile.GenerationProgress = 100
                         tilesReady += 1
-                        Dispatcher.Invoke(Sub()
-                                              Title = "Tile Generation - " & Math.Round((tilesReady / maxTiles) * 100, 1) & "%"
-                                          End Sub)
+                        CalculateDuration()
                         Tile.Comment = "Finished"
                     Else
                         Tile.GenerationProgress = 90
@@ -584,9 +834,7 @@ Public Class GenerationWindow
                         currentProcess.Close()
                         Tile.GenerationProgress = 100
                         tilesReady += 1
-                        Dispatcher.Invoke(Sub()
-                                              Title = "Tile Generation - " & Math.Round((tilesReady / maxTiles) * 100, 1) & "%"
-                                          End Sub)
+                        CalculateDuration()
                         Tile.Comment = "Finished"
                         MsgBox("Generation of world '" & StartupWindow.MySettings.WorldName & "' completed")
                     Else
@@ -598,6 +846,23 @@ Public Class GenerationWindow
             Next
         End If
 
+    End Sub
+
+    Private Sub SaveCurrentState()
+        CustomXmlSerialiser.SaveXML(StartupWindow.MySettings.PathToScriptsFolder & "/selection-left.xml", StartupWindow.MySelection)
+    End Sub
+
+    Private Sub CalculateDuration()
+        Dispatcher.Invoke(Sub()
+                              If tilesReady > 0 Then
+                                  Dim percentReady As Double = Math.Round((tilesReady / maxTiles) * 100, 2)
+                                  Dim minutesDiff As Double = DateDiff(DateInterval.Minute, DateTime.Now, startTime) / (tilesReady / maxTiles) * (1 - (tilesReady / maxTiles))
+                                  Title = "Tile Generation - " & percentReady & "%"
+                                  Dim hoursLeft As Int32 = CType(Math.Abs(minutesDiff) / 60, Int32)
+                                  Dim minutesLeft As Int32 = CType(Math.Abs(minutesDiff) Mod 60, Int32)
+                                  lbl_Estimated_Duration.Content = "Estimated Duration: " & hoursLeft & " h and " & minutesLeft & " min"
+                              End If
+                          End Sub)
     End Sub
 
 #Region "Create Batch Files"
@@ -631,7 +896,7 @@ Public Class GenerationWindow
 
                 ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmconvert.exe"" """ & StartupWindow.MySettings.PathToPBF & """ -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\unfiltered.o5m""")
 
-                Dim filter As String = "water=lake OR water=reservoir OR natural=water OR landuse=reservoir OR natural=wetland OR wetland=swamp OR natural=glacier OR natural=volcano OR natural=beach OR landuse=grass OR natural=grassland OR natural=fell OR natural=heath OR natural=scrub OR landuse=forest OR landuse=bare_rock OR natural=scree OR natural=shingle"
+                Dim filter As String = "water=lake OR water=reservoir OR natural=water OR landuse=reservoir OR natural=glacier OR natural=volcano OR natural=beach OR landuse=grass OR natural=grassland OR natural=fell OR natural=heath OR natural=scrub OR landuse=forest OR landuse=bare_rock OR natural=scree OR natural=shingle"
 
                 If StartupWindow.MySettings.highways Then
                     filter &= " OR highway=motorway OR highway=trunk"
@@ -798,10 +1063,10 @@ Public Class GenerationWindow
                     ScriptBatchFile.WriteLine("xcopy /y """ & StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\empty.osm"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\small_road.osm*""")
                 End If
 
-                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""water=lake OR water=reservoir OR natural=water OR landuse=reservoir OR waterway=riverbank OR waterway=canal OR waterway=canal"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\water.osm""")
+                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""water=lake OR water=reservoir OR natural=water OR landuse=reservoir"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\water.osm""")
 
                 If StartupWindow.MySettings.riversBoolean Then
-                    ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""waterway=river OR water=river"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\river.osm""")
+                    ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""waterway=river OR water=river OR waterway=riverbank OR waterway=canal"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\river.osm""")
                 Else
                     ScriptBatchFile.WriteLine("xcopy /y """ & StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\empty.osm"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\river.osm*""")
                 End If
@@ -812,13 +1077,15 @@ Public Class GenerationWindow
                     ScriptBatchFile.WriteLine("xcopy /y """ & StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\empty.osm"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\stream.osm*""")
                 End If
 
-                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""natural=wetland"" --drop=""wetland=swamp"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\wetland.osm""")
-                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""natural=wetland AND wetland=swamp"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\swamp.osm""")
                 ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""natural=glacier"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\glacier.osm""")
                 ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""natural=volcano AND volcano:status=active"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\volcano.osm""")
                 ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""natural=beach"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\beach.osm""")
-                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""landuse=grass OR natural=grassland OR natural=fell OR natural=heath OR natural=scrub"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\grass.osm""")
-                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""landuse=forest"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\forest.osm""")
+
+                If StartupWindow.MySettings.forests Then
+                    ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""landuse=forest"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\forest.osm""")
+                Else
+                    ScriptBatchFile.WriteLine("xcopy /y """ & StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\empty.osm"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\forest.osm*""")
+                End If
 
                 If StartupWindow.MySettings.farms Then
                     ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""landuse=farmland"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\farmland.osm""")
@@ -830,8 +1097,10 @@ Public Class GenerationWindow
 
                 If StartupWindow.MySettings.meadows Then
                     ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""landuse=meadow"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\meadow.osm""")
+                    ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""landuse=grass OR natural=grassland OR natural=fell OR natural=heath OR natural=scrub"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\grass.osm""")
                 Else
                     ScriptBatchFile.WriteLine("xcopy /y """ & StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\empty.osm"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\meadow.osm*""")
+                    ScriptBatchFile.WriteLine("xcopy /y """ & StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\empty.osm"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\grass.osm*""")
                 End If
 
                 If StartupWindow.MySettings.quarrys Then
@@ -949,10 +1218,10 @@ Public Class GenerationWindow
                     ScriptBatchFile.WriteLine("xcopy /y """ & StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\empty.osm"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\small_road.osm*""")
                 End If
 
-                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""water=lake OR water=reservoir OR natural=water OR landuse=reservoir OR waterway=riverbank OR waterway=canal OR waterway=canal"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\water.osm""")
+                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""water=lake OR water=reservoir OR natural=water OR landuse=reservoir"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\water.osm""")
 
                 If StartupWindow.MySettings.riversBoolean Then
-                    ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""waterway=river OR water=river"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\river.osm""")
+                    ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""waterway=river OR water=river OR waterway=riverbank OR waterway=canalg"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\river.osm""")
                 Else
                     ScriptBatchFile.WriteLine("xcopy /y """ & StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\empty.osm"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\river.osm*""")
                 End If
@@ -963,13 +1232,16 @@ Public Class GenerationWindow
                     ScriptBatchFile.WriteLine("xcopy /y """ & StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\empty.osm"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\stream.osm*""")
                 End If
 
-                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""natural=wetland"" --drop=""wetland=swamp"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\wetland.osm""")
-                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""natural=wetland AND wetland=swamp"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\swamp.osm""")
                 ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""natural=glacier"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\glacier.osm""")
                 ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""natural=volcano AND volcano:status=active"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\volcano.osm""")
                 ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""natural=beach"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\beach.osm""")
                 ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""landuse=grass OR natural=grassland OR natural=fell OR natural=heath OR natural=scrub"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\grass.osm""")
-                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""landuse=forest"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\forest.osm""")
+
+                If StartupWindow.MySettings.forests Then
+                    ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""landuse=forest"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\forest.osm""")
+                Else
+                    ScriptBatchFile.WriteLine("xcopy /y """ & StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\empty.osm"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\forest.osm*""")
+                End If
 
                 If StartupWindow.MySettings.farms Then
                     ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""landuse=farmland"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\farmland.osm""")
@@ -981,8 +1253,10 @@ Public Class GenerationWindow
 
                 If StartupWindow.MySettings.meadows Then
                     ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""landuse=meadow"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\meadow.osm""")
+                    ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToScriptsFolder & "\osmfilter.exe"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\output.osm"" --verbose --keep=""landuse=grass OR natural=grassland OR natural=fell OR natural=heath OR natural=scrub"" -o=""" & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\grass.osm""")
                 Else
                     ScriptBatchFile.WriteLine("xcopy /y """ & StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\empty.osm"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\meadow.osm*""")
+                    ScriptBatchFile.WriteLine("xcopy /y """ & StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\empty.osm"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & "\grass.osm*""")
                 End If
 
                 If StartupWindow.MySettings.quarrys Then
@@ -1033,7 +1307,7 @@ Public Class GenerationWindow
         End Try
     End Sub
 
-    Private Sub QgisExport(Tile As String)
+    Private Sub QgisRepair(Tile As String)
         Try
 
             If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\")) Then
@@ -1058,56 +1332,26 @@ Public Class GenerationWindow
             pythonFile.WriteLine("try:" & Environment.NewLine &
                                 vbTab & "import os" & Environment.NewLine &
                                 vbTab & "from PyQt5.QtCore import *" & Environment.NewLine &
-                                vbTab & "import processing" & Environment.NewLine &
-                                "except:" & Environment.NewLine &
-                                vbTab & "with open(os.path.join('" & PathReversedSlash & "/python', '" & Tile & "_error'), 'w') as fp:" & Environment.NewLine &
+                                vbTab & "import processing" & Environment.NewLine)
+            pythonFile.WriteLine(vbTab & "processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/urban.osm|layername=multipolygons','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/urban.shp'})")
+            pythonFile.WriteLine(vbTab & "processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/forest.osm|layername=multipolygons|subset=\""other_tags\"" = \'\""leaf_type\""=>\""broadleaved\""\'','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/broadleaved.shp'})")
+            pythonFile.WriteLine(vbTab & "processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/forest.osm|layername=multipolygons|subset=\""other_tags\"" = \'\""leaf_type\""=>\""needleleaved\""\'','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/needleleaved.shp'})")
+            pythonFile.WriteLine(vbTab & "processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/forest.osm|layername=multipolygons','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/mixedforest.shp'})")
+            pythonFile.WriteLine(vbTab & "processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/beach.osm|layername=multipolygons','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/beach.shp'})")
+            pythonFile.WriteLine(vbTab & "processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/grass.osm|layername=multipolygons','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/grass.shp'})")
+            pythonFile.WriteLine(vbTab & "processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/farmland.osm|layername=multipolygons','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/farmland.shp'})")
+            pythonFile.WriteLine(vbTab & "processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/meadow.osm|layername=multipolygons','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/meadow.shp'})")
+            pythonFile.WriteLine(vbTab & "processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/quarry.osm|layername=multipolygons','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/quarry.shp'})")
+            pythonFile.WriteLine(vbTab & "processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/water.osm|layername=multipolygons|subset=\""natural\"" = \'water\'','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/water.shp'})")
+            pythonFile.WriteLine(vbTab & "processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/glacier.osm|layername=multipolygons','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/glacier.shp'})")
+            pythonFile.WriteLine(vbTab & "processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/wetland.osm|layername=multipolygons','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/wetland.shp'})")
+            pythonFile.WriteLine(vbTab & "processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/swamp.osm|layername=multipolygons','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/swamp.shp'})")
+            pythonFile.WriteLine(vbTab & "os.kill(os.getpid(), 9)")
+            pythonFile.WriteLine("except:" & Environment.NewLine &
+                                vbTab & "with open(os.path.join(os.getenv('APPDATA') + '/', 'EarthTilesPythonError'), 'w') as fp:" & Environment.NewLine &
                                 vbTab & vbTab & "pass" & Environment.NewLine &
                                 vbTab & "os.kill(os.getpid(), 9)" & Environment.NewLine)
-            pythonFile.WriteLine("processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/urban.osm|layername=multipolygons','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/urban.shp'})")
-            pythonFile.WriteLine("processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/forest.osm|layername=multipolygons|subset=\""other_tags\"" = \'\""leaf_type\""=>\""broadleaved\""\'','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/broadleaved.shp'})")
-            pythonFile.WriteLine("processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/forest.osm|layername=multipolygons|subset=\""other_tags\"" = \'\""leaf_type\""=>\""needleleaved\""\'','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/needleleaved.shp'})")
-            pythonFile.WriteLine("processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/forest.osm|layername=multipolygons','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/mixedforest.shp'})")
-            pythonFile.WriteLine("processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/beach.osm|layername=multipolygons','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/beach.shp'})")
-            pythonFile.WriteLine("processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/grass.osm|layername=multipolygons','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/grass.shp'})")
-            pythonFile.WriteLine("processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/farmland.osm|layername=multipolygons','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/farmland.shp'})")
-            pythonFile.WriteLine("processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/meadow.osm|layername=multipolygons','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/meadow.shp'})")
-            pythonFile.WriteLine("processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/quarry.osm|layername=multipolygons','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/quarry.shp'})")
-            pythonFile.WriteLine("processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/water.osm|layername=multipolygons|subset=\""natural\"" = \'water\'','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/water.shp'})")
-            pythonFile.WriteLine("processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/glacier.osm|layername=multipolygons','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/glacier.shp'})")
-            pythonFile.WriteLine("processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/wetland.osm|layername=multipolygons','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/wetland.shp'})")
-            pythonFile.WriteLine("processing.run(""native:fixgeometries"", {'INPUT':'" & PathReversedSlash & "/osm/" & Tile & "/swamp.osm|layername=multipolygons','OUTPUT':'" & PathReversedSlash & "/osm/" & Tile & "/swamp.shp'})")
-            pythonFile.WriteLine("os.kill(os.getpid(), 9)")
             pythonFile.Close()
-
-            Dim pythonFile2 As System.IO.StreamWriter
-            pythonFile2 = My.Computer.FileSystem.OpenTextFileWriter(StartupWindow.MySettings.PathToScriptsFolder & "\python\" & Tile & ".py", False, System.Text.Encoding.ASCII)
-            pythonFile2.WriteLine("import os" & Environment.NewLine &
-                                "from PyQt5.QtCore import *" & Environment.NewLine &
-                                Environment.NewLine &
-                                "path = '" & StartupWindow.MySettings.PathToScriptsFolder.Replace("\", "/") & "/'" & Environment.NewLine &
-                                "tile = '" & Tile & "'" & Environment.NewLine &
-                                "scale = " & StartupWindow.MySettings.BlocksPerTile & Environment.NewLine &
-                                "TilesPerMap = " & StartupWindow.MySettings.TilesPerMap & Environment.NewLine &
-                                "rivers = '" & StartupWindow.MySettings.rivers & "'" & Environment.NewLine &
-                                "borders = " & StartupWindow.MySettings.bordersBoolean & Environment.NewLine &
-                                "borderyear = '" & StartupWindow.MySettings.borders & "'" & Environment.NewLine &
-                                Environment.NewLine)
-
-            'Dim QgisBasescript As String = ""
-            'If My.Computer.FileSystem.FileExists(My.Application.Info.DirectoryPath & "/qgis.txt") Then
-            'Dim fileReader As String
-            'fileReader = My.Computer.FileSystem.ReadAllText(My.Application.Info.DirectoryPath & "/qgis.txt")
-            'QgisBasescript = fileReader
-            'Else
-            'QgisBasescript = My.Resources.ResourceManager.GetString("basescript")
-            'Dim objWriter As New System.IO.StreamWriter(My.Application.Info.DirectoryPath & "/qgis.txt")
-            'objWriter.Write(QgisBasescript)
-            'objWriter.Close()
-            'End If
-
-            pythonFile2.WriteLine(My.Resources.ResourceManager.GetString("basescript"))
-            pythonFile2.WriteLine("os.kill(os.getpid(), 9)")
-            pythonFile2.Close()
 
 
             If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")) Then
@@ -1116,32 +1360,139 @@ Public Class GenerationWindow
 
             Dim ScriptBatchFile As System.IO.StreamWriter
 
-            ScriptBatchFile = My.Computer.FileSystem.OpenTextFileWriter(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\2-log-qgis.bat", False, System.Text.Encoding.ASCII)
-            ScriptBatchFile.WriteLine("CALL """ & StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\2-qgis.bat"" >> """ & StartupWindow.MySettings.PathToScriptsFolder & "\logs\log-" & Tile & ".txt""")
+            Dim qgisExecutableName As String = ""
+            If My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToQGIS & "\bin\qgis-bin.exe") Then
+                qgisExecutableName = "qgis-bin.exe"
+            ElseIf My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToQGIS & "\bin\qgis-ltr-bin.exe") Then
+                qgisExecutableName = "qgis-ltr-bin.exe"
+            Else
+                qgisExecutableName = "qgis-bin.exe"
+            End If
+
+            ScriptBatchFile = My.Computer.FileSystem.OpenTextFileWriter(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\2-1-log-qgis.bat", False, System.Text.Encoding.ASCII)
+            ScriptBatchFile.WriteLine("CALL """ & StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\2-1-qgis.bat"" >> """ & StartupWindow.MySettings.PathToScriptsFolder & "\logs\log-" & Tile & ".txt""")
             ScriptBatchFile.WriteLine()
             ScriptBatchFile.Close()
 
-            ScriptBatchFile = My.Computer.FileSystem.OpenTextFileWriter(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\2-qgis.bat", False, System.Text.Encoding.ASCII)
+            ScriptBatchFile = My.Computer.FileSystem.OpenTextFileWriter(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\2-1-qgis.bat", False, System.Text.Encoding.ASCII)
+            ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToQGIS & "\bin\" & qgisExecutableName & """ --nologo --noplugins --code """ & StartupWindow.MySettings.PathToScriptsFolder & "\python\" & Tile & "_repair.py""")
+            ScriptBatchFile.WriteLine()
+            ScriptBatchFile.Close()
 
-            ScriptBatchFile.WriteLine("SLEEP 5")
-            ScriptBatchFile.WriteLine("if not exist """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\"" mkdir """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\""")
-            ScriptBatchFile.WriteLine("if not exist """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & Tile & """ mkdir """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & Tile & """")
-            ScriptBatchFile.WriteLine("if not exist """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & Tile & "\heightmap"" mkdir """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & Tile & "\heightmap""")
-            'first, repair multipolygons
-            ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToQGIS & "\bin\qgis-bin.exe"" --code """ & StartupWindow.MySettings.PathToScriptsFolder & "\python\" & Tile & "_repair.py""")
-            'next, copy all files
+        Catch ex As Exception
+            Throw New Exception("File '2-1-qgis.bat' could not be saved. " & ex.Message)
+        End Try
+    End Sub
+
+    Private Sub QgisExport(Tile As String)
+        Try
+
+            Dim projectName As String = ""
+            If StartupWindow.MySettings.bathymetry And StartupWindow.MySettings.offlineTerrain Then
+                projectName = "MinecraftEarthTiles.qgz"
+            ElseIf Not StartupWindow.MySettings.bathymetry And StartupWindow.MySettings.offlineTerrain Then
+                projectName = "MinecraftEarthTiles_no_bathymetry.qgz"
+            ElseIf StartupWindow.MySettings.bathymetry And Not StartupWindow.MySettings.offlineTerrain Then
+                projectName = "MinecraftEarthTiles_no_terrain.qgz"
+            ElseIf StartupWindow.MySettings.bathymetry And Not StartupWindow.MySettings.offlineTerrain Then
+                projectName = "MinecraftEarthTiles_no_terrain_no_bathymetry.qgz"
+            Else
+                projectName = "MinecraftEarthTiles.qgz"
+            End If
+
+            If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\")) Then
+                System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\")
+            End If
+
+            If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")) Then
+                System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")
+            End If
+
+            If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\python\")) Then
+                System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\python\")
+            End If
+
+            If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\logs\")) Then
+                System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\logs\")
+            End If
+
+            Dim citySize As String = "villages_5-000-000"
+
+            If 36768000 / CType(StartupWindow.MySettings.BlocksPerTile, Int32) * (360 / CType(StartupWindow.MySettings.TilesPerMap, Int32)) > 2000 Then
+                citySize = "villages_5-000-000"
+            ElseIf 36768000 / CType(StartupWindow.MySettings.BlocksPerTile, Int32) * (360 / CType(StartupWindow.MySettings.TilesPerMap, Int32)) > 500 Then
+                citySize = "villages_2-500-000"
+            ElseIf 36768000 / CType(StartupWindow.MySettings.BlocksPerTile, Int32) * (360 / CType(StartupWindow.MySettings.TilesPerMap, Int32)) > 200 Then
+                citySize = "villages_1-500-000"
+            Else
+                citySize = "villages_500-000"
+            End If
+
+            Dim pythonFile As System.IO.StreamWriter
+            pythonFile = My.Computer.FileSystem.OpenTextFileWriter(StartupWindow.MySettings.PathToScriptsFolder & "\python\" & Tile & ".py", False, System.Text.Encoding.ASCII)
+            pythonFile.WriteLine("try:" & Environment.NewLine &
+                                  vbTab & "import os" & Environment.NewLine &
+                                  vbTab & "from PyQt5.QtCore import *" & Environment.NewLine &
+                                  vbTab & Environment.NewLine &
+                                  vbTab & "path = '" & StartupWindow.MySettings.PathToScriptsFolder.Replace("\", "/") & "/'" & Environment.NewLine &
+                                  vbTab & "tile = '" & Tile & "'" & Environment.NewLine &
+                                  vbTab & "spawntile = '" & StartupWindow.MySelection.SpawnTile & "'" & Environment.NewLine &
+                                  vbTab & "scale = " & StartupWindow.MySettings.BlocksPerTile & Environment.NewLine &
+                                  vbTab & "verticleScale = " & StartupWindow.MySettings.VerticalScale & Environment.NewLine &
+                                  vbTab & "TilesPerMap = " & StartupWindow.MySettings.TilesPerMap & Environment.NewLine &
+                                  vbTab & "rivers = '" & StartupWindow.MySettings.rivers & "'" & Environment.NewLine &
+                                  vbTab & "offlineTerrain = '" & StartupWindow.MySettings.offlineTerrain & "'" & Environment.NewLine &
+                                  vbTab & "citySize = '" & citySize & "'" & Environment.NewLine &
+                                  vbTab & "borders = '" & StartupWindow.MySettings.bordersBoolean & "'" & Environment.NewLine &
+                                  vbTab & "borderyear = '" & StartupWindow.MySettings.borders & "'" & Environment.NewLine &
+                                  vbTab & "vanillaGeneration = '" & StartupWindow.MySettings.vanillaGeneration & "'")
+            pythonFile.WriteLine(My.Resources.ResourceManager.GetString("basescript"))
+            pythonFile.WriteLine(vbTab & "os.kill(os.getpid(), 9)")
+            pythonFile.WriteLine("except:" & Environment.NewLine &
+                                vbTab & "with open(os.path.join(os.getenv('APPDATA') + '/', 'EarthTilesPythonError'), 'w') as fp:" & Environment.NewLine &
+                                vbTab & vbTab & "pass" & Environment.NewLine &
+                                vbTab & "os.kill(os.getpid(), 9)" & Environment.NewLine)
+            pythonFile.Close()
+
+            If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")) Then
+                System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")
+            End If
+
+            Dim ScriptBatchFile As System.IO.StreamWriter
+
+            Dim qgisExecutableName As String = ""
+            If My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToQGIS & "\bin\qgis-bin.exe") Then
+                qgisExecutableName = "qgis-bin.exe"
+            ElseIf My.Computer.FileSystem.FileExists(StartupWindow.MySettings.PathToQGIS & "\bin\qgis-ltr-bin.exe") Then
+                qgisExecutableName = "qgis-ltr-bin.exe"
+            Else
+                qgisExecutableName = "qgis-bin.exe"
+            End If
+
+            ScriptBatchFile = My.Computer.FileSystem.OpenTextFileWriter(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\2-2-log-qgis.bat", False, System.Text.Encoding.ASCII)
+            ScriptBatchFile.WriteLine("CALL """ & StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\2-2-qgis.bat"" >> """ & StartupWindow.MySettings.PathToScriptsFolder & "\logs\log-" & Tile & ".txt""")
+            ScriptBatchFile.WriteLine()
+            ScriptBatchFile.Close()
+
+            ScriptBatchFile = My.Computer.FileSystem.OpenTextFileWriter(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\2-2-qgis.bat", False, System.Text.Encoding.ASCII)
+            ScriptBatchFile.WriteLine("if Not exist """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\"" mkdir """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\""")
+            ScriptBatchFile.WriteLine("if Not exist """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & Tile & """ mkdir """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & Tile & """")
+            ScriptBatchFile.WriteLine("if Not exist """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & Tile & "\heightmap"" mkdir """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & Tile & "\heightmap""")
+
             ScriptBatchFile.WriteLine("xcopy """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & """ """ & StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\OsmData"" /Y")
             'open project and run script
-            If StartupWindow.MySettings.bathymetry Then
-                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToQGIS & "\bin\qgis-bin.exe"" --project """ & StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\MinecraftEarthTiles.qgz"" --code """ & StartupWindow.MySettings.PathToScriptsFolder & "\python\" & Tile & ".py""")
-            Else
-                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToQGIS & "\bin\qgis-bin.exe"" --project """ & StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\MinecraftEarthTiles_no-bathymetry.qgz"" --code """ & StartupWindow.MySettings.PathToScriptsFolder & "\python\" & Tile & ".py""")
-            End If
+
+            ScriptBatchFile.WriteLine("timeout /t 3")
+            ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToQGIS & "\bin\" & qgisExecutableName & """ --noversioncheck --nologo --noplugins --project """ & StartupWindow.MySettings.PathToScriptsFolder & "\QGIS\" & projectName & """ --code """ & StartupWindow.MySettings.PathToScriptsFolder & "\python\" & Tile & ".py""")
+            ScriptBatchFile.WriteLine("timeout /t 3")
+            ScriptBatchFile.WriteLine("START taskkill /f /im python.exe")
+            ScriptBatchFile.WriteLine("timeout /t 3")
+            ScriptBatchFile.WriteLine()
 
             ScriptBatchFile.Close()
 
         Catch ex As Exception
-            Throw New Exception("File '2-qgis.bat' could not be saved. " & ex.Message)
+            Throw New Exception("File '2-2-qgis.bat' could not be saved. " & ex.Message)
         End Try
     End Sub
 
@@ -1419,6 +1770,9 @@ Public Class GenerationWindow
 
             Dim NewTile As String = Tile
 
+
+            ScriptBatchFile.WriteLine("timeout /t 7")
+
             If CType(StartupWindow.MySettings.TilesPerMap, Int16) = 1 Then
 
                 If StartupWindow.MySettings.Heightmap_Error_Correction = True Then
@@ -1447,21 +1801,21 @@ Public Class GenerationWindow
             Dim scale As Double = Math.Round(36768000 / ((CType(StartupWindow.MySettings.BlocksPerTile, Int16) * (360 / CType(StartupWindow.MySettings.TilesPerMap, Int16)))), 1)
 
             If scale < 25 Then
-                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png"" -sample 3.125%% -magnify -magnify -magnify -magnify -magnify """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png""")
+                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png"" -sample 3.125%% -magnify -magnify -magnify -magnify -magnify -define png:color-type=6 """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png""")
             ElseIf scale < 50 Then
-                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png"" -sample 6.25%% -magnify -magnify -magnify -magnify """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png""")
+                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png"" -sample 6.25%% -magnify -magnify -magnify -magnify -define png:color-type=6 """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png""")
             ElseIf scale < 100 Then
-                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png"" -sample 12.5%% -magnify -magnify -magnify """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png""")
+                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png"" -sample 12.5%% -magnify -magnify -magnify -define png:color-type=6 """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png""")
             ElseIf scale < 200 Then
-                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png"" -sample 25%% -magnify -magnify """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png""")
+                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png"" -sample 25%% -magnify -magnify -define png:color-type=6 """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png""")
             ElseIf scale < 500 Then
-                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png"" -sample 50%% -magnify """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png""")
+                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png"" -sample 50%% -magnify -define png:color-type=6 """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_climate.png""")
             End If
 
             If scale < 50 Then
                 ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_ocean_temp.png"" -sample 1.5625%% -magnify -magnify -magnify -magnify -magnify -magnify """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_ocean_temp.png""")
             ElseIf scale < 100 Then
-                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_ocean_temp.png"" -sample 3.125%% -magnify -magnify -magnify -magnify """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_ocean_temp.png""")
+                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_ocean_temp.png"" -sample 3.125%% -magnify -magnify -magnify -magnify -magnify """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_ocean_temp.png""")
             ElseIf scale < 200 Then
                 ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_ocean_temp.png"" -sample 6.25%% -magnify -magnify -magnify -magnify """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_ocean_temp.png""")
             ElseIf scale < 500 Then
@@ -1470,6 +1824,24 @@ Public Class GenerationWindow
                 ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_ocean_temp.png"" -sample 25%% -magnify -magnify """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_ocean_temp.png""")
             ElseIf scale < 2000 Then
                 ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_ocean_temp.png"" -sample 50%% -magnify """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_ocean_temp.png""")
+            End If
+
+            If Not StartupWindow.MySettings.vanillaGeneration = "Off" Then
+                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_mountains.png"" -transparent black """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_mountains.png""")
+                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_ocean.png"" -transparent black """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_ocean.png""")
+                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_deep_ocean.png"" -transparent black """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_deep_ocean.png""")
+                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen.png"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_mountains.png"" -compose over -composite """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen.png""")
+                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen.png"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_ocean.png"" -compose over -composite """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen.png""")
+                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen.png"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_deep_ocean.png"" -compose over -composite """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen.png""")
+
+                ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_heightmap.png"" -blur 5 """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_heightmap.png""")
+
+                If (36768000 / (CType(StartupWindow.MySettings.BlocksPerTile, Int32) * (360 / CType(StartupWindow.MySettings.TilesPerMap, Int32)))) <= 500 Then
+                    ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ montage -mode Concatenate -tile 4x4 """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_cities_1.png"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_cities_2.png"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_cities_3.png"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_cities_4.png"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_cities_5.png"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_cities_6.png"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_cities_7.png"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_cities_8.png"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_cities_9.png"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_cities_10.png"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_cities_11.png"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_cities_12.png"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_cities_13.png"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_cities_14.png"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_cities_15.png"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_cities_16.png"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_cities.png""")
+                ElseIf (36768000 / (CType(StartupWindow.MySettings.BlocksPerTile, Int32) * (360 / CType(StartupWindow.MySettings.TilesPerMap, Int32)))) <= 1000 Then
+                    ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ montage -mode Concatenate -tile 2x2 """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_cities_1.png"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_cities_2.png"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_cities_3.png"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_cities_4.png"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\imagegen_cities.png""")
+                End If
+
             End If
 
             ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToMagick & """ convert """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_terrain.png"" -dither None -remap """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript\terrain\" & StartupWindow.MySettings.Terrain & ".png"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & NewTile & "\" & NewTile & "_terrain_reduced_colors.png""")
@@ -1524,7 +1896,41 @@ Public Class GenerationWindow
                 Case "1.16+"
                     MapVersionShort = "1-16"
             End Select
-            ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToWorldPainterFolder & """ """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript.js"" """ & StartupWindow.MySettings.PathToScriptsFolder.Replace("\", "/") & "/"" " & ReplacedString & " " & StartupWindow.MySettings.BlocksPerTile & " " & StartupWindow.MySettings.TilesPerMap & " " & StartupWindow.MySettings.VerticalScale & " " & StartupWindow.MySettings.highways.ToString & " " & StartupWindow.MySettings.streets.ToString & " " & StartupWindow.MySettings.small_streets.ToString & " " & StartupWindow.MySettings.buildings.ToString & " " & StartupWindow.MySettings.ores.ToString & " " & StartupWindow.MySettings.netherite.ToString & " " & StartupWindow.MySettings.farms.ToString & " " & StartupWindow.MySettings.meadows.ToString & " " & StartupWindow.MySettings.quarrys.ToString & " " & StartupWindow.MySettings.aerodrome.ToString & " " & StartupWindow.MySettings.mobSpawner.ToString & " " & StartupWindow.MySettings.animalSpawner.ToString & " " & StartupWindow.MySettings.riversBoolean.ToString & " " & StartupWindow.MySettings.streams.ToString & " " & StartupWindow.MySettings.volcanos.ToString & " " & StartupWindow.MySettings.shrubs.ToString & " " & StartupWindow.MySettings.crops.ToString & " " & MapVersionShort)
+            Dim vanillaGeneration As String = "False"
+            If Not StartupWindow.MySettings.vanillaGeneration = "Off" Then
+                vanillaGeneration = "True"
+            End If
+            ScriptBatchFile.WriteLine("""" & StartupWindow.MySettings.PathToWorldPainterFolder & """ """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript.js"" """ & StartupWindow.MySettings.PathToScriptsFolder.Replace("\", "/") & "/"" " & ReplacedString & " " & StartupWindow.MySettings.BlocksPerTile & " " & StartupWindow.MySettings.TilesPerMap & " " & StartupWindow.MySettings.VerticalScale & " " & StartupWindow.MySettings.highways.ToString & " " & StartupWindow.MySettings.streets.ToString & " " & StartupWindow.MySettings.small_streets.ToString & " " & StartupWindow.MySettings.buildings.ToString & " " & StartupWindow.MySettings.ores.ToString & " " & StartupWindow.MySettings.netherite.ToString & " " & StartupWindow.MySettings.farms.ToString & " " & StartupWindow.MySettings.meadows.ToString & " " & StartupWindow.MySettings.quarrys.ToString & " " & StartupWindow.MySettings.aerodrome.ToString & " " & StartupWindow.MySettings.mobSpawner.ToString & " " & StartupWindow.MySettings.animalSpawner.ToString & " " & StartupWindow.MySettings.riversBoolean.ToString & " " & StartupWindow.MySettings.streams.ToString & " " & StartupWindow.MySettings.volcanos.ToString & " " & StartupWindow.MySettings.shrubs.ToString & " " & StartupWindow.MySettings.crops.ToString & " " & MapVersionShort & " " & StartupWindow.MySettings.mapOffset & " " & vanillaGeneration)
+            ScriptBatchFile.Close()
+        Catch ex As Exception
+            Throw New Exception("File '6-wpscript.bat' could not be saved. " & ex.Message)
+        End Try
+    End Sub
+
+    Private Sub nbtChunkStatusChangerExport(Tile As String)
+        Try
+
+            Dim ScriptBatchFile As System.IO.StreamWriter
+
+            ScriptBatchFile = My.Computer.FileSystem.OpenTextFileWriter(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\6-1-log-statusChanger.bat", False, System.Text.Encoding.ASCII)
+            ScriptBatchFile.WriteLine("CALL """ & StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\6-1-statusChanger.bat"" >> """ & StartupWindow.MySettings.PathToScriptsFolder & "\logs\log-" & Tile & ".txt""")
+            ScriptBatchFile.WriteLine()
+            ScriptBatchFile.Close()
+
+            ScriptBatchFile = My.Computer.FileSystem.OpenTextFileWriter(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\6-1-statusChanger.bat", False, System.Text.Encoding.ASCII)
+
+            Dim ChunkStatus As String = ""
+            If StartupWindow.MySettings.vanillaGeneration = "Off" Then
+                ChunkStatus = "full"
+            ElseIf StartupWindow.MySettings.vanillaGeneration = "Only Features" Then
+                ChunkStatus = "liquid_carvers"
+            ElseIf StartupWindow.MySettings.vanillaGeneration = "Features and Caves" Then
+                ChunkStatus = "surface"
+            ElseIf StartupWindow.MySettings.vanillaGeneration = "Features, Caves, Structures" Then
+                ChunkStatus = "empty"
+            End If
+
+            ScriptBatchFile.WriteLine("java -jar """ & StartupWindow.MySettings.PathToScriptsFolder & "\nbtChunkStatusChanger-1.0-SNAPSHOT.jar"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript\exports\" & Tile & """ """ & chunkStatus & """")
             ScriptBatchFile.Close()
         Catch ex As Exception
             Throw New Exception("File '6-wpscript.bat' could not be saved. " & ex.Message)
@@ -1534,11 +1940,11 @@ Public Class GenerationWindow
     Private Sub CleanUpExport(Tile As String)
         Try
 
-            If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\")) Then
+            If Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\") Then
                 System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\")
             End If
 
-            If (Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")) Then
+            If Not System.IO.Directory.Exists(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\") Then
                 System.IO.Directory.CreateDirectory(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\")
             End If
 
@@ -1551,11 +1957,11 @@ Public Class GenerationWindow
 
             ScriptBatchFile = My.Computer.FileSystem.OpenTextFileWriter(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\" & Tile & "\8-cleanup.bat", False, System.Text.Encoding.ASCII)
 
-            If (StartupWindow.MySettings.keepImageFiles = False) Then
-                ScriptBatchFile.WriteLine("rmdir /Q /S """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & Tile & Chr(34))
+            If StartupWindow.MySettings.keepImageFiles = False And (StartupWindow.MySettings.vanillaGeneration = "Off" Or Not StartupWindow.MySelection.SpawnTile = Tile) Then
+                ScriptBatchFile.WriteLine("rmdir /Q /S """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & Tile & """")
             End If
 
-            If (StartupWindow.MySettings.keepOsmFiles = False) Then
+            If StartupWindow.MySettings.keepOsmFiles = False Then
                 ScriptBatchFile.WriteLine("rmdir /Q /S """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\" & Tile & Chr(34))
             End If
 
@@ -1586,23 +1992,27 @@ Public Class GenerationWindow
 
             ScriptBatchFile = My.Computer.FileSystem.OpenTextFileWriter(StartupWindow.MySettings.PathToScriptsFolder & "\batchfiles\7-combine.bat", False, System.Text.Encoding.ASCII)
 
+            Dim exportPath As String = ""
             If StartupWindow.MySettings.PathToExport = "" Then
-                ScriptBatchFile.WriteLine("If Not exist """ & StartupWindow.MySettings.PathToScriptsFolder & "\" & StartupWindow.MySettings.WorldName & """ mkdir """ & StartupWindow.MySettings.PathToScriptsFolder & "\" & StartupWindow.MySettings.WorldName & """")
-                ScriptBatchFile.WriteLine("If Not exist """ & StartupWindow.MySettings.PathToScriptsFolder & "\" & StartupWindow.MySettings.WorldName & "\region"" mkdir """ & StartupWindow.MySettings.PathToScriptsFolder & "\" & StartupWindow.MySettings.WorldName & "\region""")
-                ScriptBatchFile.WriteLine("copy """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript\exports\" & StartupWindow.MySelection.SpawnTile & "\level.dat"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\" & StartupWindow.MySettings.WorldName & """")
-                ScriptBatchFile.WriteLine("copy """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript\exports\" & StartupWindow.MySelection.SpawnTile & "\session.lock"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\" & StartupWindow.MySettings.WorldName & """")
-                ScriptBatchFile.WriteLine("pushd """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript\exports\""")
-                ScriptBatchFile.WriteLine("For /r %%i in (*.mca) do  xcopy /Y ""%%i"" """ & StartupWindow.MySettings.PathToScriptsFolder & "\" & StartupWindow.MySettings.WorldName & "\region\""")
-                ScriptBatchFile.WriteLine("popd")
+                exportPath = StartupWindow.MySettings.PathToScriptsFolder
             Else
-                ScriptBatchFile.WriteLine("If Not exist """ & StartupWindow.MySettings.PathToExport & "\" & StartupWindow.MySettings.WorldName & """ mkdir """ & StartupWindow.MySettings.PathToExport & "\" & StartupWindow.MySettings.WorldName & """")
-                ScriptBatchFile.WriteLine("If Not exist """ & StartupWindow.MySettings.PathToExport & "\" & StartupWindow.MySettings.WorldName & "\region"" mkdir """ & StartupWindow.MySettings.PathToExport & "\" & StartupWindow.MySettings.WorldName & "\region""")
-                ScriptBatchFile.WriteLine("copy """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript\exports\" & StartupWindow.MySelection.SpawnTile & "\level.dat"" """ & StartupWindow.MySettings.PathToExport & "\" & StartupWindow.MySettings.WorldName & """")
-                ScriptBatchFile.WriteLine("copy """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript\exports\" & StartupWindow.MySelection.SpawnTile & "\session.lock"" """ & StartupWindow.MySettings.PathToExport & "\" & StartupWindow.MySettings.WorldName & """")
-                ScriptBatchFile.WriteLine("pushd """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript\exports\""")
-                ScriptBatchFile.WriteLine("For /r %%i in (*.mca) do  xcopy /Y ""%%i"" """ & StartupWindow.MySettings.PathToExport & "\" & StartupWindow.MySettings.WorldName & "\region\""")
-                ScriptBatchFile.WriteLine("popd")
+                exportPath = StartupWindow.MySettings.PathToExport
             End If
+
+            ScriptBatchFile.WriteLine("If Not exist """ & exportPath & "\" & StartupWindow.MySettings.WorldName & """ mkdir """ & exportPath & "\" & StartupWindow.MySettings.WorldName & """")
+            ScriptBatchFile.WriteLine("If Not exist """ & exportPath & "\" & StartupWindow.MySettings.WorldName & "\region"" mkdir """ & exportPath & "\" & StartupWindow.MySettings.WorldName & "\region""")
+            ScriptBatchFile.WriteLine("copy """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript\exports\" & StartupWindow.MySelection.SpawnTile & "\level.dat"" """ & exportPath & "\" & StartupWindow.MySettings.WorldName & """")
+            ScriptBatchFile.WriteLine("copy """ & StartupWindow.MySettings.PathToScriptsFolder & "\settings.xml"" """ & exportPath & "\" & StartupWindow.MySettings.WorldName & """")
+            ScriptBatchFile.WriteLine("copy """ & StartupWindow.MySettings.PathToScriptsFolder & "\selection.xml"" """ & exportPath & "\" & StartupWindow.MySettings.WorldName & """")
+            ScriptBatchFile.WriteLine("copy """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript\exports\" & StartupWindow.MySelection.SpawnTile & "\session.lock"" """ & exportPath & "\" & StartupWindow.MySettings.WorldName & """")
+            If Not StartupWindow.MySettings.vanillaGeneration = "Off" Then
+                ScriptBatchFile.WriteLine("copy """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & StartupWindow.MySelection.SpawnTile & "\imagegen.png"" """ & exportPath & "\" & StartupWindow.MySettings.WorldName & """")
+                ScriptBatchFile.WriteLine("copy """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & StartupWindow.MySelection.SpawnTile & "\imagegen_cities.png"" """ & exportPath & "\" & StartupWindow.MySettings.WorldName & """")
+                ScriptBatchFile.WriteLine("copy """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports\" & StartupWindow.MySelection.SpawnTile & "\imagegen_heightmap.png"" """ & exportPath & "\" & StartupWindow.MySettings.WorldName & """")
+            End If
+            ScriptBatchFile.WriteLine("pushd """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript\exports\""")
+            ScriptBatchFile.WriteLine("For /r %%i in (*.mca) do  xcopy /Y ""%%i"" """ & exportPath & "\" & StartupWindow.MySettings.WorldName & "\region\""")
+            ScriptBatchFile.WriteLine("popd")
             ScriptBatchFile.Close()
 
         Catch ex As Exception
@@ -1632,13 +2042,17 @@ Public Class GenerationWindow
 
             ScriptBatchFile.WriteLine("rmdir /Q /S """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript\backups""")
             ScriptBatchFile.WriteLine("mkdir """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript\backups""")
-            If (StartupWindow.MySettings.keepWorldPainterFiles = False) Then
+            If StartupWindow.MySettings.keepWorldPainterFiles = False Then
                 ScriptBatchFile.WriteLine("rmdir /Q /S """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript\worldpainter_files""")
                 ScriptBatchFile.WriteLine("mkdir """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript\worldpainter_files""")
             End If
-            If (StartupWindow.MySettings.keepPbfFile = False) Then
+            If StartupWindow.MySettings.keepPbfFile = False Then
                 ScriptBatchFile.WriteLine("del """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\unfiltered.o5m""")
                 ScriptBatchFile.WriteLine("del """ & StartupWindow.MySettings.PathToScriptsFolder & "\osm\output.o5m""")
+            End If
+            If StartupWindow.MySettings.keepImageFiles = False Then
+                ScriptBatchFile.WriteLine("rmdir /Q /S """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports""")
+                ScriptBatchFile.WriteLine("mkdir """ & StartupWindow.MySettings.PathToScriptsFolder & "\image_exports""")
             End If
             ScriptBatchFile.WriteLine("rmdir /Q /S """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript\exports""")
             ScriptBatchFile.WriteLine("mkdir """ & StartupWindow.MySettings.PathToScriptsFolder & "\wpscript\exports""")
@@ -1652,6 +2066,14 @@ Public Class GenerationWindow
         Catch ex As Exception
             Throw New Exception("File '8-cleanup.bat' could not be saved. " & ex.Message)
         End Try
+    End Sub
+
+    Private Sub ckb_pause_Checked(sender As Object, e As RoutedEventArgs) Handles ckb_pause.Checked, ckb_pause.Unchecked
+        If ckb_pause.IsChecked = True Then
+            pause = True
+        ElseIf ckb_pause.IsChecked = False Then
+            pause = False
+        End If
     End Sub
 
 #End Region
