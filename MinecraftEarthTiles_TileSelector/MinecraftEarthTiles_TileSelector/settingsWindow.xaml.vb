@@ -64,7 +64,7 @@ Public Class SettingsWindow
 
     Private Sub Help_Click(sender As Object, e As RoutedEventArgs)
         'Help.ShowHelp(Nothing, "Help/Settings.chm")
-        Process.Start("https://earthtiles.motfe.net/2020/08/04/settings/")
+        Process.Start("https://earth.motfe.net/tiles-settings/")
     End Sub
 
 #End Region
@@ -174,7 +174,7 @@ Public Class SettingsWindow
         txb_PathToExport.Text = Settings.PathToExport
 
         If Not Settings.WorldName = "" Then
-            txb_worldName.Text = Settings.WorldName
+            txb_worldName.Text = RemoveIllegalFileNameChars(Settings.WorldName)
         Else
             txb_worldName.Text = "world"
         End If
@@ -184,9 +184,13 @@ Public Class SettingsWindow
             cbb_BlocksPerTile.Text = Settings.BlocksPerTile
         End If
 
-        If Settings.VerticalScale = "5" Or Settings.VerticalScale = "10" Or Settings.VerticalScale = "25" Or Settings.VerticalScale = "33" Or Settings.VerticalScale = "50" Or Settings.VerticalScale = "100" Or Settings.VerticalScale = "200" Then
+        If Settings.VerticalScale = "5" Or Settings.VerticalScale = "10" Or Settings.VerticalScale = "25" Or Settings.VerticalScale = "35" Or Settings.VerticalScale = "50" Or Settings.VerticalScale = "75" Or Settings.VerticalScale = "100" Or Settings.VerticalScale = "200" Then
             cbb_VerticalScale.SelectedValue = Settings.VerticalScale
             cbb_VerticalScale.Text = Settings.VerticalScale
+            If Not Settings.TilesPerMap = "1" And (Settings.VerticalScale = "5" Or Settings.VerticalScale = "10" Or Settings.VerticalScale = "25") Then
+                cbb_VerticalScale.SelectedValue = "35"
+                cbb_VerticalScale.Text = "35"
+            End If
         End If
 
         If Settings.Terrain = "Standard" Or Settings.Terrain = "Custom" Then
@@ -195,29 +199,43 @@ Public Class SettingsWindow
         End If
 
         If 90 Mod CType(Settings.TilesPerMap, Int16) = 0.0 Then
-            cbb_TilesperMap.SelectedValue = Settings.TilesPerMap
-            cbb_TilesperMap.Text = Settings.TilesPerMap
+            cbb_TilesPerMap.SelectedValue = Settings.TilesPerMap
+            cbb_TilesPerMap.Text = Settings.TilesPerMap
         End If
 
-        If Settings.MapVersion = "1.12" Or Settings.MapVersion = "1.12 with Cubic Chunks" Or Settings.MapVersion = "1.16+" Then
+        If Settings.MapVersion = "1.12" Or Settings.MapVersion = "1.16" Or Settings.MapVersion = "1.17" Or Settings.MapVersion = "1.18" Or Settings.MapVersion = "1.19" Then
             cbb_MapVersion.SelectedValue = Settings.MapVersion
             cbb_MapVersion.Text = Settings.MapVersion
         End If
 
+        If Settings.MapVersion = "1.12" Or Settings.MapVersion = "1.18" Or Settings.MapVersion = "1.19" Then
+            chb_VanillaPopulation.IsEnabled = True
+        Else
+            chb_VanillaPopulation.IsEnabled = False
+        End If
+
         chb_Borders.IsChecked = Settings.bordersBoolean
 
-        If Settings.borders = "2000bc" Or Settings.borders = "1000bc" Or Settings.borders = "500bc" Or Settings.borders = "323bc" Or Settings.borders = "200bc" Or Settings.borders = "1bc" Or Settings.borders = "400" Or Settings.borders = "600" Or Settings.borders = "800" Or Settings.borders = "1000" Or Settings.borders = "1279" Or Settings.borders = "1482" Or Settings.borders = "1530" Or Settings.borders = "1650" Or Settings.borders = "1715" Or Settings.borders = "1783" Or Settings.borders = "1815" Or Settings.borders = "1880" Or Settings.borders = "1914" Or Settings.borders = "1920" Or Settings.borders = "1938" Or Settings.borders = "1945" Or Settings.borders = "1994" Or Settings.borders = "2020" Then
+        If Settings.borders = "2000bc" Or Settings.borders = "1000bc" Or Settings.borders = "500bc" Or Settings.borders = "323bc" Or Settings.borders = "200bc" Or Settings.borders = "1bc" Or Settings.borders = "400" Or Settings.borders = "600" Or Settings.borders = "800" Or Settings.borders = "1000" Or Settings.borders = "1279" Or Settings.borders = "1482" Or Settings.borders = "1530" Or Settings.borders = "1650" Or Settings.borders = "1715" Or Settings.borders = "1783" Or Settings.borders = "1815" Or Settings.borders = "1880" Or Settings.borders = "1914" Or Settings.borders = "1920" Or Settings.borders = "1938" Or Settings.borders = "1945" Or Settings.borders = "1994" Or Settings.borders = "Current" Then
             cbb_Borders.SelectedValue = Settings.borders
             cbb_Borders.Text = Settings.borders
         End If
 
-        chb_Heightmap_Error_Correction.IsChecked = Settings.Heightmap_Error_Correction
+        chb_HeightmapErrorCorrection.IsChecked = Settings.Heightmap_Error_Correction
 
         chb_geofabrik.IsChecked = Settings.geofabrik
 
-        chb_bathymetry.IsChecked = Settings.bathymetry
+        chb_Bathymetry.IsChecked = Settings.bathymetry
 
-        chb_offlineTerrain.IsChecked = Settings.offlineTerrain
+        If Settings.TerrainSource = "Offline Terrain (high res)" Or Settings.TerrainSource = "Offline Terrain (low res)" Or Settings.TerrainSource = "Arcgis" Or Settings.TerrainSource = "Google" Or Settings.TerrainSource = "Bing" Then
+            cbb_TerrainSource.SelectedValue = Settings.TerrainSource
+            cbb_TerrainSource.Text = Settings.TerrainSource
+        End If
+
+        If Settings.biomeSource = "Köppen Climate Classification" Or Settings.biomeSource = "Terrestrial Ecoregions (WWF)" Then
+            cbb_BiomeSource.SelectedValue = Settings.biomeSource
+            cbb_BiomeSource.Text = Settings.biomeSource
+        End If
 
         chb_highways.IsChecked = Settings.highways
 
@@ -252,9 +270,10 @@ Public Class SettingsWindow
             cbb_Rivers.Text = Settings.rivers
         End If
 
-        If Settings.vanillaGeneration = "Off" Or Settings.vanillaGeneration = "Only Features" Or Settings.vanillaGeneration = "Features and Caves" Or Settings.vanillaGeneration = "Features, Caves, Structures" Then
-            cbb_VanillaGeneration.SelectedValue = Settings.vanillaGeneration
-            cbb_VanillaGeneration.Text = Settings.vanillaGeneration
+        If Settings.MapVersion = "1.12" Or Settings.MapVersion = "1.18" Or Settings.MapVersion = "1.19" Then
+            chb_VanillaPopulation.IsChecked = Settings.vanillaPopulation
+        Else
+            chb_VanillaPopulation.IsChecked = False
         End If
 
         chb_streams.IsChecked = Settings.streams
@@ -264,9 +283,11 @@ Public Class SettingsWindow
         chb_crops.IsChecked = Settings.crops
 
         If CType(Settings.NumberOfCores, Int32) <= 16 Then
-            cbb_Number_Of_Cores.SelectedValue = Settings.NumberOfCores
-            cbb_Number_Of_Cores.Text = Settings.NumberOfCores
+            cbb_NumberOfCores.SelectedValue = Settings.NumberOfCores
+            cbb_NumberOfCores.Text = Settings.NumberOfCores
         End If
+
+        chb_ParallelWorldPainterGenerations.IsChecked = Settings.ParallelWorldPainterGenerations
 
         chb_keepPbfFiles.IsChecked = Settings.keepPbfFile
         chb_reUsePbfFiles.IsChecked = Settings.reUsePbfFile
@@ -276,16 +297,18 @@ Public Class SettingsWindow
         chb_reUseImages.IsChecked = Settings.reUseImageFiles
         chb_keepWorldPainter.IsChecked = Settings.keepWorldPainterFiles
 
-        chb_cmd_Visibility.IsChecked = Settings.cmdVisibility
+        chb_CmdVisibility.IsChecked = Settings.cmdVisibility
 
         chb_continue.IsChecked = Settings.continueGeneration
 
         txb_Proxy.Text = Settings.Proxy
 
         If Settings.mapOffset = "-1" Or Settings.mapOffset = "0" Or Settings.mapOffset = "1" Then
-            cbb_Map_Offset.SelectedValue = Settings.mapOffset
-            cbb_Map_Offset.Text = Settings.mapOffset
+            cbb_MapOffset.SelectedValue = Settings.mapOffset
+            cbb_MapOffset.Text = Settings.mapOffset
         End If
+
+        txb_OsmURL.Text = Settings.OverpassURL
 
         Calculate_Scale()
         ReUseChanged()
@@ -312,14 +335,14 @@ Public Class SettingsWindow
         If Directory.Exists(txb_PathToExport.Text) Then
             LocalSettings.PathToExport = txb_PathToExport.Text
         End If
-        If Not txb_worldName.Text = "" Then
-            LocalSettings.WorldName = RemoveIllegalFileNameChars(txb_worldName.Text)
-            txb_worldName.Text = RemoveIllegalFileNameChars(txb_worldName.Text)
+        If Not txb_WorldName.Text = "" Then
+            LocalSettings.WorldName = RemoveIllegalFileNameChars(txb_WorldName.Text)
+            txb_WorldName.Text = RemoveIllegalFileNameChars(txb_WorldName.Text)
         End If
         If CType(cbb_BlocksPerTile.Text, Int16) Mod 512 = 0.0 Then
             LocalSettings.BlocksPerTile = cbb_BlocksPerTile.Text
         End If
-        If cbb_VerticalScale.Text = "200" Or cbb_VerticalScale.Text = "100" Or cbb_VerticalScale.Text = "50" Or cbb_VerticalScale.Text = "33" Or cbb_VerticalScale.Text = "25" Or cbb_VerticalScale.Text = "10" Or cbb_VerticalScale.Text = "5" Then
+        If cbb_VerticalScale.Text = "200" Or cbb_VerticalScale.Text = "100" Or cbb_VerticalScale.Text = "75" Or cbb_VerticalScale.Text = "50" Or cbb_VerticalScale.Text = "35" Or cbb_VerticalScale.Text = "25" Or cbb_VerticalScale.Text = "10" Or cbb_VerticalScale.Text = "5" Then
             LocalSettings.VerticalScale = cbb_VerticalScale.Text
         End If
         If 90 Mod CType(cbb_TilesperMap.Text, Int16) = 0.0 Then
@@ -328,21 +351,29 @@ Public Class SettingsWindow
         If cbb_TerrainMapping.Text = "Default" Or cbb_TerrainMapping.Text = "Custom" Then
             LocalSettings.Terrain = cbb_TerrainMapping.Text
         End If
-        If cbb_MapVersion.Text = "1.12" Or cbb_MapVersion.Text = "1.12 with Cubic Chunks" Or cbb_MapVersion.Text = "1.16+" Then
+        If cbb_MapVersion.Text = "1.12" Or cbb_MapVersion.Text = "1.16" Or cbb_MapVersion.Text = "1.17" Or cbb_MapVersion.Text = "1.18" Or cbb_MapVersion.Text = "1.19" Then
             LocalSettings.MapVersion = cbb_MapVersion.Text
         End If
 
         LocalSettings.bordersBoolean = CBool(chb_Borders.IsChecked)
 
-        If cbb_Borders.Text = "2000bc" Or cbb_Borders.Text = "1000bc" Or cbb_Borders.Text = "500bc" Or cbb_Borders.Text = "323bc" Or cbb_Borders.Text = "200bc" Or cbb_Borders.Text = "1bc" Or cbb_Borders.Text = "400" Or cbb_Borders.Text = "600" Or cbb_Borders.Text = "800" Or cbb_Borders.Text = "1000" Or cbb_Borders.Text = "1279" Or cbb_Borders.Text = "1482" Or cbb_Borders.Text = "1530" Or cbb_Borders.Text = "1650" Or cbb_Borders.Text = "1715" Or cbb_Borders.Text = "1783" Or cbb_Borders.Text = "1815" Or cbb_Borders.Text = "1880" Or cbb_Borders.Text = "1914" Or cbb_Borders.Text = "1920" Or cbb_Borders.Text = "1938" Or cbb_Borders.Text = "1945" Or cbb_Borders.Text = "1994" Or cbb_Borders.Text = "2020" Then
+        If cbb_Borders.Text = "2000bc" Or cbb_Borders.Text = "1000bc" Or cbb_Borders.Text = "500bc" Or cbb_Borders.Text = "323bc" Or cbb_Borders.Text = "200bc" Or cbb_Borders.Text = "1bc" Or cbb_Borders.Text = "400" Or cbb_Borders.Text = "600" Or cbb_Borders.Text = "800" Or cbb_Borders.Text = "1000" Or cbb_Borders.Text = "1279" Or cbb_Borders.Text = "1482" Or cbb_Borders.Text = "1530" Or cbb_Borders.Text = "1650" Or cbb_Borders.Text = "1715" Or cbb_Borders.Text = "1783" Or cbb_Borders.Text = "1815" Or cbb_Borders.Text = "1880" Or cbb_Borders.Text = "1914" Or cbb_Borders.Text = "1920" Or cbb_Borders.Text = "1938" Or cbb_Borders.Text = "1945" Or cbb_Borders.Text = "1994" Or cbb_Borders.Text = "Current" Then
             LocalSettings.borders = cbb_Borders.Text
         End If
 
-        LocalSettings.Heightmap_Error_Correction = CBool(chb_Heightmap_Error_Correction.IsChecked)
+        LocalSettings.Heightmap_Error_Correction = CBool(chb_HeightmapErrorCorrection.IsChecked)
 
         LocalSettings.geofabrik = CBool(chb_geofabrik.IsChecked)
         LocalSettings.bathymetry = CBool(chb_bathymetry.IsChecked)
-        LocalSettings.offlineTerrain = CBool(chb_offlineTerrain.IsChecked)
+
+        If cbb_TerrainSource.Text = "Offline Terrain (high res)" Or cbb_TerrainSource.Text = "Offline Terrain (low res)" Or cbb_TerrainSource.Text = "Arcgis" Or cbb_TerrainSource.Text = "Google" Or cbb_TerrainSource.Text = "Bing" Then
+            LocalSettings.TerrainSource = cbb_TerrainSource.Text
+        End If
+
+        If cbb_BiomeSource.Text = "Terrestrial Ecoregions (WWF)" Or cbb_BiomeSource.Text = "Köppen Climate Classification" Then
+            LocalSettings.biomeSource = cbb_BiomeSource.Text
+        End If
+
         LocalSettings.highways = CBool(chb_highways.IsChecked)
         LocalSettings.streets = CBool(chb_streets.IsChecked)
         LocalSettings.buildings = CBool(chb_buildings.IsChecked)
@@ -366,13 +397,13 @@ Public Class SettingsWindow
             LocalSettings.rivers = cbb_Rivers.Text
         End If
 
-        If cbb_VanillaGeneration.Text = "Off" Or cbb_VanillaGeneration.Text = "Only Features" Or cbb_VanillaGeneration.Text = "Features and Caves" Or cbb_VanillaGeneration.Text = "Features, Caves, Structures" Then
-            LocalSettings.vanillaGeneration = cbb_VanillaGeneration.Text
+        LocalSettings.vanillaPopulation = CBool(chb_VanillaPopulation.IsChecked)
+
+        If CType(cbb_NumberOfCores.Text, Int32) <= 16 Then
+            LocalSettings.NumberOfCores = cbb_NumberOfCores.Text
         End If
 
-        If CType(cbb_Number_Of_Cores.Text, Int32) <= 16 Then
-            LocalSettings.NumberOfCores = cbb_Number_Of_Cores.Text
-        End If
+        LocalSettings.ParallelWorldPainterGenerations = CBool(chb_ParallelWorldPainterGenerations.IsChecked)
 
         LocalSettings.keepPbfFile = CBool(chb_keepPbfFiles.IsChecked)
         LocalSettings.reUsePbfFile = CBool(chb_reUsePbfFiles.IsChecked)
@@ -382,14 +413,16 @@ Public Class SettingsWindow
         LocalSettings.reUseImageFiles = CBool(chb_reUseImages.IsChecked)
         LocalSettings.keepWorldPainterFiles = CBool(chb_keepWorldPainter.IsChecked)
 
-        LocalSettings.cmdVisibility = CBool(chb_cmd_Visibility.IsChecked)
+        LocalSettings.cmdVisibility = CBool(chb_CmdVisibility.IsChecked)
         LocalSettings.continueGeneration = CBool(chb_continue.IsChecked)
 
         LocalSettings.Proxy = txb_Proxy.Text
 
-        If cbb_Map_Offset.Text = "-1" Or cbb_Map_Offset.Text = "0" Or cbb_Map_Offset.Text = "1" Then
-            LocalSettings.mapOffset = cbb_Map_Offset.Text
+        If cbb_MapOffset.Text = "-1" Or cbb_MapOffset.Text = "0" Or cbb_MapOffset.Text = "1" Then
+            LocalSettings.mapOffset = cbb_MapOffset.Text
         End If
+
+        LocalSettings.OverpassURL = txb_OsmURL.Text
 
         Return LocalSettings
     End Function
@@ -399,10 +432,10 @@ Public Class SettingsWindow
             If Not cbb_BlocksPerTile.Text = "" And Not cbb_TilesperMap.Text = "" Then
                 Dim ScaleCalc As Double = (CType(cbb_BlocksPerTile.Text, Int16)) / 1.024
 
-                lbl_Scale_Quantity.Content = "1 : " & (Math.Round(40075000 / ((CType(cbb_BlocksPerTile.Text, Int16) * (360 / CType(cbb_TilesperMap.Text, Int16)))), 1)).ToString
-                lbl_Scale_rounded_Quantity.Content = "1 : " & (Math.Round(36768000 / ((CType(cbb_BlocksPerTile.Text, Int16) * (360 / CType(cbb_TilesperMap.Text, Int16)))), 1)).ToString
+                lbl_ScaleQuantity.Content = "1 : " & (Math.Round(40075000 / ((CType(cbb_BlocksPerTile.Text, Int16) * (360 / CType(cbb_TilesPerMap.Text, Int16)))), 1)).ToString
+                lbl_ScaleRoundedQuantity.Content = "1 : " & (Math.Round(36768000 / ((CType(cbb_BlocksPerTile.Text, Int16) * (360 / CType(cbb_TilesPerMap.Text, Int16)))), 1)).ToString
 
-                If 36768000 / ((CType(cbb_BlocksPerTile.Text, Int16) * (360 / CType(cbb_TilesperMap.Text, Int16)))) >= 500 Then
+                If 36768000 / (CType(cbb_BlocksPerTile.Text, Int16) * (360 / CType(cbb_TilesperMap.Text, Int16))) >= 500 Then
                     chb_small_streets.IsEnabled = False
                     chb_small_streets.IsChecked = False
                     chb_farms.IsEnabled = False
@@ -427,12 +460,27 @@ Public Class SettingsWindow
                 End If
             End If
         End If
+
+        If Not cbb_TilesPerMap.Text = "1" Then
+            For Each item As ComboBoxItem In cbb_VerticalScale.Items
+                If item.Content.ToString = "5" Or item.Content.ToString = "10" Or item.Content.ToString = "25" Then
+                    item.IsEnabled = False
+                End If
+            Next
+        Else
+            For Each item As ComboBoxItem In cbb_VerticalScale.Items
+                item.IsEnabled = True
+            Next
+        End If
     End Sub
 
     Public Shared Function RemoveIllegalFileNameChars(input As String, Optional replacement As String = "_") As String
         Dim regexSearch = New String(Path.GetInvalidFileNameChars()) & New String(Path.GetInvalidPathChars())
         Dim r = New Regex(String.Format("[{0}]", Regex.Escape(regexSearch)))
-        Return r.Replace(input, replacement)
+        Dim returnString As String = ""
+        returnString = r.Replace(input, replacement)
+        returnString = returnString.Replace(" ", replacement)
+        Return returnString
     End Function
 
     Private Sub ReUseChanged()
@@ -440,6 +488,15 @@ Public Class SettingsWindow
             lbl_reuse_warning.Visibility = Visibility.Visible
         Else
             lbl_reuse_warning.Visibility = Visibility.Hidden
+        End If
+    End Sub
+
+    Private Sub cbb_MapVersion_DropDownClosed(sender As Object, e As EventArgs) Handles cbb_MapVersion.DropDownClosed
+        If cbb_MapVersion.Text = "1.12" Or cbb_MapVersion.Text = "1.18" Or cbb_MapVersion.Text = "1.19" Then
+            chb_VanillaPopulation.IsEnabled = True
+        Else
+            chb_VanillaPopulation.IsEnabled = False
+            chb_VanillaPopulation.IsChecked = False
         End If
     End Sub
 

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MinecraftEarthTiles_TileSelector"
         mc:Ignorable="d"
-        Title="Tile Selection" Height="450" Width="800"  Loaded="Window_Loaded">
+        Title="Tile Selection" Height="500" Width="800"  Loaded="Window_Loaded">
     <Window.Resources>
         <Style TargetType="{x:Type CheckBox}" x:Key="EarthTilesCheckboxStyle">
             <Setter Property="Template">
@@ -122,11 +122,11 @@
                 </StackPanel>
             </ScrollViewer>
 
-            <Grid Grid.Row="2" Height="40" VerticalAlignment="Bottom" Background="LightGray">
-                <Label x:Name="lbl_ZoomSlider" Content="Zoom" HorizontalAlignment="Left" Margin="10,7,0,0" RenderTransformOrigin="0.78,0.615" Height="26" VerticalAlignment="Top"/>
-                <Slider x:Name="ZoomSlider" Orientation="Horizontal" Minimum="0.5" Maximum="10.0" LargeChange="0.5" SmallChange="0.25" Value="1.0" Margin="56,10,0,0" HorizontalAlignment="Left" Width="147" Height="20" VerticalAlignment="Top" />
-                
-                <ComboBox x:Name="cbb_Background_Image" HorizontalAlignment="Right" Margin="0,0,477,10" VerticalAlignment="Bottom" Width="88" Height="20" DropDownClosed="Change_Background" RenderTransformOrigin="0.542,0.5">
+            <Grid Grid.Row="2" Height="70" VerticalAlignment="Bottom" Background="LightGray">
+                <Label x:Name="lbl_ZoomSlider" Content="Zoom" HorizontalAlignment="Left" Margin="10,0,0,38" RenderTransformOrigin="0.78,0.615" Height="26" VerticalAlignment="Bottom" Width="41"/>
+                <Slider x:Name="ZoomSlider" Orientation="Horizontal" Minimum="0.5" Maximum="10.0" LargeChange="0.5" SmallChange="0.25" Value="1.0" Margin="56,0,0,40" HorizontalAlignment="Left" Width="149" Height="20" VerticalAlignment="Bottom" />
+
+                <ComboBox x:Name="cbb_Background_Image" Margin="210,0,0,40" DropDownClosed="Change_Background" RenderTransformOrigin="0.542,0.5" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="88">
                     <ComboBoxItem IsSelected="True">Terrain</ComboBoxItem>
                     <ComboBoxItem>Borders</ComboBoxItem>
                     <ComboBoxItem>Scale 1:33</ComboBoxItem>
@@ -134,15 +134,25 @@
                     <ComboBoxItem>Scale 1:10</ComboBoxItem>
                     <ComboBoxItem>Scale 1:5</ComboBoxItem>
                 </ComboBox>
-                
-                <Button x:Name="btn_Clear_Selection" Content="Clear Selection" Margin="0,0,367,10" Click="Reset_Selection_Click" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="105"/>
-                <Label x:Name="lbl_Spawn_Tile" Content="Spawn Tile" Margin="0,0,295,7" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="67" RenderTransformOrigin="0.522,0.154"/>
-                <ComboBox x:Name="cbb_Spawn_Tile" Margin="0,0,170,10" VerticalAlignment="Bottom" Height="20" HorizontalAlignment="Right" Width="120"/>
 
-                <Grid x:Name="grd_Buttons">
-                    <Button x:Name="btn_Save_Selection" Content="Save" Margin="0,0,90,10" Click="Save_Click" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75"/>
-                    <Button x:Name="btn_Cancel_Selection" Content="Cancel" Margin="0,0,10,10" Click="Cancel_Click" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75"/>
-                </Grid>
+                <Button x:Name="btn_Clear_Selection" Content="Clear Selection" Margin="0,0,10,40" Click="Reset_Selection_Click" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="105" Grid.Column="1"/>
+                <Label x:Name="lbl_Spawn_Tile" Content="Spawn Tile" Margin="303,0,0,37" VerticalAlignment="Bottom" RenderTransformOrigin="0.522,0.154" HorizontalAlignment="Left" Width="67" Height="26"/>
+                <ComboBox x:Name="cbb_Spawn_Tile" Margin="370,0,0,40" VerticalAlignment="Bottom" Height="20" HorizontalAlignment="Left" Width="89" RenderTransformOrigin="-0.2,0.55"/>
+                <Label x:Name="lbl_Void_Barrier" Content="Void Barrier" Margin="464,0,0,37" VerticalAlignment="Bottom" RenderTransformOrigin="0.522,0.154" HorizontalAlignment="Left" Width="72" Height="26"/>
+                <ComboBox x:Name="cbb_Void_Barrier" Margin="536,0,0,41" DropDownClosed="Calculate_Void_Tiles" RenderTransformOrigin="0.542,0.5" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="57">
+                    <ComboBoxItem IsSelected="True">0</ComboBoxItem>
+                    <ComboBoxItem>512</ComboBoxItem>
+                    <ComboBoxItem>1024</ComboBoxItem>
+                    <ComboBoxItem>1536</ComboBoxItem>
+                    <ComboBoxItem>2048</ComboBoxItem>
+                </ComboBox>
+                <Label x:Name="lbl_Corners" Content="Corner Coordinates for worldborder / chunky:" Margin="1,0,0,7" VerticalAlignment="Bottom" RenderTransformOrigin="0.522,0.154" Grid.Column="1" HorizontalAlignment="Left" Width="252" Height="26"/>
+                <TextBox x:Name="txb_Corners" Grid.Column="1" HorizontalAlignment="Left" Margin="258,0,0,6" TextWrapping="NoWrap" Text="" Width="219" Height="23" VerticalAlignment="Bottom"/>
+
+                <Button x:Name="btn_Save_Selection" Content="Save" Margin="0,0,90,10" Click="Save_Click" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Grid.Column="1"/>
+                <Button x:Name="btn_Cancel_Selection" Content="Cancel" Margin="0,0,10,10" Click="Cancel_Click" Grid.Column="1" Height="20" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75"/>
+                <Label x:Name="lbl_Void_Barrier_Blocks" Content="Blocks" Margin="593,0,0,37" VerticalAlignment="Bottom" RenderTransformOrigin="0.522,0.154" HorizontalAlignment="Left" Width="72" Height="26"/>
+
             </Grid>
         </Grid>
     </DockPanel>

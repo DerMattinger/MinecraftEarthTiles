@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MinecraftEarthTiles_TileSelector"
         mc:Ignorable="d"
-        Title="Tile Generation" Height="520" Width="605">
+        Title="Tile Generation" Height="600" Width="800">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="File">
@@ -42,10 +42,14 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Log" Width="80">
+                    <DataGridTemplateColumn Header="Open">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Content="{Binding Path=TileName, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Click="Log_Click"></Button>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Padding="3,0" Margin="0,0,1,0" Content="Log File" Tag="{Binding Path=TileName, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Click="Log_Click"></Button>
+                                    <Button Padding="3,0" Margin="0,0,1,0" Content="OSM Folder" Tag="{Binding Path=TileName, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Click="Folder_OSM_Click"></Button>
+                                    <Button Padding="3,0" Margin="0,0,0,0" Content="Images Folder" Tag="{Binding Path=TileName, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Click="Folder_Images_Click"></Button>
+                                </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -58,10 +62,11 @@
                     <RowDefinition Height="19*"/>
                 </Grid.RowDefinitions>
                 <Button x:Name="btn_Generate_Batch_Files" Content="Generate Batch Files only" Margin="10,10,0,0" Click="BatchFiles_Click" Height="20" VerticalAlignment="Top" HorizontalAlignment="Left" Width="153" Grid.RowSpan="2"/>
-                <Label x:Name="lbl_Estimated_Duration" Content="Estimated Duration: 0 h and 0 min" Margin="168,7,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="219" Grid.RowSpan="2"/>
+                <Label x:Name="lbl_elapsed_time" Content="Running: 0 h and 0 min" Margin="168,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="219" Grid.RowSpan="2"/>
+                <Label x:Name="lbl_Estimated_Duration" Content="Time left: 0 h and 0 min" Margin="168,14,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="219" Grid.RowSpan="2"/>
                 <Button x:Name="btn_Start_Selection" Content="Start" Margin="0,10,65,0" Click="Start_Click" Height="20" VerticalAlignment="Top" Grid.RowSpan="2" HorizontalAlignment="Right" Width="50"/>
                 <Button x:Name="btn_Stop_Selection" Content="Stop" Margin="0,10,10,0" Click="Stop_Click" Height="20" VerticalAlignment="Top" Grid.RowSpan="2" HorizontalAlignment="Right" Width="50"/>
-                <CheckBox x:Name="ckb_pause" Content="Pause" FlowDirection="RightToLeft" HorizontalAlignment="Right" ToolTip="Pause generation after next step" Margin="0,13,120,0" VerticalAlignment="Top" Grid.RowSpan="2" Width="53"/>
+                <CheckBox x:Name="ckb_pause" Content="Pause after next step" FlowDirection="RightToLeft" HorizontalAlignment="Right" ToolTip="Pause generation after next step" Margin="0,13,120,0" VerticalAlignment="Top" Grid.RowSpan="2" Width="132"/>
             </Grid>
         </Grid>
     </DockPanel>

@@ -16,7 +16,8 @@
     Public borders As String
     Public geofabrik As Boolean
     Public bathymetry As Boolean
-    Public offlineTerrain As Boolean
+    Public TerrainSource As String
+    Public biomeSource As String
     Public highways As Boolean
     Public streets As Boolean
     Public small_streets As Boolean
@@ -46,16 +47,18 @@
     Public reUseImageFiles As Boolean
     Public keepWorldPainterFiles As Boolean
     Public NumberOfCores As String
+    Public ParallelWorldPainterGenerations As Boolean
     Public cmdVisibility As Boolean
     Public continueGeneration As Boolean
     Public mapOffset As String
-    Public vanillaGeneration As String
+    Public vanillaPopulation As Boolean
+    Public OverpassURL As String
 
     ''' <summary>
     ''' Standard values for settings
     ''' </summary>
     Public Sub New()
-        version = "1.1.2"
+        version = "1.2.1"
         PathToScriptsFolder = My.Application.Info.DirectoryPath
         PathToWorldPainterFolder = ""
         PathToQGIS = ""
@@ -70,7 +73,8 @@
         Heightmap_Error_Correction = False
         geofabrik = False
         bathymetry = True
-        offlineTerrain = True
+        TerrainSource = "Argcis"
+        biomeSource = "Köppen Climate Classification"
         highways = True
         streets = True
         small_streets = False
@@ -102,10 +106,12 @@
         reUseImageFiles = False
         keepWorldPainterFiles = False
         NumberOfCores = "2"
+        ParallelWorldPainterGenerations = True
         cmdVisibility = False
         continueGeneration = False
         mapOffset = "0"
-        vanillaGeneration = "Off"
+        vanillaPopulation = False
+        OverpassURL = ""
     End Sub
 
 End Class

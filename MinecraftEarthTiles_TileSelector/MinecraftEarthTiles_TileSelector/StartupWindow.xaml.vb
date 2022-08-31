@@ -31,9 +31,9 @@ Public Class StartupWindow
             End Try
         End If
         Dim LocalSelection As New Selection
-        If File.Exists(My.Application.Info.DirectoryPath & "\tiles.xml") Then
+        If File.Exists(My.Application.Info.DirectoryPath & "\selection.xml") Then
             Try
-                LocalSelection = CustomXmlSerialiser.GetXMLSelection(My.Application.Info.DirectoryPath & "\tiles.xml")
+                LocalSelection = CustomXmlSerialiser.GetXMLSelection(My.Application.Info.DirectoryPath & "\selection.xml")
                 MySelection = LocalSelection
             Catch ex As Exception
                 MsgBox(ex.Message)
@@ -50,7 +50,11 @@ Public Class StartupWindow
 
     Private Sub Help_Click(sender As Object, e As RoutedEventArgs)
         'Help.ShowHelp(Nothing, "MyResources/MinecraftEarthTiles.chm")
-        Process.Start("https://earthtiles.motfe.net/")
+        Process.Start("https://earth.motfe.net/")
+    End Sub
+
+    Private Sub Info_Click(sender As Object, e As RoutedEventArgs)
+        Dim MsgBoxResult As DialogResult = MessageBox.Show("Copyright © 2020 - 2022 by MattiBorchers." & Environment.NewLine & "OSM Data: ©️ OpenStreetMap Contributors" & Environment.NewLine & "https://www.openstreetmap.org/copyright", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information)
     End Sub
 
 #End Region
@@ -70,14 +74,6 @@ Public Class StartupWindow
     End Sub
 
     Private Sub Btn_Generation_Click(sender As Object, e As RoutedEventArgs)
-        ''Btn_osmbatExport_Click(sender, e)
-        ''Btn_QgisExport_Click(sender, e)
-        ''Btn_tartool_Click(sender, e)
-        ''Btn_gdalExport_Click(sender, e)
-        ''Btn_magick_Export_Click(sender, e)
-        ''Btn_WPScriptExport_Click(sender, e)
-        ''Btn_CombineExport_Click(sender, e)
-        ''Btn_CleanUpExport_Click(sender, e)
         Dim TilesList As List(Of String) = MySelection.TilesList
         If TilesList.Count = 0 Then
             Throw New System.Exception("No Tiles selected.")
@@ -96,12 +92,19 @@ Public Class StartupWindow
         Check()
     End Sub
 
+    Private Sub Btn_StructureGeneration_Click(sender As Object, e As RoutedEventArgs)
+        MsgBox("Not implemented yet!")
+        'Dim StructureGenerationWindow As New StructureGenerationWindow
+        'StructureGenerationWindow.ShowDialog()
+    End Sub
+
 #End Region
 
     Public Sub Check()
         lbl_Setting_Status.Content = "Status: incomplete"
         lbl_Selection_Numbers.Content = "Tiles selected: " & MySelection.TilesList.Count
         btn_AllExport.IsEnabled = False
+        btn_StructureGeneration.IsEnabled = False
 
         If Not MySettings.PathToMagick = "" _
             And Not MySettings.PathToQGIS = "" _
@@ -109,6 +112,7 @@ Public Class StartupWindow
             And Not MySettings.PathToWorldPainterFolder = "" _
             And ((Not MySettings.PathToPBF = "" And MySettings.geofabrik = True And MySettings.reUsePbfFile = False) Or (MySettings.geofabrik = False) Or (MySettings.geofabrik = True And MySettings.reUsePbfFile = True)) Then
             lbl_Setting_Status.Content = "Status: complete"
+            btn_StructureGeneration.IsEnabled = True
             If Not MySelection.SpawnTile = "" And MySelection.TilesList.Count > 0 Then
                 btn_AllExport.IsEnabled = True
             End If
@@ -117,7 +121,7 @@ Public Class StartupWindow
         Dim worldSize As Double = 0.0
         Dim worldSizeString As String = ""
         Try
-            worldSize = 5.0 * ((CType(MySettings.BlocksPerTile, Int32) / 512) ^ 2) * CType(MySelection.TilesList.Count, Int32)
+            worldSize = (5.4 * (((CType(MySettings.BlocksPerTile, Int32) / 512) ^ 2) * (CType(MySelection.TilesList.Count, Int32) - MySelection.VoidTiles))) + (4.0 * MySelection.VoidTiles)
             Select Case worldSize
                 Case < 1
                     worldSizeString = worldSize.ToString & " KB"

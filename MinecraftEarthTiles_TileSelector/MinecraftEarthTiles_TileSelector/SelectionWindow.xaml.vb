@@ -8,6 +8,8 @@ Public Class SelectionWindow
     Private lastMousePositionOnTarget As Point?
     Private lastDragPoint As Point?
 
+    Private TilesVoidList As New List(Of String)
+
     Public Sub New()
         InitializeComponent()
         AddHandler ScrollViewer.ScrollChanged, AddressOf OnScrollViewerScrollChanged
@@ -181,6 +183,7 @@ Public Class SelectionWindow
         Next
 
         Selection_To_GUI(StartupWindow.MySelection)
+        CalculateTiles()
     End Sub
 
 #Region "Menu"
@@ -227,7 +230,7 @@ Public Class SelectionWindow
 
     Private Sub Help_Click(sender As Object, e As RoutedEventArgs)
         'Help.ShowHelp(Nothing, "Help/Settings.chm")
-        Process.Start("https://earthtiles.motfe.net/")
+        Process.Start("https://earth.motfe.net/")
     End Sub
 
 #End Region
@@ -260,9 +263,11 @@ Public Class SelectionWindow
         cbb_Spawn_Tile.Items.Clear()
         If Not MySelection.TilesList Is Nothing Then
             For Each Tile In MySelection.TilesList
-                cbb_Spawn_Tile.Items.Add(Tile)
-                If Tile = MySelection.SpawnTile Then
-                    cbb_Spawn_Tile.Text = MySelection.SpawnTile
+                If Not Tile.Contains("x") Then
+                    cbb_Spawn_Tile.Items.Add(Tile)
+                    If Tile = MySelection.SpawnTile Then
+                        cbb_Spawn_Tile.Text = MySelection.SpawnTile
+                    End If
                 End If
             Next
             For Each Checkbox In Me.Tiles.Children.OfType(Of CheckBox)
@@ -273,7 +278,11 @@ Public Class SelectionWindow
                 End If
             Next
         End If
-
+        If MySelection.VoidBarrier = "0" Or MySelection.VoidBarrier = "512" Or MySelection.VoidBarrier = "1024" Or MySelection.VoidBarrier = "1536" Or MySelection.VoidBarrier = "2048" Then
+            cbb_Void_Barrier.SelectedValue = MySelection.VoidBarrier
+            cbb_Void_Barrier.Text = MySelection.VoidBarrier
+        End If
+        Calculate_Void_Tiles(Nothing, Nothing)
     End Sub
 
     Private Function GUI_To_Selection() As Selection
@@ -283,8 +292,12 @@ Public Class SelectionWindow
             Where T.IsChecked Select T.Name
         ).ToList
         TilesList.Sort()
-        LocalSelection.TilesList = TilesList
+        LocalSelection.TilesList.Clear()
+        LocalSelection.TilesList.AddRange(TilesList)
+        LocalSelection.TilesList.AddRange(TilesVoidList)
         LocalSelection.SpawnTile = cbb_Spawn_Tile.Text
+        LocalSelection.VoidBarrier = cbb_Void_Barrier.Text
+        LocalSelection.VoidTiles = TilesVoidList.Count
         Return LocalSelection
     End Function
 
@@ -402,16 +415,18 @@ Public Class SelectionWindow
             Where T.IsChecked Select T.Name
         ).ToList
         For Each Tile In TilesList
-            cbb_Spawn_Tile.Items.Add(Tile)
-            If Tile = currentSpawnTile Then
-                cbb_Spawn_Tile.Text = Tile
-            End If
-            If TilesList.Count = 1 Then
-                cbb_Spawn_Tile.Text = Tile
+            If Not Tile.Contains("x") Then
+                cbb_Spawn_Tile.Items.Add(Tile)
+                If Tile = currentSpawnTile Then
+                    cbb_Spawn_Tile.Text = Tile
+                End If
+                If TilesList.Count = 1 Then
+                    cbb_Spawn_Tile.Text = Tile
+                End If
             End If
         Next
 
-        CheckForMaximumTiles()
+        CalculateTiles()
     End Sub
 
     Public Sub Change_Background(sender As Object, e As EventArgs)
@@ -435,23 +450,132 @@ Public Class SelectionWindow
         img_Background.Source = New BitmapImage(MyURI)
     End Sub
 
-    Public Sub CheckForMaximumTiles()
-#If False Then
+    Public Sub Calculate_Void_Tiles(sender As Object, e As EventArgs)
+
+        Dim NumberOfVoidBarrier As Int32 = CType(cbb_Void_Barrier.Text, Integer)
+
+        Dim mapWidth As Int32 = CType(180 / CType(StartupWindow.MySettings.TilesPerMap, Integer) * CType(StartupWindow.MySettings.BlocksPerTile, Integer), Integer)
+        Dim mapHeight As Int32 = CType(90 / CType(StartupWindow.MySettings.TilesPerMap, Integer) * CType(StartupWindow.MySettings.BlocksPerTile, Integer), Integer)
+
+        Select Case cbb_Void_Barrier.Text
+            Case "0"
+                TilesVoidList.Clear()
+            Case Else
+
+                Dim VoidTiles As Integer = CType(CType(cbb_Void_Barrier.Text, Integer) / 512, Integer)
+
+                ''Void im Norden
+                For latitude As Integer = (mapHeight + NumberOfVoidBarrier) * -1 To (mapHeight + 512) * -1 Step 512
+                    For longitude As Integer = (mapWidth + NumberOfVoidBarrier) * -1 To mapWidth Step 512
+                        TilesVoidList.Add(longitude & "x" & latitude)
+                    Next
+                Next
+
+                ''Viod im Süden
+                For latitude As Integer = mapHeight To mapHeight + NumberOfVoidBarrier - 512 Step 512
+                    For longitude As Integer = (mapWidth + NumberOfVoidBarrier) * -1 To mapWidth Step 512
+                        TilesVoidList.Add(longitude & "x" & latitude)
+                    Next
+                Next
+
+                ''Viod im Westen
+                For longitude As Integer = (mapWidth + NumberOfVoidBarrier) * -1 To (mapWidth + 512) * -1 Step 512
+                    For latitude As Integer = (mapHeight + NumberOfVoidBarrier) * -1 To mapHeight + NumberOfVoidBarrier - 512 Step 512
+                        TilesVoidList.Add(longitude & "x" & latitude)
+                    Next
+                Next
+
+                ''Viod im Osten
+                For longitude As Integer = mapWidth To mapWidth + NumberOfVoidBarrier - 512 Step 512
+                    For latitude As Integer = (mapHeight + NumberOfVoidBarrier) * -1 To mapHeight + NumberOfVoidBarrier - 512 Step 512
+                        TilesVoidList.Add(longitude & "x" & latitude)
+                    Next
+                Next
+
+                TilesVoidList = TilesVoidList.Distinct().ToList
+                TilesVoidList.Sort()
+
+        End Select
+
+    End Sub
+
+    Public Sub CalculateTiles()
         Dim TilesList = (
-        From T In Me.Tiles.Children.OfType(Of CheckBox)()
-        Where T.IsChecked Select T.Name
+            From T In Me.Tiles.Children.OfType(Of CheckBox)()
+            Where T.IsChecked Select T.Name
         ).ToList
+        Dim xMin As Integer = 0
+        Dim yMin As Integer = 0
+        Dim xMax As Integer = 0
+        Dim yMax As Integer = 0
+        Dim TilesPerMap As Int32 = CType(StartupWindow.MySettings.TilesPerMap, Int32)
+        Dim blocksPerTile As Int32 = CType(StartupWindow.MySettings.BlocksPerTile, Int32)
+
+        For Each Tile In TilesList
+            Dim LatiDir = Tile.Substring(0, 1)
+            Dim LatiNumber As Int32 = 0
+            Int32.TryParse(Tile.Substring(1, 2), LatiNumber)
+            Dim LongDir = Tile.Substring(3, 1)
+            Dim LongNumber As Int32 = 0
+            Int32.TryParse(Tile.Substring(4, 3), LongNumber)
+
+            Dim xMinNew As Integer = 0
+            Dim yMinNew As Integer = 0
+            Dim xMaxNew As Integer = 0
+            Dim yMaxNew As Integer = 0
+
+            If LatiDir = "N" Then
+                yMinNew = CType((((LatiNumber + 1) * blocksPerTile / TilesPerMap) + 1) * -1, Int32)
+                yMaxNew = CType((((LatiNumber + 1) * blocksPerTile / TilesPerMap) - blocksPerTile + 1) * -1, Int32)
+            Else
+                yMinNew = CType(((LatiNumber - 1) * blocksPerTile / TilesPerMap), Int32)
+                yMaxNew = CType(((LatiNumber - 1) * blocksPerTile / TilesPerMap) + blocksPerTile, Int32)
+            End If
+            If LongDir = "E" Then
+                xMinNew = CType(((LongNumber) * blocksPerTile / TilesPerMap), Int32)
+                xMaxNew = CType(((LongNumber) * blocksPerTile / TilesPerMap) + blocksPerTile, Int32)
+            Else
+                xMinNew = CType(((LongNumber * blocksPerTile / TilesPerMap) + 1) * -1, Int32)
+                xMaxNew = CType(((LongNumber * blocksPerTile / TilesPerMap) - blocksPerTile + 1) * -1, Int32)
+            End If
+
+            If Tile = TilesList.First Then
+                xMin = xMinNew
+                xMax = xMaxNew
+                yMin = yMinNew
+                yMax = yMaxNew
+            Else
+                If xMinNew < xMin Then
+                    xMin = xMinNew
+                End If
+                If xMaxNew > xMax Then
+                    xMax = xMaxNew
+                End If
+                If yMinNew < yMin Then
+                    yMin = yMinNew
+                End If
+                If yMaxNew > yMax Then
+                    yMax = yMaxNew
+                End If
+            End If
+
+        Next
+
+        txb_Corners.Text = xMin & " " & yMin & " " & xMax & " " & yMax
+
+#If False Then
+
         If TilesList.Count > 25 Then
             btn_Save_Selection.IsEnabled = False
             btnSaveClose.IsEnabled = False
             Dim MyToolTip As ToolTip = New ToolTip
             MyToolTip.Placement = Primitives.PlacementMode.Mouse
             MyToolTip.Content = "You can't create more then 25 Tiles in the demo version."
-            grd_Buttons.ToolTip = MyToolTip
+            btn_Save_Selection.ToolTip = MyToolTip
         Else
             btn_Save_Selection.IsEnabled = True
             btnSaveClose.IsEnabled = True
-            grd_Buttons.ToolTip = New ToolTip
+            btn_Save_Selection.ToolTip = New ToolTip
         End If
 #End If
     End Sub

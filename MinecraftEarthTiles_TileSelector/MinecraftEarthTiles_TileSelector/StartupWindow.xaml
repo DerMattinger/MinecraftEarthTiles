@@ -6,10 +6,10 @@
         xmlns:local="clr-namespace:MinecraftEarthTiles_TileSelector"
         mc:Ignorable="d"
         Title="Minecraft Earth Tiles"
-        Height="220"
-        MinHeight="220"
-        Width="255"
-        MinWidth="255"
+        Height="255"
+        MinHeight="200"
+        Width="200"
+        MinWidth="235"
         Loaded="Window_Loaded"
         ResizeMode="CanMinimize">
     <DockPanel>
@@ -18,20 +18,19 @@
                 <MenuItem Header="Exit" Click="Exit_Click"/>
             </MenuItem>
             <MenuItem Header="Help" Click="Help_Click"/>
+            <MenuItem Header="Info" Click="Info_Click"/>
         </Menu>
-        <ScrollViewer>
-            <Grid>
+        <Grid>
+            <Button x:Name="btn_Settings" Content="Settings" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="Btn_Settings_Click"/>
+            <Label x:FieldModifier="public" x:Name="lbl_Setting_Status" Content="Status: incomplete" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,7,0,0"/>
+            <Button x:Name="btn_Selection" Content="Selection" HorizontalAlignment="Left" Margin="10,35,0,0" Width="75" Click="Btn_Selection_Click" Height="20" VerticalAlignment="Top"/>
+            <Label x:FieldModifier="public" x:Name="lbl_Selection_Numbers" Content="Tiles selected: 0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,32,0,0"/>
 
-                <Button x:Name="btn_Settings" Content="Settings" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="Btn_Settings_Click"/>
-                <Label x:FieldModifier="public" x:Name="lbl_Setting_Status" Content="Status: incomplete" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,7,0,0"/>
-                <Button x:Name="btn_Selection" Content="Selection" HorizontalAlignment="Left" Margin="10,35,0,0" Width="75" Click="Btn_Selection_Click" Height="20" VerticalAlignment="Top"/>
-                <Label x:FieldModifier="public" x:Name="lbl_Selection_Numbers" Content="Tiles selected: 0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="90,32,0,0"/>
-
-                <Label x:FieldModifier="public" x:Name="lbl_World_Size_Label" Content="Estimated world size:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,60,0,0"/>
-                <Label x:FieldModifier="public" x:Name="lbl_World_Size_Content" Content="0 kb" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="131,60,0,0"/>
-                <Button x:Name="btn_AllExport" Content="Generation" Margin="10,91,0,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="45" HorizontalAlignment="Left" Width="205" Click="Btn_Generation_Click" IsEnabled="False"/>
-                <Label x:Name="lbl_Version" Content="Full Version: 1.1.2" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
-            </Grid>
-        </ScrollViewer>
+            <Label x:FieldModifier="public" x:Name="lbl_World_Size_Label" Content="Estimated world size:" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,60,0,0"/>
+            <Label x:FieldModifier="public" x:Name="lbl_World_Size_Content" Content="0 kb" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="131,60,0,0"/>
+            <Button x:Name="btn_AllExport" Content="Generation" Margin="10,91,10,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="45" Click="Btn_Generation_Click" IsEnabled="False"/>
+            <Button x:Name="btn_StructureGeneration" Content="/place structure Commands" Margin="10,141,10,0" VerticalAlignment="Top" RenderTransformOrigin="-1.787,0.05" Height="20" Click="btn_StructureGeneration_Click" IsEnabled="False"/>
+            <Label x:Name="lbl_Version" Content="Full Version: 1.3.2" VerticalAlignment="Bottom" HorizontalAlignment="Left" />
+        </Grid>
     </DockPanel>
 </Window>

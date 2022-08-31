@@ -197,5 +197,15 @@ InitializeComponent
 Application Entry Point.
 </summary>
 </member>
+<member name="T:MinecraftEarthTiles_TileSelector.StructureGenerationWindow">
+<summary>
+StructureGenerationWindow
+</summary>
+</member>
+<member name="M:MinecraftEarthTiles_TileSelector.StructureGenerationWindow.InitializeComponent">
+<summary>
+InitializeComponent
+</summary>
+</member>
 </members>
 </doc>
