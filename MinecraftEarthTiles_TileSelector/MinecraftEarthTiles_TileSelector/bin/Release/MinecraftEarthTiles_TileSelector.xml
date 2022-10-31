@@ -117,12 +117,32 @@ MinecraftEarthTiles_TileSelector
 *   This program is free software; you can redistribute it and/o [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
 </summary>
 </member>
+<member name="T:MinecraftEarthTiles_TileSelector.GeneratedImagePreview">
+<summary>
+GeneratedImagePreview
+</summary>
+</member>
+<member name="M:MinecraftEarthTiles_TileSelector.GeneratedImagePreview.InitializeComponent">
+<summary>
+InitializeComponent
+</summary>
+</member>
 <member name="T:MinecraftEarthTiles_TileSelector.GenerationWindow">
 <summary>
 GenerationWindow
 </summary>
 </member>
 <member name="M:MinecraftEarthTiles_TileSelector.GenerationWindow.InitializeComponent">
+<summary>
+InitializeComponent
+</summary>
+</member>
+<member name="T:MinecraftEarthTiles_TileSelector.PreviewWindow">
+<summary>
+PreviewWindow
+</summary>
+</member>
+<member name="M:MinecraftEarthTiles_TileSelector.PreviewWindow.InitializeComponent">
 <summary>
 InitializeComponent
 </summary>
@@ -195,16 +215,6 @@ InitializeComponent
 <member name="M:MinecraftEarthTiles_TileSelector.Application.Main">
 <summary>
 Application Entry Point.
-</summary>
-</member>
-<member name="T:MinecraftEarthTiles_TileSelector.StructureGenerationWindow">
-<summary>
-StructureGenerationWindow
-</summary>
-</member>
-<member name="M:MinecraftEarthTiles_TileSelector.StructureGenerationWindow.InitializeComponent">
-<summary>
-InitializeComponent
 </summary>
 </member>
 </members>

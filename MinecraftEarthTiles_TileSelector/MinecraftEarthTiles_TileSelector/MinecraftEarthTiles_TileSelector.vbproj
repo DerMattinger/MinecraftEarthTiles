@@ -108,47 +108,54 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="CustomXmlSerialiser.vb" />
-    <Compile Include="Generation.vb" />
-    <Compile Include="GenerationWindow.xaml.vb">
+    <Compile Include="Classes\CustomXmlSerialiser.vb" />
+    <Compile Include="Classes\GeneratedImagePreview.xaml.vb">
+      <DependentUpon>GeneratedImagePreview.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\Generation.vb" />
+    <Compile Include="Windows\GenerationWindow.xaml.vb">
       <DependentUpon>GenerationWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Selection.vb" />
-    <Compile Include="SelectionWindow.xaml.vb">
+    <Compile Include="Classes\Selection.vb" />
+    <Compile Include="Windows\PreviewWindow.xaml.vb">
+      <DependentUpon>PreviewWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\SelectionWindow.xaml.vb">
       <DependentUpon>SelectionWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Settings.vb" />
-    <Compile Include="SettingsWindow.xaml.vb">
+    <Compile Include="Classes\Settings.vb" />
+    <Compile Include="Windows\SettingsWindow.xaml.vb">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="StartupWindow.xaml.vb">
+    <Compile Include="Windows\StartupWindow.xaml.vb">
       <DependentUpon>StartupWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Application.xaml.vb">
       <DependentUpon>Application.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="StructureGenerationWindow.xaml.vb">
-      <DependentUpon>StructureGenerationWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Structures.vb" />
-    <Page Include="GenerationWindow.xaml">
+    <Compile Include="Classes\Structures.vb" />
+    <Page Include="Classes\GeneratedImagePreview.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SelectionWindow.xaml">
+    <Page Include="Windows\GenerationWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SettingsWindow.xaml">
+    <Page Include="Windows\PreviewWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="StartupWindow.xaml">
+    <Page Include="Windows\SelectionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="StructureGenerationWindow.xaml">
+    <Page Include="Windows\SettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\StartupWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -245,6 +252,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="MyResources\utils_orig.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="MyResources\terrain_chroma.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="MyResources\notrendered.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
