@@ -1,0 +1,88 @@
+﻿<Window x:Class="StartupWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:MinecraftEarthTiles_GUI"
+        mc:Ignorable="d"
+        Title="Minecraft Earth Tiles"
+        Height="275"
+        MinHeight="275"
+        Width="409"
+        MinWidth="409"
+        Loaded="Window_Loaded"
+        ResizeMode="CanMinimize"
+        Style="{StaticResource MaterialDesignWindow}"
+        WindowStartupLocation="CenterScreen">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" Background="{DynamicResource MaterialDesignToolBarBackground}">
+            <MenuItem>
+                <MenuItem.Icon>
+                    <materialDesign:PackIcon Kind="Menu" VerticalAlignment="Center"/>
+                </MenuItem.Icon>
+                <MenuItem Header="Close" Click="Close_Click">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="Close" VerticalAlignment="Center"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="Theme">
+                <MenuItem.Icon>
+                    <materialDesign:PackIcon Kind="Brightness6" VerticalAlignment="Center"/>
+                </MenuItem.Icon>
+                <MenuItem Name="mnu_light" Header="Light" IsCheckable="true" IsChecked="True" Click="Light_Click"/>
+                <MenuItem Name="mnu_dark" Header="Dark" IsCheckable="true" Click="Dark_Click"/>
+            </MenuItem>
+            <MenuItem Header="Help" Click="Help_Click">
+                <MenuItem.Icon>
+                    <materialDesign:PackIcon Kind="Help" VerticalAlignment="Center"/>
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem Header="Info" Click="Info_Click">
+                <MenuItem.Icon>
+                    <materialDesign:PackIcon Kind="InfoCircle" VerticalAlignment="Center"/>
+                </MenuItem.Icon>
+            </MenuItem>
+        </Menu>
+        <StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0"  Margin="10">
+                    <Label x:FieldModifier="public" x:Name="lbl_Setting_Status" Content="Status: incomplete"/>
+                    <Button x:Name="btn_Settings" Click="Btn_Settings_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock>Settings</TextBlock>
+                            <materialDesign:PackIcon Kind="Settings" VerticalAlignment="Center" Margin="5 0 0 0"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Margin="10">
+                    <Label x:FieldModifier="public" x:Name="lbl_Selection_Numbers" Content="Tiles selected: 0"/>
+                    <Button x:Name="btn_Selection" Click="Btn_Selection_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock>Selection</TextBlock>
+                            <materialDesign:PackIcon Kind="SelectMultipleLocation" VerticalAlignment="Center" Margin="5 0 0 0"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Grid>
+            <StackPanel Margin="10">
+
+                <StackPanel Orientation="Horizontal">
+                    <Label x:FieldModifier="public" x:Name="lbl_World_Size_Label" Content="Estimated world size:"/>
+                    <Label x:FieldModifier="public" x:Name="lbl_World_Size_Content" Content="0 kb"/>
+                </StackPanel>
+                <Button x:Name="btn_AllExport" Height="65" Click="Btn_Generation_Click" IsEnabled="False">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock>Generation</TextBlock>
+                        <materialDesign:PackIcon Kind="Globe" VerticalAlignment="Center" Margin="5 0 0 0"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </StackPanel>
+    </DockPanel>
+</Window>

@@ -1,0 +1,60 @@
+﻿<Window x:Class="PreviewWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:MinecraftEarthTiles_GUI"
+        mc:Ignorable="d"
+        Title="Minecraft Earth Tiles Live Preview" Height="516" Width="753" MinHeight="516" MinWidth="753" Loaded="Window_Loaded"
+        Style="{StaticResource MaterialDesignWindow}"
+        WindowStartupLocation="CenterScreen">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" Background="{DynamicResource MaterialDesignToolBarBackground}">
+            <MenuItem>
+                <MenuItem.Icon>
+                    <materialDesign:PackIcon Kind="Menu"/>
+                </MenuItem.Icon>
+                <MenuItem Header="Close" Click="Close_Click">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="Close" VerticalAlignment="Center"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="Help" Click="Help_Click">
+                <MenuItem.Icon>
+                    <materialDesign:PackIcon Kind="Help" VerticalAlignment="Center"/>
+                </MenuItem.Icon>
+            </MenuItem>
+        </Menu>
+        <DockPanel DockPanel.Dock="Bottom" Background="{DynamicResource MaterialDesignTextFieldBoxBackground}">
+            <StackPanel DockPanel.Dock="Right">
+                <Button x:Name="btn_Close_Preview" Click="Close_Click" Margin="10">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Close" VerticalAlignment="Center"/>
+                        <TextBlock>Close</TextBlock>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+            <DockPanel VerticalAlignment="Center" Margin="10 0 10 0">
+                <Label x:Name="lbl_ZoomSlider" Content="Zoom" DockPanel.Dock="Left"/>
+                <Slider x:Name="zsl_ZoomSlider" Orientation="Horizontal" Minimum="0.5" Maximum="80.0" LargeChange="1" SmallChange="0.5" Value="1.0" Height="20"/>
+            </DockPanel>
+        </DockPanel>
+        <ScrollViewer x:Name="ScrollViewer" PanningMode="Both" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible">
+            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
+                <Grid Name="Tiles" Width="1440" Height="720" MinWidth="1440" MinHeight="720" Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
+                    <Grid.LayoutTransform>
+                        <TransformGroup>
+                            <ScaleTransform x:Name="scaleTransform"/>
+                        </TransformGroup>
+                    </Grid.LayoutTransform>
+                    <Image x:Name="img_Background" Source="../MyResources/terrain_chroma.jpg" Width="1440" Height="720" MinWidth="1440" MinHeight="720"  Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                </Grid>
+                <StackPanel.LayoutTransform>
+                    <ScaleTransform ScaleX="{Binding ElementName=ZoomSlider, Path=Value}" ScaleY="{Binding ElementName=ZoomSlider, Path=Value}" />
+                </StackPanel.LayoutTransform>
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

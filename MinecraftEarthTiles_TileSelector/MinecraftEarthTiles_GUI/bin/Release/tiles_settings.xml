@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TilesSettings>
+  <version>1.3.5</version>
+  <PathToScriptsFolder>E:\osm</PathToScriptsFolder>
+  <PathToWorldPainterFolder>C:\Program Files\WorldPainter\wpscript.exe</PathToWorldPainterFolder>
+  <PathToQGIS>C:\Program Files\QGIS 3.22.13</PathToQGIS>
+  <PathToMagick>C:\Program Files\ImageMagick-7.1.0-Q16-HDRI\magick.exe</PathToMagick>
+  <PathToMinutor>C:\Program Files\Minutor\minutor.exe</PathToMinutor>
+  <PathToExport>C:\Users\matze\Desktop</PathToExport>
+  <Theme>Dark</Theme>
+  <Proxy />
+  <keepPbfFile>true</keepPbfFile>
+  <reUsePbfFile>true</reUsePbfFile>
+  <keepOsmFiles>true</keepOsmFiles>
+  <reUseOsmFiles>true</reUseOsmFiles>
+  <keepImageFiles>true</keepImageFiles>
+  <reUseImageFiles>true</reUseImageFiles>
+  <keepWorldPainterFiles>false</keepWorldPainterFiles>
+  <minutor>true</minutor>
+  <NumberOfCores>1</NumberOfCores>
+  <ParallelWorldPainterGenerations>true</ParallelWorldPainterGenerations>
+  <cmdVisibility>false</cmdVisibility>
+  <cmdPause>false</cmdPause>
+  <continueGeneration>false</continueGeneration>
+  <alertAfterFinish>true</alertAfterFinish>
+  <alertMail>mattiasbrennecke@googlemail.com</alertMail>
+  <closeAfterFinish>false</closeAfterFinish>
+</TilesSettings>

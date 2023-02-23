@@ -1,0 +1,131 @@
+﻿<Window x:Class="SelectionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:MinecraftEarthTiles_GUI"
+        mc:Ignorable="d"
+        Title="Minecraft Earth Tiles Selection" Height="516" Width="953" MinHeight="516" MinWidth="953" Loaded="Window_Loaded"
+        Style="{StaticResource MaterialDesignWindow}"
+        WindowStartupLocation="CenterScreen">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" Background="{DynamicResource MaterialDesignToolBarBackground}">
+            <MenuItem>
+                <MenuItem.Icon>
+                    <materialDesign:PackIcon Kind="Menu"/>
+                </MenuItem.Icon>
+                <MenuItem Name="btnSave" Header="Save" Click="Save_Click">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="ContentSave"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Name="btnSaveClose" Header="Save and close" Click="Save_Close_Click">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="ContentSaveMove"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Clear Selection" Click="Reset_Selection_Click">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="Delete"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Load Selection from file" Click="Load_Selection_Click">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="FileUpload"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Save Selection to file" Click="Save_Selection_Click">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="FileDownload"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="Close" Click="Close_Click">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="Close"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="Help" Click="Help_Click">
+                <MenuItem.Icon>
+                    <materialDesign:PackIcon Kind="Help" VerticalAlignment="Center"/>
+                </MenuItem.Icon>
+            </MenuItem>
+        </Menu>
+        <DockPanel DockPanel.Dock="Bottom" Background="{DynamicResource MaterialDesignToolBarBackground}">
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Margin="10">
+                <TextBlock Foreground="Red" x:Name="txb_toManyTiles" Text="" VerticalAlignment="Center"/>
+                <Grid Width="10"/>
+                <Button x:Name="btn_Save_Selection" Click="Save_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="ContentSave" VerticalAlignment="Center"/>
+                        <TextBlock>Save</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Grid Width="10"/>
+                <Button x:Name="btn_Cancel_Selection" Click="Close_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Close" VerticalAlignment="Center"/>
+                        <TextBlock>Close</TextBlock>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+
+            <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <Label x:Name="lbl_Corners" Content="Corner Coordinates for worldborder / chunky:"/>
+                    <TextBox x:Name="txb_Corners" Width="180"/>
+                </StackPanel>
+            </StackPanel>
+        </DockPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Margin="10">
+                <Label x:Name="lbl_ZoomSlider" Content="Zoom"/>
+                <Slider x:Name="zsl_ZoomSlider" Orientation="Horizontal" Minimum="0.5" Maximum="10.0" LargeChange="0.5" SmallChange="0.25" Value="1.0"/>
+                <Label x:Name="lbl_background" Content="Background"/>
+                <ComboBox x:Name="cbb_Background_Image" DropDownClosed="Change_Background">
+                    <ComboBoxItem IsSelected="True">Terrain</ComboBoxItem>
+                    <ComboBoxItem>Borders</ComboBoxItem>
+                </ComboBox>
+                <Label x:Name="lbl_Spawn_Tile" Content="Spawn Tile"/>
+                <ComboBox x:Name="cbb_Spawn_Tile"/>
+                <Label x:Name="lbl_Void_Barrier" Content="Void Barrier (in Blocks)"/>
+                <ComboBox x:Name="cbb_Void_Barrier" DropDownClosed="Calculate_Void_Tiles">
+                    <ComboBoxItem IsSelected="True">0</ComboBoxItem>
+                    <ComboBoxItem>512</ComboBoxItem>
+                    <ComboBoxItem>1024</ComboBoxItem>
+                    <ComboBoxItem>1536</ComboBoxItem>
+                    <ComboBoxItem>2048</ComboBoxItem>
+                </ComboBox>
+                <Button Margin="0 10 0 0" x:Name="btn_Clear_Selection" Click="Reset_Selection_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Delete" VerticalAlignment="Center" Margin="5 0 0 0"/>
+                        <TextBlock>Clear Selection</TextBlock>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+            <ScrollViewer Grid.Column="1" x:Name="ScrollViewer" PanningMode="Both" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" Style="{DynamicResource MaterialDesignScrollViewer}">
+                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Grid Name="Tiles" Width="1440" Height="720" MinWidth="1440" MinHeight="720" Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
+                        <Grid.LayoutTransform>
+                            <TransformGroup>
+                                <ScaleTransform x:Name="scaleTransform"/>
+                            </TransformGroup>
+                        </Grid.LayoutTransform>
+                        <Image x:Name="img_Background" Source="../MyResources/terrain.jpg" Width="1440" Height="720" MinWidth="1440" MinHeight="720"  Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                        <Grid Name="CheckBoxes" Width="1440" Height="720" MinWidth="1440" MinHeight="720" Margin="0,0,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" />
+                    </Grid>
+                    <StackPanel.LayoutTransform>
+                        <ScaleTransform ScaleX="{Binding ElementName=ZoomSlider, Path=Value}" ScaleY="{Binding ElementName=ZoomSlider, Path=Value}" />
+                    </StackPanel.LayoutTransform>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </DockPanel>
+</Window>

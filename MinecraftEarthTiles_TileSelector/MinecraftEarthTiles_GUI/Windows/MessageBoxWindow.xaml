@@ -1,0 +1,31 @@
+﻿<Window x:Class="MessageBoxWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MinecraftEarthTiles_GUI"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Loaded="Window_Loaded"
+        Title="Info" Height="175" Width="250"
+        ResizeMode="CanMinimize"
+        PreviewKeyDown="btn_PreviewKeyDown"
+        Style="{StaticResource MaterialDesignWindow}"
+        WindowStartupLocation="CenterScreen">
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Bottom" Background="{DynamicResource MaterialDesignToolBarBackground}">
+            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Margin="10">
+                <Button x:Name="btn_Save_Selection" Click="Btn_Close_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Check" VerticalAlignment="Center"/>
+                        <TextBlock>OK</TextBlock>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+            <Grid></Grid>
+        </DockPanel>
+        <Grid Margin="10">
+            <TextBlock x:Name="txb_Message" VerticalAlignment="Center" HorizontalAlignment="Left" TextWrapping="Wrap"/>
+        </Grid>
+    </DockPanel>
+</Window>

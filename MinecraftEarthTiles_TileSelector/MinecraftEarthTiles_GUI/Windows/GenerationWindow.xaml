@@ -1,0 +1,138 @@
+﻿<Window x:Class="GenerationWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="Minecraft Earth Tiles Generation" Height="715" Width="845" MinHeight="200" MinWidth="845" Loaded="Window_Loaded" Closing="window_closing"
+        Style="{StaticResource MaterialDesignWindow}"
+        WindowStartupLocation="CenterScreen">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top" Background="{DynamicResource MaterialDesignToolBarBackground}">
+            <MenuItem>
+                <MenuItem.Icon>
+                    <materialDesign:PackIcon Kind="Menu"/>
+                </MenuItem.Icon>
+                <MenuItem Name="btn_preview" Header="Open Live Preview" Click="preview_Click" IsEnabled="false">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="Globe" VerticalAlignment="Center"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Name="btn_debugZip" Header="Create Debug Zip" Click="DebugZip_Click">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="CompressedFolder" VerticalAlignment="Center"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="Close" Click="Close_Click">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="Close" VerticalAlignment="Center"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Name="mnu_Start" Header="Specials">
+                <MenuItem.Icon>
+                    <materialDesign:PackIcon Kind="Play"/>
+                </MenuItem.Icon>
+                <MenuItem Name="btn_Generate_Batch_Files" Header="Batch Files Only" Click="BatchFiles_Click">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="FileCode" VerticalAlignment="Center"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Name="btn_Generate_OSM_Only" Header="OSM Files Only" Click="OsmOnly_Click">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="Map" VerticalAlignment="Center"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Name="btn_Generate_Images_Only" Header="Images Only" Click="ImagesOnly_Click">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="FileImage" VerticalAlignment="Center"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Name="btn_Generate_WorldPainter_Only" Header="WorldPainter Files Only" Click="WorldPainterOnly_Click">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="Globe" VerticalAlignment="Center"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Name="btn_Combining_Only" Header="Combining Only" Click="CombineOnly_Click">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="FilePlus" VerticalAlignment="Center"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Name="btn_Cleanup_Only" Header="Cleanup Only" Click="CleanupOnly_Click">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="Delete" VerticalAlignment="Center"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="Help" Click="Help_Click">
+                <MenuItem.Icon>
+                    <materialDesign:PackIcon Kind="Help" VerticalAlignment="Center"/>
+                </MenuItem.Icon>
+            </MenuItem>
+        </Menu>
+        <DockPanel DockPanel.Dock="Bottom" Background="{DynamicResource MaterialDesignTextFieldBoxBackground}">
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right" Margin="10">
+                <CheckBox x:Name="ckb_pause" Content="Pause after next step" HorizontalAlignment="Right" ToolTip="Pause generation after next step"/>
+                <Grid Width="10"/>
+                <Button x:Name="btn_Start" Click="Start_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Play" VerticalAlignment="Center"/>
+                        <TextBlock>Start</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Grid Width="10"/>
+                <Button x:Name="btn_Stop" Click="Stop_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Stop" VerticalAlignment="Center"/>
+                        <TextBlock>Stop</TextBlock>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10">
+                <Label x:Name="lbl_elapsed_time" Content="Running: 0 h and 0 min"/>
+                <Label x:Name="lbl_elapsed_time_Seperator" Content="/"/>
+                <Label x:Name="lbl_Estimated_Duration" Content="Time left: 0 h and 0 min"/>
+            </StackPanel>
+        </DockPanel>
+        <DataGrid x:Name="dgr_Tiles" CanUserAddRows="False" AutoGenerateColumns="False" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden" RowHeaderWidth="0">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Tile" Width="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Path=TileName, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Progress" Width="180">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ProgressBar Minimum="0" Maximum="100" Value="{Binding Path=GenerationProgress, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Info" Width="230">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Path=Comment, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Open">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Padding="3,0" Content="Log File" Tag="{Binding Path=TileName, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Click="Log_Click"></Button>
+                                <Button Padding="3,0" Content="OSM Files" Tag="{Binding Path=TileName, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Click="Folder_OSM_Click" Margin="5 0 0 0"></Button>
+                                <Button Padding="3,0" Content="Images" Tag="{Binding Path=TileName, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Click="Folder_Images_Click" Margin="5 0 0 0"></Button>
+                                <Button Padding="3,0" Content="Batch Files" Tag="{Binding Path=TileName, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" Click="Folder_Batch_Click" Margin="5 0 0 0"></Button>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</Window>

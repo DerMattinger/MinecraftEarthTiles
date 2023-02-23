@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Settings>
+  <PathToPBF />
+  <OverpassURL />
+  <WorldName>earth_1-6000_osm-based_with-features_1-19-3</WorldName>
+  <BlocksPerTile>1536</BlocksPerTile>
+  <TilesPerMap>90</TilesPerMap>
+  <VerticalScale>200</VerticalScale>
+  <Terrain>Standard</Terrain>
+  <Heightmap_Error_Correction>true</Heightmap_Error_Correction>
+  <bordersBoolean>true</bordersBoolean>
+  <borders>Current</borders>
+  <geofabrik>true</geofabrik>
+  <bathymetry>true</bathymetry>
+  <TerrainSource>Arcgis</TerrainSource>
+  <biomeSource>Terrestrial Ecoregions (WWF)</biomeSource>
+  <highways>false</highways>
+  <streets>false</streets>
+  <small_streets>false</small_streets>
+  <buildings>false</buildings>
+  <ores>true</ores>
+  <netherite>true</netherite>
+  <farms>false</farms>
+  <meadows>false</meadows>
+  <quarrys>false</quarrys>
+  <forests>false</forests>
+  <aerodrome>true</aerodrome>
+  <mobSpawner>true</mobSpawner>
+  <animalSpawner>true</animalSpawner>
+  <riversBoolean>true</riversBoolean>
+  <rivers>Major</rivers>
+  <streams>false</streams>
+  <volcanos>true</volcanos>
+  <shrubs>true</shrubs>
+  <crops>true</crops>
+  <MapVersion>1.19</MapVersion>
+  <mapOffset>0</mapOffset>
+  <vanillaPopulation>false</vanillaPopulation>
+  <mod_BOP>false</mod_BOP>
+  <mod_BYG>false</mod_BYG>
+  <mod_Terralith>false</mod_Terralith>
+  <mod_Create>false</mod_Create>
+  <custom_layers />
+</Settings>
