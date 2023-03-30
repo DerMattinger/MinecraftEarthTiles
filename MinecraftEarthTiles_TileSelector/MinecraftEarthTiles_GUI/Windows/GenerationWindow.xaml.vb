@@ -118,20 +118,14 @@ Public Class GenerationWindow
 
     Private Sub DebugZip_Click(sender As Object, e As RoutedEventArgs)
 
-        MyGenerationWorker.WriteLog("DebugZip_Click")
-
         Dim SaveSettingsFileDialog As New SaveFileDialog With {
-            .FileName = "debug.zip",
+            .FileName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") & "_Debug.zip",
             .Filter = "ZIP Files (.zip)|*.zip|All Files (*.*)|*.*",
             .FilterIndex = 1
         }
         If SaveSettingsFileDialog.ShowDialog() = Forms.DialogResult.OK Then
             Try
-                CustomXmlSerialiser.SaveXML(ClassWorker.GetTilesSettings.PathToScriptsFolder & "/logs/tiles_settings.xml", ClassWorker.GetTilesSettings)
-                CustomXmlSerialiser.SaveXML(ClassWorker.GetTilesSettings.PathToScriptsFolder & "/logs/settings.xml", ClassWorker.GetWorldSettings)
-                CustomXmlSerialiser.SaveXML(ClassWorker.GetTilesSettings.PathToScriptsFolder & "/logs/selection.xml", ClassWorker.GetSelection)
-
-                ZipFile.CreateFromDirectory(ClassWorker.GetTilesSettings.PathToScriptsFolder & "/logs/", SaveSettingsFileDialog.FileName)
+                ClassWorker.CreateDebugZip(SaveSettingsFileDialog.FileName)
                 Dim MessageBox As New MessageBoxWindow("Debug Zip saved.")
                 MessageBox.ShowDialog()
             Catch ex As Exception

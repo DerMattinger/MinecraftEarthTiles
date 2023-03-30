@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TilesSettings>
+  <version>1.4.0</version>
+  <PathToScriptsFolder>E:\osm</PathToScriptsFolder>
+  <PathToWorldPainterFolder>C:\Program Files\WorldPainter\wpscript.exe</PathToWorldPainterFolder>
+  <PathToQGIS>C:\Program Files\QGIS 3.28.2</PathToQGIS>
+  <PathToMagick>C:\Program Files\ImageMagick-7.1.0-Q16-HDRI\magick.exe</PathToMagick>
+  <PathToMinutor />
+  <PathToExport>E:\osm</PathToExport>
+  <Theme>Dark</Theme>
+  <Proxy />
+  <keepPbfFile>true</keepPbfFile>
+  <reUsePbfFile>true</reUsePbfFile>
+  <keepOsmFiles>true</keepOsmFiles>
+  <reUseOsmFiles>true</reUseOsmFiles>
+  <keepImageFiles>true</keepImageFiles>
+  <reUseImageFiles>false</reUseImageFiles>
+  <keepWorldPainterFiles>true</keepWorldPainterFiles>
+  <minutor>false</minutor>
+  <NumberOfCores>1</NumberOfCores>
+  <ParallelWorldPainterGenerations>true</ParallelWorldPainterGenerations>
+  <cmdVisibility>true</cmdVisibility>
+  <cmdPause>false</cmdPause>
+  <continueGeneration>false</continueGeneration>
+  <alertAfterFinish>false</alertAfterFinish>
+  <alertMail />
+  <closeAfterFinish>false</closeAfterFinish>
+</TilesSettings>

@@ -21,6 +21,12 @@
                 <MenuItem.Icon>
                     <materialDesign:PackIcon Kind="Menu" VerticalAlignment="Center"/>
                 </MenuItem.Icon>
+                <MenuItem Name="btn_debugZip" Header="Create Debug Zip" Click="DebugZip_Click">
+                    <MenuItem.Icon>
+                        <materialDesign:PackIcon Kind="CompressedFolder" VerticalAlignment="Center"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator />
                 <MenuItem Header="Close" Click="Close_Click">
                     <MenuItem.Icon>
                         <materialDesign:PackIcon Kind="Close" VerticalAlignment="Center"/>

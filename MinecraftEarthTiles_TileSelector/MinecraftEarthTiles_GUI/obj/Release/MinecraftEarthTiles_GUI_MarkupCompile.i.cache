@@ -4,16 +4,16 @@
 winexe
 VB
 .vb
-C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_TileSelector\obj\Release\
+C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\obj\Release\
 MinecraftEarthTiles_GUI
 none
 false
 
-C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_TileSelector\Application.xaml
+C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\Application.xaml
 9537553277
 
-19-1033010362
-20275536669
+14-1788341118
+191742398816
 Classes\GeneratedImagePreview.xaml;CustomButtons.xaml;Windows\GenerationWindow.xaml;Windows\InfoWindow.xaml;Windows\MessageBoxWindow.xaml;Windows\PreviewWindow.xaml;Windows\SelectionWindow.xaml;Windows\SettingsWindow.xaml;Windows\StartupWindow.xaml;
 
 True

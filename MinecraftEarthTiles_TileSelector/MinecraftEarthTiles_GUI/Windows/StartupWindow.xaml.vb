@@ -13,7 +13,7 @@ Public Class StartupWindow
 
     Public Shared Property MyTheme As String
 
-    Public Shared Property MyVersion As String = "Demo"
+    Public Shared Property MyVersion As String = "Full"
     'Public Shared Property MyVersion As String = "Full"
     'Public Shared Property MyVersion As String = "Demo"
 
@@ -67,10 +67,14 @@ Public Class StartupWindow
                 MessageBox.ShowDialog()
             End Try
         End If
-        Dim LocalSelection As New Selection
         If File.Exists(My.Application.Info.DirectoryPath & "\selection.xml") Then
             Try
-                ClassWorker.SetSelection(ClassWorker.LoadSelectionFromFile(My.Application.Info.DirectoryPath & "\selection.xml"))
+                Dim LocalSelection = ClassWorker.LoadSelectionFromFile(My.Application.Info.DirectoryPath & "\selection.xml")
+                If MyVersion = "Demo" And LocalSelection.TilesList.Count > 25 Then
+                    ClassWorker.SetSelection(New Selection)
+                Else
+                    ClassWorker.SetSelection(ClassWorker.LoadSelectionFromFile(My.Application.Info.DirectoryPath & "\selection.xml"))
+                End If
             Catch ex As Exception
                 Dim MessageBox As New MessageBoxWindow(ex.Message)
                 MessageBox.ShowDialog()
@@ -110,6 +114,25 @@ Public Class StartupWindow
     End Sub
 
 #Region "Menu"
+
+    Private Sub DebugZip_Click(sender As Object, e As RoutedEventArgs)
+
+        Dim SaveSettingsFileDialog As New SaveFileDialog With {
+            .FileName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") & "_Debug.zip",
+            .Filter = "ZIP Files (.zip)|*.zip|All Files (*.*)|*.*",
+            .FilterIndex = 1
+        }
+        If SaveSettingsFileDialog.ShowDialog() = Forms.DialogResult.OK Then
+            Try
+                ClassWorker.CreateDebugZip(SaveSettingsFileDialog.FileName)
+                Dim MessageBox As New MessageBoxWindow("Debug zip saved.")
+                MessageBox.ShowDialog()
+            Catch ex As Exception
+                Dim MessageBox As New MessageBoxWindow(ex.Message)
+                MessageBox.ShowDialog()
+            End Try
+        End If
+    End Sub
 
     Private Sub Close_Click(sender As Object, e As RoutedEventArgs)
         End
@@ -194,10 +217,10 @@ Public Class StartupWindow
             Or (ClassWorker.GetWorldSettings.reUseImageFiles = True)
             ) Then
             lbl_Setting_Status.Content = "Status: complete"
-            If ClassWorker.GetSelection.SpawnTile = "" Then
-                lbl_Selection_Numbers.Content = "No spawn Tile selected"
-            ElseIf ClassWorker.GetSelection.TilesList.Count = 0 Then
+            If ClassWorker.GetSelection.TilesList.Count = 0 Then
                 lbl_Selection_Numbers.Content = "No Tiles selected"
+            ElseIf ClassWorker.GetSelection.SpawnTile = "" Then
+                lbl_Selection_Numbers.Content = "No spawn Tile selected"
             Else
                 btn_AllExport.IsEnabled = True
             End If

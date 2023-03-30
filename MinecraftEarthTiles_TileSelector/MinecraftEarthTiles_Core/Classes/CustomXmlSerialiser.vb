@@ -57,9 +57,6 @@ Public Class CustomXmlSerialiser
 
     Public Shared Sub CheckWorldSettings(ByRef MyWorldSettings As Settings)
 
-        If MyWorldSettings.PathToExport Is Nothing Then
-            MyWorldSettings.PathToExport = My.Application.Info.DirectoryPath
-        End If
         If Not MyWorldSettings.WorldName = "" Then
             MyWorldSettings.WorldName = ClassWorker.RemoveIllegalFileNameChars(MyWorldSettings.WorldName)
         Else
@@ -126,6 +123,14 @@ Public Class CustomXmlSerialiser
             MyWorldSettings.mapOffset = "0"
         End If
 
+        If MyWorldSettings.terrainModifier < -2 Or MyWorldSettings.terrainModifier > 2 Then
+            MyWorldSettings.terrainModifier = 0
+        End If
+
+        If MyWorldSettings.oreModifier < 1 Or MyWorldSettings.oreModifier > 15 Then
+            MyWorldSettings.oreModifier = 8
+        End If
+
     End Sub
 
     Public Shared Function GetXMLTilesSettings(ByVal fileName As String) As TilesSettings
@@ -162,6 +167,10 @@ Public Class CustomXmlSerialiser
 
         If Not File.Exists(MyTilesSettings.PathToMinutor) Then
             MyTilesSettings.PathToMinutor = ""
+        End If
+
+        If Not Directory.Exists(MyTilesSettings.PathToExport) Then
+            MyTilesSettings.PathToExport = ""
         End If
 
         If CType(MyTilesSettings.NumberOfCores, Int32) > 16 Then

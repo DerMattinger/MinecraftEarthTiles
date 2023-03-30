@@ -146,6 +146,14 @@ Public Class GenerationWorker
                 If Tile.TileName = "Combining" Then
                     CombineBatchExport()
                     CombineGeneration(Tile, currentProcess, currentProcessInfo)
+                    If Not ClassWorker.MyTilesSettings.PathToMinutor = "" And ClassWorker.MyTilesSettings.minutor = True Then
+                        MinutorFinalRenderExort(Tile.TileName)
+                        MinutorFinalGeneration(Tile, currentProcess, currentProcessInfo)
+                    End If
+                    Tile.GenerationProgress = 100
+                    Tile.Comment = "Finished"
+                    WriteLog(Tile.Comment)
+                    LatestMessage = Tile.TileName & ": " & Tile.Comment
                 End If
             Next
         End If
@@ -601,11 +609,10 @@ Public Class GenerationWorker
                                             Tile.Comment = $"Error: {missingOSM} osm files missing"
                                             WriteLog(Tile.Comment, Tile.TileName)
                                             LatestMessage = Tile.TileName & ": " & Tile.Comment
-                                            If ClassWorker.MyTilesSettings.continueGeneration Then
-                                                keepRunningLocal = False
-                                            Else
+                                            If Not ClassWorker.MyTilesSettings.continueGeneration Then
                                                 keepRunning = False
                                             End If
+                                            keepRunningLocal = False
                                         End If
 
                                         Dim r As Random = New Random(Tile.TileName.GetHashCode())
@@ -641,11 +648,10 @@ Public Class GenerationWorker
                                             Tile.Comment = "Error: " & Tile.TileName & ".png not found"
                                             WriteLog(Tile.Comment, Tile.TileName)
                                             LatestMessage = Tile.TileName & ": " & Tile.Comment
-                                            If ClassWorker.MyTilesSettings.continueGeneration Then
-                                                keepRunningLocal = False
-                                            Else
+                                            If Not ClassWorker.MyTilesSettings.continueGeneration Then
                                                 keepRunning = False
                                             End If
+                                            keepRunningLocal = False
                                         End If
 
                                         If CType(ClassWorker.MyWorldSettings.TilesPerMap, Int16) = 1 Then
@@ -842,11 +848,10 @@ Public Class GenerationWorker
                                             Tile.Comment = "Error: " & Tile.TileName & "_terrain_reduced_colors.png not found"
                                             WriteLog(Tile.Comment, Tile.TileName)
                                             LatestMessage = Tile.TileName & ": " & Tile.Comment
-                                            If ClassWorker.MyTilesSettings.continueGeneration Then
-                                                keepRunningLocal = False
-                                            Else
+                                            If Not ClassWorker.MyTilesSettings.continueGeneration Then
                                                 keepRunning = False
                                             End If
+                                            keepRunningLocal = False
                                         End If
 
                                         While pause = True
@@ -905,11 +910,10 @@ Public Class GenerationWorker
                                             Tile.Comment = "Error: " & Tile.TileName & "\level.dat not found"
                                             WriteLog(Tile.Comment, Tile.TileName)
                                             LatestMessage = Tile.TileName & ": " & Tile.Comment
-                                            If ClassWorker.MyTilesSettings.continueGeneration Then
-                                                keepRunningLocal = False
-                                            Else
+                                            If Not ClassWorker.MyTilesSettings.continueGeneration Then
                                                 keepRunning = False
                                             End If
+                                            keepRunningLocal = False
                                         End If
 
                                         While pause = True
@@ -1016,7 +1020,6 @@ Public Class GenerationWorker
                     End If
 
                 Catch ex As Exception
-                    WriteLog(ex.Message)
                     Tile.Comment = ex.Message
                     WriteLog(Tile.Comment)
                     LatestMessage = Tile.TileName & ": " & Tile.Comment
@@ -1107,7 +1110,7 @@ Public Class GenerationWorker
                                             End If
                                         End If
 
-                                        If ClassWorker.MyTilesSettings.reUseOsmFiles = False Then
+                                        If ClassWorker.MyTilesSettings.reUseOsmFiles = False And ClassWorker.MyTilesSettings.reUseImageFiles = False Then
 
                                             If ClassWorker.MyWorldSettings.geofabrik = False Then
                                                 currentParallelProcessInfo.CreateNoWindow = False
@@ -1262,11 +1265,10 @@ Public Class GenerationWorker
                                                 Tile.Comment = $"Error: {missingOSM} osm files missing"
                                                 WriteLog(Tile.Comment, Tile.TileName)
                                                 LatestMessage = Tile.TileName & ": " & Tile.Comment
-                                                If ClassWorker.MyTilesSettings.continueGeneration Then
-                                                    keepRunningLocal = False
-                                                Else
+                                                If Not ClassWorker.MyTilesSettings.continueGeneration Then
                                                     keepRunning = False
                                                 End If
+                                                keepRunningLocal = False
                                             End If
 
                                             Dim r As Random = New Random(Tile.TileName.GetHashCode())
@@ -1302,11 +1304,10 @@ Public Class GenerationWorker
                                                 Tile.Comment = "Error: " & Tile.TileName & ".png not found"
                                                 WriteLog(Tile.Comment, Tile.TileName)
                                                 LatestMessage = Tile.TileName & ": " & Tile.Comment
-                                                If ClassWorker.MyTilesSettings.continueGeneration Then
-                                                    keepRunningLocal = False
-                                                Else
+                                                If Not ClassWorker.MyTilesSettings.continueGeneration Then
                                                     keepRunning = False
                                                 End If
+                                                keepRunningLocal = False
                                             End If
 
                                             If CType(ClassWorker.MyWorldSettings.TilesPerMap, Int16) = 1 Then
@@ -1362,11 +1363,10 @@ Public Class GenerationWorker
                                             Tile.Comment = "Error: " & Tile.TileName & "_terrain_reduced_colors.png not found"
                                             WriteLog(Tile.Comment, Tile.TileName)
                                             LatestMessage = Tile.TileName & ": " & Tile.Comment
-                                            If ClassWorker.MyTilesSettings.continueGeneration Then
-                                                keepRunningLocal = False
-                                            Else
+                                            If Not ClassWorker.MyTilesSettings.continueGeneration Then
                                                 keepRunning = False
                                             End If
+                                            keepRunningLocal = False
                                         End If
 
                                         While pause = True
@@ -1425,11 +1425,10 @@ Public Class GenerationWorker
                                             Tile.Comment = "Error: " & Tile.TileName & "\level.dat not found"
                                             WriteLog(Tile.Comment, Tile.TileName)
                                             LatestMessage = Tile.TileName & ": " & Tile.Comment
-                                            If ClassWorker.MyTilesSettings.continueGeneration Then
-                                                keepRunningLocal = False
-                                            Else
+                                            If Not ClassWorker.MyTilesSettings.continueGeneration Then
                                                 keepRunning = False
                                             End If
+                                            keepRunningLocal = False
                                         End If
 
                                         While pause = True
@@ -1465,7 +1464,6 @@ Public Class GenerationWorker
                                         LatestMessage = Tile.TileName & ": " & Tile.Comment
 
                                     Catch ex As Exception
-                                        WriteLog(ex.Message)
                                         Tile.Comment = ex.Message
                                         WriteLog(Tile.Comment, Tile.TileName)
                                         LatestMessage = Tile.TileName & ": " & Tile.Comment
@@ -1670,11 +1668,10 @@ Public Class GenerationWorker
                 Tile.Comment = Tile.TileName & "\1-osmconvert.bat not found"
                 WriteLog(Tile.Comment, Tile.TileName)
                 LatestMessage = Tile.TileName & ": " & Tile.Comment
-                If ClassWorker.MyTilesSettings.continueGeneration Then
-                    keepRunningLocal = False
-                Else
+                If Not ClassWorker.MyTilesSettings.continueGeneration Then
                     keepRunning = False
                 End If
+                keepRunningLocal = False
             End If
         Else
             If My.Computer.FileSystem.FileExists(ClassWorker.MyTilesSettings.PathToScriptsFolder & "\batchfiles\" & Tile.TileName & "\1-osmconvert.bat") Then
@@ -1693,11 +1690,10 @@ Public Class GenerationWorker
                 Tile.Comment = Tile.TileName & "\1-osmconvert.bat not found"
                 WriteLog(Tile.Comment, Tile.TileName)
                 LatestMessage = Tile.TileName & ": " & Tile.Comment
-                If ClassWorker.MyTilesSettings.continueGeneration Then
-                    keepRunningLocal = False
-                Else
+                If Not ClassWorker.MyTilesSettings.continueGeneration Then
                     keepRunning = False
                 End If
+                keepRunningLocal = False
             End If
         End If
     End Sub
@@ -1724,11 +1720,10 @@ Public Class GenerationWorker
                 Tile.Comment = "Error in the python environment"
                 WriteLog(Tile.Comment, Tile.TileName)
                 LatestMessage = Tile.TileName & ": " & Tile.Comment
-                If ClassWorker.MyTilesSettings.continueGeneration Then
-                    keepRunningLocal = False
-                Else
+                If Not ClassWorker.MyTilesSettings.continueGeneration Then
                     keepRunning = False
                 End If
+                keepRunningLocal = False
                 File.Delete(Environment.SpecialFolder.ApplicationData & "\EarthTilesPythonError")
             End If
             Tile.GenerationProgress = 33
@@ -1737,11 +1732,10 @@ Public Class GenerationWorker
             Tile.Comment = Tile.TileName & "\2-1-qgis.bat not found"
             WriteLog(Tile.Comment, Tile.TileName)
             LatestMessage = Tile.TileName & ": " & Tile.Comment
-            If ClassWorker.MyTilesSettings.continueGeneration Then
-                keepRunningLocal = False
-            Else
+            If Not ClassWorker.MyTilesSettings.continueGeneration Then
                 keepRunning = False
             End If
+            keepRunningLocal = False
         End If
     End Sub
 
@@ -1778,11 +1772,10 @@ Public Class GenerationWorker
                 Tile.Comment = "Error in the python environment"
                 WriteLog(Tile.Comment, Tile.TileName)
                 LatestMessage = Tile.TileName & ": " & Tile.Comment
-                If ClassWorker.MyTilesSettings.continueGeneration Then
-                    keepRunningLocal = False
-                Else
+                If Not ClassWorker.MyTilesSettings.continueGeneration Then
                     keepRunning = False
                 End If
+                keepRunningLocal = False
                 File.Delete(Environment.SpecialFolder.ApplicationData & "\EarthTilesPythonError")
             End If
             Tile.GenerationProgress = 30
@@ -1791,11 +1784,10 @@ Public Class GenerationWorker
             Tile.Comment = Tile.TileName & "\2-qgis.bat not found"
             WriteLog(Tile.Comment, Tile.TileName)
             LatestMessage = Tile.TileName & ": " & Tile.Comment
-            If ClassWorker.MyTilesSettings.continueGeneration Then
-                keepRunningLocal = False
-            Else
+            If Not ClassWorker.MyTilesSettings.continueGeneration Then
                 keepRunning = False
             End If
+            keepRunningLocal = False
         End If
 
         If Directory.Exists(Path.GetTempPath) Then
@@ -1844,11 +1836,10 @@ Public Class GenerationWorker
             Tile.Comment = Tile.TileName & "\3-tartool.bat not found"
             WriteLog(Tile.Comment, Tile.TileName)
             LatestMessage = Tile.TileName & ": " & Tile.Comment
-            If ClassWorker.MyTilesSettings.continueGeneration Then
-                keepRunningLocal = False
-            Else
+            If Not ClassWorker.MyTilesSettings.continueGeneration Then
                 keepRunning = False
             End If
+            keepRunningLocal = False
         End If
     End Sub
 
@@ -1870,11 +1861,10 @@ Public Class GenerationWorker
             Tile.Comment = Tile.TileName & "\4-gdal.bat not found"
             WriteLog(Tile.Comment, Tile.TileName)
             LatestMessage = Tile.TileName & ": " & Tile.Comment
-            If ClassWorker.MyTilesSettings.continueGeneration Then
-                keepRunningLocal = False
-            Else
+            If Not ClassWorker.MyTilesSettings.continueGeneration Then
                 keepRunning = False
             End If
+            keepRunningLocal = False
         End If
     End Sub
 
@@ -1896,11 +1886,10 @@ Public Class GenerationWorker
             Tile.Comment = Tile.TileName & "\5-magick.bat not found"
             WriteLog(Tile.Comment, Tile.TileName)
             LatestMessage = Tile.TileName & ": " & Tile.Comment
-            If ClassWorker.MyTilesSettings.continueGeneration Then
-                keepRunningLocal = False
-            Else
+            If Not ClassWorker.MyTilesSettings.continueGeneration Then
                 keepRunning = False
             End If
+            keepRunningLocal = False
         End If
     End Sub
 
@@ -1922,11 +1911,10 @@ Public Class GenerationWorker
             Tile.Comment = Tile.TileName & "\6-wpscript.bat not found"
             WriteLog(Tile.Comment, Tile.TileName)
             LatestMessage = Tile.TileName & ": " & Tile.Comment
-            If ClassWorker.MyTilesSettings.continueGeneration Then
-                keepRunningLocal = False
-            Else
+            If Not ClassWorker.MyTilesSettings.continueGeneration Then
                 keepRunning = False
             End If
+            keepRunningLocal = False
         End If
     End Sub
 
@@ -1949,11 +1937,10 @@ Public Class GenerationWorker
             Tile.Comment = Tile.TileName & "\6-voidscript.bat not found"
             WriteLog(Tile.Comment, Tile.TileName)
             LatestMessage = Tile.TileName & ": " & Tile.Comment
-            If ClassWorker.MyTilesSettings.continueGeneration Then
-                keepRunningLocal = False
-            Else
+            If Not ClassWorker.MyTilesSettings.continueGeneration Then
                 keepRunning = False
             End If
+            keepRunningLocal = False
         End If
     End Sub
 
@@ -1975,11 +1962,10 @@ Public Class GenerationWorker
             Tile.Comment = Tile.TileName & "\6-1-minutors.bat not found"
             WriteLog(Tile.Comment, Tile.TileName)
             LatestMessage = Tile.TileName & ": " & Tile.Comment
-            If ClassWorker.MyTilesSettings.continueGeneration Then
-                keepRunningLocal = False
-            Else
+            If Not ClassWorker.MyTilesSettings.continueGeneration Then
                 keepRunning = False
             End If
+            keepRunningLocal = False
         End If
     End Sub
 
@@ -1987,7 +1973,7 @@ Public Class GenerationWorker
 
         If My.Computer.FileSystem.FileExists(ClassWorker.MyTilesSettings.PathToScriptsFolder & "\batchfiles\" & Tile.TileName & "\8-log-cleanup.bat") Then
             Tile.Comment = "Cleaning up my mess"
-            WriteLog(Tile.Comment, Tile.TileName)
+            WriteLog(Tile.Comment)
             LatestMessage = Tile.TileName & ": " & Tile.Comment
             currentParallelProcessInfo.FileName = ClassWorker.MyTilesSettings.PathToScriptsFolder & "\batchfiles\" & Tile.TileName & "\8-log-cleanup.bat"
             currentParallelProcess = Process.Start(currentParallelProcessInfo)
@@ -3208,7 +3194,26 @@ Public Class GenerationWorker
                 ScriptBatchFile.WriteLine("""" & ClassWorker.MyTilesSettings.PathToMagick & """ convert """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\image_exports\" & Tile & "\" & Tile & "_ocean_temp.png"" -sample 50%% -magnify """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\image_exports\" & Tile & "\" & Tile & "_ocean_temp.png""")
             End If
 
-            ScriptBatchFile.WriteLine("""" & ClassWorker.MyTilesSettings.PathToMagick & """ convert """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\image_exports\" & Tile & "\" & Tile & "_terrain.png"" -dither None -remap """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\wpscript\terrain\" & ClassWorker.MyWorldSettings.Terrain & ".png"" """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\image_exports\" & Tile & "\" & Tile & "_terrain_reduced_colors.png""")
+            If Not ClassWorker.MyWorldSettings.terrainModifier = 0 Then
+                Select Case ClassWorker.MyWorldSettings.terrainModifier
+                    Case -2
+                        ScriptBatchFile.WriteLine("""" & ClassWorker.MyTilesSettings.PathToMagick & """ convert """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\image_exports\" & Tile & "\" & Tile & "_terrain.png"" -channel R -level -15%%,100%% """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\image_exports\" & Tile & "\" & Tile & "_terrain_modified.png""")
+                        ScriptBatchFile.WriteLine("""" & ClassWorker.MyTilesSettings.PathToMagick & """ convert """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\image_exports\" & Tile & "\" & Tile & "_terrain_modified.png"" -channel G -level -5%%,100%% """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\image_exports\" & Tile & "\" & Tile & "_terrain_modified.png""")
+                    Case -1
+                        ScriptBatchFile.WriteLine("""" & ClassWorker.MyTilesSettings.PathToMagick & """ convert """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\image_exports\" & Tile & "\" & Tile & "_terrain.png"" -channel R -level -5%%,100%% """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\image_exports\" & Tile & "\" & Tile & "_terrain_modified.png""")
+                        ScriptBatchFile.WriteLine("""" & ClassWorker.MyTilesSettings.PathToMagick & """ convert """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\image_exports\" & Tile & "\" & Tile & "_terrain_modified.png"" -channel G -level -2%%,100%% """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\image_exports\" & Tile & "\" & Tile & "_terrain_modified.png""")
+                    Case 1
+                        ScriptBatchFile.WriteLine("""" & ClassWorker.MyTilesSettings.PathToMagick & """ convert """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\image_exports\" & Tile & "\" & Tile & "_terrain.png"" -channel G -level -2%%,100%% """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\image_exports\" & Tile & "\" & Tile & "_terrain_modified.png""")
+                        ScriptBatchFile.WriteLine("""" & ClassWorker.MyTilesSettings.PathToMagick & """ convert """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\image_exports\" & Tile & "\" & Tile & "_terrain_modified.png"" -channel R -level -0%%,100%%,0.9 """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\image_exports\" & Tile & "\" & Tile & "_terrain_modified.png""")
+                    Case 2
+                        ScriptBatchFile.WriteLine("""" & ClassWorker.MyTilesSettings.PathToMagick & """ convert """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\image_exports\" & Tile & "\" & Tile & "_terrain.png"" -channel G -level -5%%,100%% """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\image_exports\" & Tile & "\" & Tile & "_terrain_modified.png""")
+                        ScriptBatchFile.WriteLine("""" & ClassWorker.MyTilesSettings.PathToMagick & """ convert """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\image_exports\" & Tile & "\" & Tile & "_terrain_modified.png"" -channel R -level 0%%,100%%,0.8 """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\image_exports\" & Tile & "\" & Tile & "_terrain_modified.png""")
+                End Select
+                ScriptBatchFile.WriteLine("""" & ClassWorker.MyTilesSettings.PathToMagick & """ convert """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\image_exports\" & Tile & "\" & Tile & "_terrain_modified.png"" -dither None -remap """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\wpscript\terrain\" & ClassWorker.MyWorldSettings.Terrain & ".png"" """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\image_exports\" & Tile & "\" & Tile & "_terrain_reduced_colors.png""")
+            Else
+                ScriptBatchFile.WriteLine("""" & ClassWorker.MyTilesSettings.PathToMagick & """ convert """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\image_exports\" & Tile & "\" & Tile & "_terrain.png"" -dither None -remap """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\wpscript\terrain\" & ClassWorker.MyWorldSettings.Terrain & ".png"" """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\image_exports\" & Tile & "\" & Tile & "_terrain_reduced_colors.png""")
+            End If
+
             If ClassWorker.MyTilesSettings.cmdPause Then
                 ScriptBatchFile.WriteLine("PAUSE")
             End If
@@ -3295,7 +3300,7 @@ Public Class GenerationWorker
                 Else
                 End If
             End If
-            ScriptBatchFile.WriteLine("""" & ClassWorker.MyTilesSettings.PathToWorldPainterFolder & """ """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\wpscript.js"" """ & ClassWorker.MyTilesSettings.PathToScriptsFolder.Replace("\", "/") & "/"" " & ReplacedString & " " & ClassWorker.MyWorldSettings.BlocksPerTile & " " & ClassWorker.MyWorldSettings.TilesPerMap & " " & ClassWorker.MyWorldSettings.VerticalScale & " " & ClassWorker.MyWorldSettings.bordersBoolean.ToString & " " & ClassWorker.MyWorldSettings.highways.ToString & " " & ClassWorker.MyWorldSettings.streets.ToString & " " & ClassWorker.MyWorldSettings.small_streets.ToString & " " & ClassWorker.MyWorldSettings.buildings.ToString & " " & ClassWorker.MyWorldSettings.ores.ToString & " " & ClassWorker.MyWorldSettings.netherite.ToString & " " & ClassWorker.MyWorldSettings.farms.ToString & " " & ClassWorker.MyWorldSettings.meadows.ToString & " " & ClassWorker.MyWorldSettings.quarrys.ToString & " " & ClassWorker.MyWorldSettings.aerodrome.ToString & " " & ClassWorker.MyWorldSettings.mobSpawner.ToString & " " & ClassWorker.MyWorldSettings.animalSpawner.ToString & " " & ClassWorker.MyWorldSettings.riversBoolean.ToString & " " & ClassWorker.MyWorldSettings.streams.ToString & " " & ClassWorker.MyWorldSettings.volcanos.ToString & " " & ClassWorker.MyWorldSettings.shrubs.ToString & " " & ClassWorker.MyWorldSettings.crops.ToString & " " & MapVersionShort & " " & ClassWorker.MyWorldSettings.mapOffset & " " & ClassWorker.MyWorldSettings.vanillaPopulation & " " & NewTile & " " & NewBiomeSource & " " & ClassWorker.MyWorldSettings.mod_BOP & " " & ClassWorker.MyWorldSettings.mod_BYG & " " & ClassWorker.MyWorldSettings.mod_Terralith & " " & ClassWorker.MyWorldSettings.mod_Create)
+            ScriptBatchFile.WriteLine("""" & ClassWorker.MyTilesSettings.PathToWorldPainterFolder & """ """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\wpscript.js"" """ & ClassWorker.MyTilesSettings.PathToScriptsFolder.Replace("\", "/") & "/"" " & ReplacedString & " " & ClassWorker.MyWorldSettings.BlocksPerTile & " " & ClassWorker.MyWorldSettings.TilesPerMap & " " & ClassWorker.MyWorldSettings.VerticalScale & " " & ClassWorker.MyWorldSettings.bordersBoolean.ToString & " " & ClassWorker.MyWorldSettings.highways.ToString & " " & ClassWorker.MyWorldSettings.streets.ToString & " " & ClassWorker.MyWorldSettings.small_streets.ToString & " " & ClassWorker.MyWorldSettings.buildings.ToString & " " & ClassWorker.MyWorldSettings.ores.ToString & " " & ClassWorker.MyWorldSettings.netherite.ToString & " " & ClassWorker.MyWorldSettings.farms.ToString & " " & ClassWorker.MyWorldSettings.meadows.ToString & " " & ClassWorker.MyWorldSettings.quarrys.ToString & " " & ClassWorker.MyWorldSettings.aerodrome.ToString & " " & ClassWorker.MyWorldSettings.mobSpawner.ToString & " " & ClassWorker.MyWorldSettings.animalSpawner.ToString & " " & ClassWorker.MyWorldSettings.riversBoolean.ToString & " " & ClassWorker.MyWorldSettings.streams.ToString & " " & ClassWorker.MyWorldSettings.volcanos.ToString & " " & ClassWorker.MyWorldSettings.shrubs.ToString & " " & ClassWorker.MyWorldSettings.crops.ToString & " " & MapVersionShort & " " & ClassWorker.MyWorldSettings.mapOffset & " " & ClassWorker.MyWorldSettings.vanillaPopulation & " " & NewTile & " " & NewBiomeSource & " " & ClassWorker.MyWorldSettings.oreModifier.ToString & " " & ClassWorker.MyWorldSettings.mod_BOP & " " & ClassWorker.MyWorldSettings.mod_BYG & " " & ClassWorker.MyWorldSettings.mod_Terralith & " " & ClassWorker.MyWorldSettings.mod_Create)
             If ClassWorker.MyTilesSettings.cmdPause Then
                 ScriptBatchFile.WriteLine("PAUSE")
             End If
@@ -3552,7 +3557,7 @@ Public Class GenerationWorker
             Dim ScriptBatchFile As StreamWriter
 
             ScriptBatchFile = My.Computer.FileSystem.OpenTextFileWriter(ClassWorker.MyTilesSettings.PathToScriptsFolder & "\batchfiles\7-1-log-minutors.bat", False, System.Text.Encoding.ASCII)
-            ScriptBatchFile.WriteLine("CALL """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\batchfiles\7-1-minutors.bat"" >> """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\logs\log-" & Tile & ".txt""")
+            ScriptBatchFile.WriteLine("CALL """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\batchfiles\7-1-minutors.bat"" >> """ & ClassWorker.MyTilesSettings.PathToScriptsFolder & "\logs\log-general.txt""")
             ScriptBatchFile.WriteLine()
             ScriptBatchFile.Close()
 
@@ -3668,10 +3673,14 @@ Public Class GenerationWorker
         Else
             path = $"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\logs\log-{Tile}.txt"
         End If
-        Using sw As StreamWriter = File.AppendText(path)
-            sw.WriteLine(Message)
-        End Using
-        Return True
+        Try
+            Using sw As StreamWriter = File.AppendText(path)
+                sw.WriteLine(Message)
+            End Using
+            Return True
+        Catch ex As Exception
+            Return False
+        End Try
     End Function
 
 End Class

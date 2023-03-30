@@ -42,6 +42,8 @@ Public Class Settings
     Public mod_Terralith As Boolean
     Public mod_Create As Boolean
     Public custom_layers As String
+    Public terrainModifier As Integer
+    Public oreModifier As Integer
 
     Public version As String
     Public Function ShouldSerializeversion() As Boolean
@@ -177,6 +179,8 @@ Public Class Settings
         mod_Terralith = False
         mod_Create = False
         custom_layers = ""
+        terrainModifier = 0
+        oreModifier = 8
 
         'Readonly Propertys for backward compatibility
         version = Nothing

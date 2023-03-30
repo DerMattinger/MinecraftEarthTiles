@@ -521,6 +521,14 @@ Public Class SettingsWindow
 
         txb_custom_layers.Text = WorldSettings.custom_layers
 
+        If Not WorldSettings.terrainModifier < -2 And Not WorldSettings.terrainModifier > 2 Then
+            sld_TerrainModifier.Value = WorldSettings.terrainModifier
+        End If
+
+        If Not WorldSettings.oreModifier < 1 And Not WorldSettings.oreModifier > 15 Then
+            sld_OreModifier.Value = WorldSettings.oreModifier
+        End If
+
         Calculate_Scale()
 
     End Sub
@@ -609,6 +617,10 @@ Public Class SettingsWindow
         LocalWorldSettings.mod_Create = CBool(chb_create.IsChecked)
 
         LocalWorldSettings.custom_layers = txb_custom_layers.Text
+
+        LocalWorldSettings.terrainModifier = Convert.ToInt16(sld_TerrainModifier.Value)
+
+        LocalWorldSettings.oreModifier = Convert.ToInt16(sld_OreModifier.Value)
 
         Return LocalWorldSettings
     End Function

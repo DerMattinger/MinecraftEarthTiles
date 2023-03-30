@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <StartArguments>-world_settings "E:\osm\settings.xml" -tiles_settings "E:\osm\tiles_settings.xml" -selection "E:\osm\selection.xml"</StartArguments>
+    <StartArguments>-world_settings "settings.xml" -tiles_settings "tiles_settings.xml" -selection "selection.xml"</StartArguments>
   </PropertyGroup>
 </Project>

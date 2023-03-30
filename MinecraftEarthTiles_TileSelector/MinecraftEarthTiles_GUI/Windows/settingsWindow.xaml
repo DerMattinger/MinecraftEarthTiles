@@ -240,7 +240,19 @@
                                     <TextBlock TextWrapping="Wrap" Foreground="Red" x:Name="lbl_VanillaPopulation_Info" Text="* Only works with Minecraft 1.12, 1.18 and 1.19'"/>
                                 </StackPanel>
                             </GroupBox>
-                            <GroupBox Header="Sources" Margin="10">
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem Header="Map features">
+                    <ScrollViewer>
+                        <StackPanel>
+                            <GroupBox Header="Heightmap" Margin="10">
+                                <StackPanel>
+                                    <CheckBox x:Name="chb_HeightmapErrorCorrection" Content="Heightmap Error Correction" IsChecked="True" />
+                                    <CheckBox x:Name="chb_Bathymetry" Content="Bathymetry" IsChecked="True"/>
+                                </StackPanel>
+                            </GroupBox>
+                            <GroupBox Header="Terrain" Margin="10">
                                 <StackPanel>
                                     <Label x:Name="lbl_TerrainMapping" Content="Terrain Mapping"/>
                                     <ComboBox x:Name="cbb_TerrainMapping">
@@ -255,27 +267,42 @@
                                         <ComboBoxItem Content="Google"/>
                                         <ComboBoxItem Content="Bing"/>
                                     </ComboBox>
+                                    <Label x:Name="lbl_TerrainModifier" Content="Terrain Modifier"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1.4*" />
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="1.4*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid Grid.Column="0"  HorizontalAlignment="Left">
+                                            <Label x:Name="lbl_TerrainModifierMuchSandier" Content="Dryest"/>
+                                        </Grid>
+                                        <Grid Grid.Column="1"  HorizontalAlignment="Left">
+                                            <Label x:Name="lbl_TerrainModifierSandier" Content="Dryer"/>
+                                        </Grid>
+                                        <Grid Grid.Column="2"  HorizontalAlignment="Center">
+                                            <Label x:Name="lbl_TerrainModifierNone" Content="None"/>
+                                        </Grid>
+                                        <Grid Grid.Column="3"  HorizontalAlignment="Right">
+                                            <Label x:Name="lbl_TerrainModifierGreener" Content="Greener"/>
+                                        </Grid>
+                                        <Grid Grid.Column="4"  HorizontalAlignment="Right">
+                                            <Label x:Name="lbl_TerrainModifierMuchGreener" Content="Greenest"/>
+                                        </Grid>
+                                    </Grid>
+                                    <Slider x:Name="sld_TerrainModifier" Margin="20 0" Minimum="-2" Maximum="2" Value="0" IsSnapToTickEnabled="True" TickFrequency="1"/>
+                                </StackPanel>
+                            </GroupBox>
+                            
+                            <GroupBox Header="Basic Features" Margin="10">
+                                <StackPanel>
                                     <Label x:Name="lbl_BiomeSource" Content="Biome Source"/>
                                     <ComboBox x:Name="cbb_BiomeSource">
                                         <ComboBoxItem IsSelected="true" Content="Köppen Climate Classification"/>
                                         <ComboBoxItem Content="Terrestrial Ecoregions (WWF)"/>
                                     </ComboBox>
-                                </StackPanel>
-                            </GroupBox>
-                        </StackPanel>
-                    </ScrollViewer>
-                </TabItem>
-                <TabItem Header="Map features">
-                    <ScrollViewer>
-                        <StackPanel>
-                            <GroupBox Header="Heightmap" Margin="10">
-                                <StackPanel>
-                                    <CheckBox x:Name="chb_HeightmapErrorCorrection" Content="Heightmap Error Correction" IsChecked="True" />
-                                    <CheckBox x:Name="chb_Bathymetry" Content="Bathymetry" IsChecked="True"/>
-                                </StackPanel>
-                            </GroupBox>
-                            <GroupBox Header="Basic Features" Margin="10">
-                                <StackPanel>
                                     <CheckBox x:Name="chb_rivers" Content="Rivers" IsChecked="True"/>
                                     <Label x:Name="lbl_RiverSize" Content="River Amount / Size"/>
                                     <ComboBox x:Name="cbb_Rivers">
@@ -318,6 +345,24 @@
                                     <CheckBox x:Name="chb_streets" Content="Normal Streets" IsChecked="True"/>
                                     <CheckBox x:Name="chb_ores" Content="Additional ores" IsChecked="True"/>
                                     <CheckBox x:Name="chb_netherrite" Content="Rare Netherite in the Overworld" IsChecked="True"/>
+                                    <Label x:Name="lbl_OreModifier" Content="Amount of ores"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="1*" />
+                                            <ColumnDefinition Width="1*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Grid Grid.Column="0"  HorizontalAlignment="Left">
+                                            <Label x:Name="lbl_OreModifierLess" Content="Less"/>
+                                        </Grid>
+                                        <Grid Grid.Column="1"  HorizontalAlignment="Center">
+                                            <Label x:Name="lbl_OreModifierStandard" Content="Standard"/>
+                                        </Grid>
+                                        <Grid Grid.Column="2"  HorizontalAlignment="Right">
+                                            <Label x:Name="lbl_OreModifierMore" Content="More"/>
+                                        </Grid>
+                                    </Grid>
+                                    <Slider x:Name="sld_OreModifier" Margin="20 0" Minimum="1" Maximum="15" Value="8" IsSnapToTickEnabled="True" TickFrequency="1"/>
                                     <CheckBox x:Name="chb_aerodrome" Content="End-Portals" IsChecked="True"/>
                                     <CheckBox x:Name="chb_volcanos" Content="Volcanos" IsChecked="True"/>
                                     <CheckBox x:Name="chb_shrubs" Content="Shrubs" IsChecked="True"/>
@@ -325,6 +370,7 @@
                                     <CheckBox x:Name="chb_mob_spawner" Content="Random Mob-Spawners" IsChecked="True" />
                                     <CheckBox x:Name="chb_animal_spawner" Content="Random Animal-Spawners" IsChecked="True" />
                                 </StackPanel>
+
                             </GroupBox>
                             <GroupBox Header="Detailed Features" Margin="10">
                                 <StackPanel>

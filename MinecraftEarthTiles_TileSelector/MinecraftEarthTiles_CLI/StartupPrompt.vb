@@ -143,6 +143,9 @@ Module StartupPrompt
                 MyGenerationWorker.neuerthread = New Thread(AddressOf MyGenerationWorker.CleanupOnly_Generation)
                 MyGenerationWorker.neuerthread.Start()
         End Select
+        If MyGenerationWorker.keepRunning = False Then
+            ClassWorker.CreateDebugZip()
+        End If
     End Sub
 
     Sub ShowError(message As String)
@@ -154,21 +157,21 @@ Module StartupPrompt
 
     Private Sub Check()
         Console.WriteLine("Checking settings")
-        If Not ClassWorker.GetTilesSettings.PathToMagick = "" Then
+        If ClassWorker.GetTilesSettings.PathToMagick = "" Then
             ShowError("Path to ImageMagick is not correct.")
-        ElseIf Not ClassWorker.GetTilesSettings.PathToQGIS = "" Then
+        ElseIf ClassWorker.GetTilesSettings.PathToQGIS = "" Then
             ShowError("Path to QGIS is not correct.")
-        ElseIf Not ClassWorker.GetTilesSettings.PathToScriptsFolder = "" Then
+        ElseIf ClassWorker.GetTilesSettings.PathToScriptsFolder = "" Then
             ShowError("Path to script folger is not correct.")
-        ElseIf Not ClassWorker.GetTilesSettings.PathToWorldPainterFolder = "" Then
+        ElseIf ClassWorker.GetTilesSettings.PathToWorldPainterFolder = "" Then
             ShowError("Path to WorldPainter is not correct.")
-        ElseIf Not ClassWorker.GetWorldSettings.PathToPBF = "" _
+        ElseIf ClassWorker.GetWorldSettings.PathToPBF = "" _
             And ClassWorker.GetWorldSettings.geofabrik = True _
             And ClassWorker.GetTilesSettings.reUsePbfFile = False _
             And ClassWorker.GetTilesSettings.reUseOsmFiles = False _
             And ClassWorker.GetTilesSettings.reUseImageFiles = False Then
             ShowError("Path to PBF file is not correct.")
-        ElseIf ClassWorker.GetSelection.TilesList.Count = 0 = "" Then
+        ElseIf ClassWorker.GetSelection.TilesList.Count = 0 Then
             ShowError("No Tiles selected.")
         ElseIf ClassWorker.GetSelection.SpawnTile = "" Then
             ShowError("No spawn Tile selected.")
@@ -179,9 +182,13 @@ Module StartupPrompt
         Select Case e.PropertyName
             Case "LatestMessage"
                 Console.WriteLine(MyGenerationWorker.LatestMessage)
+                If MyGenerationWorker.LatestMessage.Contains("Finished") Then
+                    Dim percentReady As Double = Math.Round((MyGenerationWorker.tilesReady / MyGenerationWorker.maxTiles) * 100, 2)
+                    Console.WriteLine(percentReady & "% ready" & " - " & "Running: " & MyGenerationWorker.hoursDone & " h and " & MyGenerationWorker.minutesDone & " min" & " - " & "Time left: " & MyGenerationWorker.hoursLeft & " h and " & MyGenerationWorker.minutesLeft & " min")
+                End If
             Case "GenerationComplete"
                 If MyGenerationWorker.GenerationComplete = True Then
-                    Console.WriteLine("Generation for '" & ClassWorker.GetWorldSettings.WorldName & "' completed")
+                    Console.WriteLine("Generation For '" & ClassWorker.GetWorldSettings.WorldName & "' completed")
                     If ClassWorker.GetTilesSettings.closeAfterFinish Then
                         End
                     Else

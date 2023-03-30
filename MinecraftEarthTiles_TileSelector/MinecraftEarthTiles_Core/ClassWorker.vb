@@ -1,6 +1,7 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.ComponentModel
 Imports System.IO
+Imports System.IO.Compression
 Imports System.Text.RegularExpressions
 
 Public Class ClassWorker
@@ -114,6 +115,16 @@ Public Class ClassWorker
         returnString = returnString.Replace(" ", replacement)
         Return returnString
     End Function
+
+    Public Shared Sub CreateDebugZip(Optional path As String = "")
+        If path = "" Then
+            path = MyTilesSettings.PathToScriptsFolder & "/" & DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") & "_Debug.zip"
+        End If
+        CustomXmlSerialiser.SaveXML(ClassWorker.GetTilesSettings.PathToScriptsFolder & "/logs/tiles_settings.xml", MyTilesSettings)
+        CustomXmlSerialiser.SaveXML(ClassWorker.GetTilesSettings.PathToScriptsFolder & "/logs/settings.xml", MyWorldSettings)
+        CustomXmlSerialiser.SaveXML(ClassWorker.GetTilesSettings.PathToScriptsFolder & "/logs/selection.xml", MySelection)
+        ZipFile.CreateFromDirectory(ClassWorker.GetTilesSettings.PathToScriptsFolder & "/logs/", path)
+    End Sub
 
 #End Region
 
