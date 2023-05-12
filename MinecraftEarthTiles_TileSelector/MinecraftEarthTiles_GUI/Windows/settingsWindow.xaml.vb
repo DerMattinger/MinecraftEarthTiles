@@ -305,10 +305,10 @@ Public Class SettingsWindow
             cbb_BlocksPerTile.Text = WorldSettings.BlocksPerTile
         End If
 
-        If WorldSettings.VerticalScale = "5" Or WorldSettings.VerticalScale = "10" Or WorldSettings.VerticalScale = "25" Or WorldSettings.VerticalScale = "35" Or WorldSettings.VerticalScale = "50" Or WorldSettings.VerticalScale = "75" Or WorldSettings.VerticalScale = "100" Or WorldSettings.VerticalScale = "200" Or WorldSettings.VerticalScale = "300" Then
+        If WorldSettings.VerticalScale = "5" Or WorldSettings.VerticalScale = "10" Or WorldSettings.VerticalScale = "15" Or WorldSettings.VerticalScale = "20" Or WorldSettings.VerticalScale = "25" Or WorldSettings.VerticalScale = "30" Or WorldSettings.VerticalScale = "35" Or WorldSettings.VerticalScale = "50" Or WorldSettings.VerticalScale = "75" Or WorldSettings.VerticalScale = "100" Or WorldSettings.VerticalScale = "200" Or WorldSettings.VerticalScale = "300" Or WorldSettings.VerticalScale = "500" Or WorldSettings.VerticalScale = "1000" Then
             cbb_VerticalScale.SelectedValue = WorldSettings.VerticalScale
             cbb_VerticalScale.Text = WorldSettings.VerticalScale
-            If Not WorldSettings.TilesPerMap = "1" And (WorldSettings.VerticalScale = "5" Or WorldSettings.VerticalScale = "10" Or WorldSettings.VerticalScale = "25") Then
+            If WorldSettings.TilesPerMap <> "1" And (WorldSettings.VerticalScale = "5" Or WorldSettings.VerticalScale = "10" Or WorldSettings.VerticalScale = "15" Or WorldSettings.VerticalScale = "20" Or WorldSettings.VerticalScale = "25" Or WorldSettings.VerticalScale = "30") Then
                 cbb_VerticalScale.SelectedValue = "35"
                 cbb_VerticalScale.Text = "35"
             End If
@@ -333,6 +333,20 @@ Public Class SettingsWindow
             chb_VanillaPopulation.IsEnabled = True
         Else
             chb_VanillaPopulation.IsEnabled = False
+        End If
+
+        cbb_LowerBuildLimit.Text = WorldSettings.lowerBuildLimit
+        cbb_LowerBuildLimit.SelectedItem = WorldSettings.lowerBuildLimit
+        cbb_UpperBuildLimit.Text = WorldSettings.upperBuildLimit
+        cbb_UpperBuildLimit.SelectedItem = WorldSettings.upperBuildLimit
+
+        If Not cbb_MapVersion.Text = "1.18" And Not cbb_MapVersion.Text = "1.19" Then
+            cbb_LowerBuildLimit.IsEnabled = False
+            cbb_LowerBuildLimit.SelectedItem = "0"
+            cbb_LowerBuildLimit.Text = "0"
+            cbb_UpperBuildLimit.IsEnabled = False
+            cbb_UpperBuildLimit.SelectedItem = "256"
+            cbb_UpperBuildLimit.Text = "256"
         End If
 
         chb_Borders.IsChecked = WorldSettings.bordersBoolean
@@ -542,41 +556,20 @@ Public Class SettingsWindow
             LocalWorldSettings.WorldName = RemoveIllegalFileNameChars(txb_WorldName.Text)
             txb_WorldName.Text = RemoveIllegalFileNameChars(txb_WorldName.Text)
         End If
-        If CType(cbb_BlocksPerTile.Text, Int16) Mod 512 = 0.0 Then
-            LocalWorldSettings.BlocksPerTile = cbb_BlocksPerTile.Text
-        End If
-        If cbb_VerticalScale.Text = "300" Or cbb_VerticalScale.Text = "200" Or cbb_VerticalScale.Text = "100" Or cbb_VerticalScale.Text = "75" Or cbb_VerticalScale.Text = "50" Or cbb_VerticalScale.Text = "35" Or cbb_VerticalScale.Text = "25" Or cbb_VerticalScale.Text = "10" Or cbb_VerticalScale.Text = "5" Then
-            LocalWorldSettings.VerticalScale = cbb_VerticalScale.Text
-        End If
-        If 90 Mod CType(cbb_TilesPerMap.Text, Int16) = 0.0 Then
-            LocalWorldSettings.TilesPerMap = cbb_TilesPerMap.Text
-        End If
-        If cbb_TerrainMapping.Text = "Default" Or cbb_TerrainMapping.Text = "Custom" Then
-            LocalWorldSettings.Terrain = cbb_TerrainMapping.Text
-        End If
-        If cbb_MapVersion.Text = "1.12" Or cbb_MapVersion.Text = "1.16" Or cbb_MapVersion.Text = "1.17" Or cbb_MapVersion.Text = "1.18" Or cbb_MapVersion.Text = "1.19" Then
-            LocalWorldSettings.MapVersion = cbb_MapVersion.Text
-        End If
-
+        LocalWorldSettings.BlocksPerTile = cbb_BlocksPerTile.Text
+        LocalWorldSettings.VerticalScale = cbb_VerticalScale.Text
+        LocalWorldSettings.lowerBuildLimit = cbb_LowerBuildLimit.Text
+        LocalWorldSettings.upperBuildLimit = cbb_UpperBuildLimit.Text
+        LocalWorldSettings.TilesPerMap = cbb_TilesPerMap.Text
+        LocalWorldSettings.Terrain = cbb_TerrainMapping.Text
+        LocalWorldSettings.MapVersion = cbb_MapVersion.Text
         LocalWorldSettings.bordersBoolean = CBool(chb_Borders.IsChecked)
-
-        If cbb_Borders.Text = "2000bc" Or cbb_Borders.Text = "1000bc" Or cbb_Borders.Text = "500bc" Or cbb_Borders.Text = "323bc" Or cbb_Borders.Text = "200bc" Or cbb_Borders.Text = "1bc" Or cbb_Borders.Text = "400" Or cbb_Borders.Text = "600" Or cbb_Borders.Text = "800" Or cbb_Borders.Text = "1000" Or cbb_Borders.Text = "1279" Or cbb_Borders.Text = "1482" Or cbb_Borders.Text = "1530" Or cbb_Borders.Text = "1650" Or cbb_Borders.Text = "1715" Or cbb_Borders.Text = "1783" Or cbb_Borders.Text = "1815" Or cbb_Borders.Text = "1880" Or cbb_Borders.Text = "1914" Or cbb_Borders.Text = "1920" Or cbb_Borders.Text = "1938" Or cbb_Borders.Text = "1945" Or cbb_Borders.Text = "1994" Or cbb_Borders.Text = "Current" Then
-            LocalWorldSettings.borders = cbb_Borders.Text
-        End If
-
+        LocalWorldSettings.borders = cbb_Borders.Text
         LocalWorldSettings.Heightmap_Error_Correction = CBool(chb_HeightmapErrorCorrection.IsChecked)
-
         LocalWorldSettings.geofabrik = CBool(chb_geofabrik.IsChecked)
         LocalWorldSettings.bathymetry = CBool(chb_Bathymetry.IsChecked)
-
-        If cbb_TerrainSource.Text = "Offline Terrain (high res)" Or cbb_TerrainSource.Text = "Offline Terrain (low res)" Or cbb_TerrainSource.Text = "Arcgis" Or cbb_TerrainSource.Text = "Google" Or cbb_TerrainSource.Text = "Bing" Then
-            LocalWorldSettings.TerrainSource = cbb_TerrainSource.Text
-        End If
-
-        If cbb_BiomeSource.Text = "Terrestrial Ecoregions (WWF)" Or cbb_BiomeSource.Text = "Köppen Climate Classification" Then
-            LocalWorldSettings.biomeSource = cbb_BiomeSource.Text
-        End If
-
+        LocalWorldSettings.TerrainSource = cbb_TerrainSource.Text
+        LocalWorldSettings.biomeSource = cbb_BiomeSource.Text
         LocalWorldSettings.highways = CBool(chb_highways.IsChecked)
         LocalWorldSettings.streets = CBool(chb_streets.IsChecked)
         LocalWorldSettings.buildings = CBool(chb_buildings.IsChecked)
@@ -595,33 +588,17 @@ Public Class SettingsWindow
         LocalWorldSettings.volcanos = CBool(chb_volcanos.IsChecked)
         LocalWorldSettings.shrubs = CBool(chb_shrubs.IsChecked)
         LocalWorldSettings.crops = CBool(chb_crops.IsChecked)
-
-        If cbb_Rivers.Text = "All (small)" Or cbb_Rivers.Text = "All (medium)" Or cbb_Rivers.Text = "All (large)" Or cbb_Rivers.Text = "Major" Or cbb_Rivers.Text = "Major + Minor" Then
-            LocalWorldSettings.rivers = cbb_Rivers.Text
-        End If
-
+        LocalWorldSettings.rivers = cbb_Rivers.Text
         LocalWorldSettings.vanillaPopulation = CBool(chb_VanillaPopulation.IsChecked)
-
-        If cbb_MapOffset.Text = "-1" Or cbb_MapOffset.Text = "0" Or cbb_MapOffset.Text = "1" Then
-            LocalWorldSettings.mapOffset = cbb_MapOffset.Text
-        End If
-
+        LocalWorldSettings.mapOffset = cbb_MapOffset.Text
         LocalWorldSettings.OverpassURL = txb_OsmURL.Text
-
         LocalWorldSettings.mod_BOP = CBool(chb_bop.IsChecked)
-
         LocalWorldSettings.mod_BYG = CBool(chb_byg.IsChecked)
-
         LocalWorldSettings.mod_Terralith = CBool(chb_terralith.IsChecked)
-
         LocalWorldSettings.mod_Create = CBool(chb_create.IsChecked)
-
         LocalWorldSettings.custom_layers = txb_custom_layers.Text
-
         LocalWorldSettings.terrainModifier = Convert.ToInt16(sld_TerrainModifier.Value)
-
         LocalWorldSettings.oreModifier = Convert.ToInt16(sld_OreModifier.Value)
-
         Return LocalWorldSettings
     End Function
 
@@ -646,13 +623,8 @@ Public Class SettingsWindow
             LocalTilesSettings.PathToExport = txb_PathToExport.Text
         End If
         LocalTilesSettings.Theme = ClassWorker.GetTilesSettings.Theme
-
-        If CType(cbb_NumberOfCores.Text, Int32) <= 16 Then
-            LocalTilesSettings.NumberOfCores = cbb_NumberOfCores.Text
-        End If
-
+        LocalTilesSettings.NumberOfCores = cbb_NumberOfCores.Text
         LocalTilesSettings.ParallelWorldPainterGenerations = CBool(chb_ParallelWorldPainterGenerations.IsChecked)
-
         LocalTilesSettings.keepPbfFile = CBool(chb_keepPbfFiles.IsChecked)
         LocalTilesSettings.reUsePbfFile = CBool(chb_reUsePbfFiles.IsChecked)
         LocalTilesSettings.keepOsmFiles = CBool(chb_keepOsmFiles.IsChecked)
@@ -661,14 +633,11 @@ Public Class SettingsWindow
         LocalTilesSettings.reUseImageFiles = CBool(chb_reUseImages.IsChecked)
         LocalTilesSettings.keepWorldPainterFiles = CBool(chb_keepWorldPainter.IsChecked)
         LocalTilesSettings.minutor = CBool(chb_minutor.IsChecked)
-
         LocalTilesSettings.cmdVisibility = CBool(chb_CmdVisibility.IsChecked)
         LocalTilesSettings.cmdPause = CBool(chb_CmdPause.IsChecked)
         LocalTilesSettings.continueGeneration = CBool(chb_continue.IsChecked)
         LocalTilesSettings.closeAfterFinish = CBool(chb_closeAfterFinish.IsChecked)
-
         LocalTilesSettings.Proxy = txb_Proxy.Text
-
         If StartupWindow.MyVersion = "Full" Then
             LocalTilesSettings.alertAfterFinish = CBool(chb_alertAfterFinish.IsChecked)
             Try
@@ -721,7 +690,7 @@ Public Class SettingsWindow
 
         If Not cbb_TilesPerMap.Text = "1" Then
             For Each item As ComboBoxItem In cbb_VerticalScale.Items
-                If item.Content.ToString = "5" Or item.Content.ToString = "10" Or item.Content.ToString = "25" Then
+                If item.Content.ToString = "5" Or item.Content.ToString = "10" Or item.Content.ToString = "15" Or item.Content.ToString = "20" Or item.Content.ToString = "25" Or item.Content.ToString = "30" Then
                     item.IsEnabled = False
                 End If
             Next
@@ -729,6 +698,18 @@ Public Class SettingsWindow
             For Each item As ComboBoxItem In cbb_VerticalScale.Items
                 item.IsEnabled = True
             Next
+        End If
+    End Sub
+
+    Private Sub Calculate_Build_Limit()
+        If cbb_MapVersion.Text = "1.18" Or cbb_MapVersion.Text = "1.19" Then
+            If cbb_VerticalScale.Text = "5" Or cbb_VerticalScale.Text = "10" Or cbb_VerticalScale.Text = "15" Or cbb_VerticalScale.Text = "20" Or cbb_VerticalScale.Text = "25" Or cbb_VerticalScale.Text = "30" Then
+                cbb_UpperBuildLimit.Text = "2032"
+                cbb_UpperBuildLimit.SelectedItem = "2032"
+            Else
+                cbb_UpperBuildLimit.Text = "320"
+                cbb_UpperBuildLimit.SelectedItem = "320"
+            End If
         End If
     End Sub
 
@@ -747,6 +728,26 @@ Public Class SettingsWindow
         Else
             chb_VanillaPopulation.IsEnabled = False
             chb_VanillaPopulation.IsChecked = False
+        End If
+        If cbb_MapVersion.Text = "1.18" Or cbb_MapVersion.Text = "1.19" Then
+            cbb_LowerBuildLimit.SelectedItem = "-64"
+            cbb_LowerBuildLimit.Text = "-64"
+            cbb_LowerBuildLimit.IsEnabled = True
+            If cbb_VerticalScale.Text = "5" Or cbb_VerticalScale.Text = "10" Or cbb_VerticalScale.Text = "15" Or cbb_VerticalScale.Text = "20" Or cbb_VerticalScale.Text = "25" Or cbb_VerticalScale.Text = "30" Then
+                cbb_UpperBuildLimit.Text = "2032"
+                cbb_UpperBuildLimit.SelectedItem = "2032"
+            Else
+                cbb_UpperBuildLimit.Text = "320"
+                cbb_UpperBuildLimit.SelectedItem = "320"
+            End If
+            cbb_UpperBuildLimit.IsEnabled = True
+        Else
+            cbb_LowerBuildLimit.IsEnabled = False
+            cbb_LowerBuildLimit.SelectedItem = "0"
+            cbb_LowerBuildLimit.Text = "0"
+            cbb_UpperBuildLimit.IsEnabled = False
+            cbb_UpperBuildLimit.SelectedItem = "256"
+            cbb_UpperBuildLimit.Text = "256"
         End If
     End Sub
 

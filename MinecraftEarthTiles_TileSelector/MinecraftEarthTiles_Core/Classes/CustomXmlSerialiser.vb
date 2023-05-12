@@ -66,8 +66,8 @@ Public Class CustomXmlSerialiser
             MyWorldSettings.BlocksPerTile = 512
         End If
 
-        If MyWorldSettings.VerticalScale = "5" Or MyWorldSettings.VerticalScale = "10" Or MyWorldSettings.VerticalScale = "25" Or MyWorldSettings.VerticalScale = "35" Or MyWorldSettings.VerticalScale = "50" Or MyWorldSettings.VerticalScale = "75" Or MyWorldSettings.VerticalScale = "100" Or MyWorldSettings.VerticalScale = "200" Or MyWorldSettings.VerticalScale = "300" Then
-            If Not MyWorldSettings.TilesPerMap = "1" And (MyWorldSettings.VerticalScale = "5" Or MyWorldSettings.VerticalScale = "10" Or MyWorldSettings.VerticalScale = "25") Then
+        If MyWorldSettings.VerticalScale = "5" Or MyWorldSettings.VerticalScale = "10" Or MyWorldSettings.VerticalScale = "15" Or MyWorldSettings.VerticalScale = "20" Or MyWorldSettings.VerticalScale = "25" Or MyWorldSettings.VerticalScale = "30" Or MyWorldSettings.VerticalScale = "35" Or MyWorldSettings.VerticalScale = "50" Or MyWorldSettings.VerticalScale = "75" Or MyWorldSettings.VerticalScale = "100" Or MyWorldSettings.VerticalScale = "200" Or MyWorldSettings.VerticalScale = "300" Or MyWorldSettings.VerticalScale = "500" Or MyWorldSettings.VerticalScale = "1000" Then
+            If MyWorldSettings.TilesPerMap <> "1" And (MyWorldSettings.VerticalScale = "5" Or MyWorldSettings.VerticalScale = "15" Or MyWorldSettings.VerticalScale = "20" Or MyWorldSettings.VerticalScale = "25" Or MyWorldSettings.VerticalScale = "30") Then
                 MyWorldSettings.VerticalScale = "35"
             End If
         Else
@@ -90,10 +90,17 @@ Public Class CustomXmlSerialiser
             MyWorldSettings.vanillaPopulation = False
         End If
 
+        If Not MyWorldSettings.lowerBuildLimit = "0" And Not MyWorldSettings.lowerBuildLimit = "-64" And Not MyWorldSettings.lowerBuildLimit = "-128" And Not MyWorldSettings.lowerBuildLimit = "-256" And Not MyWorldSettings.lowerBuildLimit = "-512" And Not MyWorldSettings.lowerBuildLimit = "-1024" And Not MyWorldSettings.lowerBuildLimit = "-2032" Then
+            MyWorldSettings.lowerBuildLimit = "-64"
+        End If
+
+        If Not MyWorldSettings.upperBuildLimit = "256" And Not MyWorldSettings.upperBuildLimit = "320" And Not MyWorldSettings.upperBuildLimit = "512" And Not MyWorldSettings.upperBuildLimit = "1024" And Not MyWorldSettings.upperBuildLimit = "1536" And Not MyWorldSettings.upperBuildLimit = "2032" Then
+            MyWorldSettings.upperBuildLimit = "320"
+        End If
+
         If Not MyWorldSettings.borders = "2000bc" And Not MyWorldSettings.borders = "1000bc" And Not MyWorldSettings.borders = "500bc" And Not MyWorldSettings.borders = "323bc" And Not MyWorldSettings.borders = "200bc" And Not MyWorldSettings.borders = "1bc" And Not MyWorldSettings.borders = "400" And Not MyWorldSettings.borders = "600" And Not MyWorldSettings.borders = "800" And Not MyWorldSettings.borders = "1000" And Not MyWorldSettings.borders = "1279" And Not MyWorldSettings.borders = "1482" And Not MyWorldSettings.borders = "1530" And Not MyWorldSettings.borders = "1650" And Not MyWorldSettings.borders = "1715" And Not MyWorldSettings.borders = "1783" And Not MyWorldSettings.borders = "1815" And Not MyWorldSettings.borders = "1880" And Not MyWorldSettings.borders = "1914" And Not MyWorldSettings.borders = "1920" And Not MyWorldSettings.borders = "1938" And Not MyWorldSettings.borders = "1945" And Not MyWorldSettings.borders = "1994" And Not MyWorldSettings.borders = "Current" Then
             MyWorldSettings.borders = "Current"
         End If
-
 
         If Not MyWorldSettings.TerrainSource = "Offline Terrain (high res)" And Not MyWorldSettings.TerrainSource = "Offline Terrain (low res)" And Not MyWorldSettings.TerrainSource = "Arcgis" And Not MyWorldSettings.TerrainSource = "Google" And Not MyWorldSettings.TerrainSource = "Bing" Then
             MyWorldSettings.TerrainSource = "Arcgis"

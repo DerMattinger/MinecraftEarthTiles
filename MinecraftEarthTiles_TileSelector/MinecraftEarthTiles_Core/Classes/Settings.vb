@@ -36,6 +36,8 @@ Public Class Settings
     Public crops As Boolean
     Public MapVersion As String
     Public mapOffset As String
+    Public lowerBuildLimit As String
+    Public upperBuildLimit As String
     Public vanillaPopulation As Boolean
     Public mod_BOP As Boolean
     Public mod_BYG As Boolean
@@ -173,6 +175,8 @@ Public Class Settings
         crops = True
         MapVersion = "1.19"
         mapOffset = "0"
+        lowerBuildLimit = "-64"
+        upperBuildLimit = "320"
         vanillaPopulation = False
         mod_BOP = False
         mod_BYG = False

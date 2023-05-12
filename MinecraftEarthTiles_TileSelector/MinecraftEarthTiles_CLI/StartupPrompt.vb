@@ -26,6 +26,7 @@ Module StartupPrompt
             Console.WriteLine("")
             Console.WriteLine("Press any key to continue...")
             Console.ReadKey()
+            End
         Else
             For i As Integer = 0 To args.Length - 1
                 Select Case args(i)
@@ -41,7 +42,7 @@ Module StartupPrompt
                                 ShowError($"File ""{args(i + 1)}"" not found")
                             End If
                         Else
-                            ShowError("Missing argument")
+                            ShowError("Missing argument for -world_settings")
                         End If
                     Case "-tiles_settings"
                         If i + 1 <= args.Length Then
@@ -55,7 +56,7 @@ Module StartupPrompt
                                 ShowError($"File ""{args(i + 1)}"" not found")
                             End If
                         Else
-                            ShowError("Missing argument")
+                            ShowError("Missing argument for -tiles_settings")
                         End If
                     Case "-selection"
                         If i + 1 <= args.Length Then
@@ -69,7 +70,7 @@ Module StartupPrompt
                                 ShowError($"File ""{args(i + 1)}"" not found")
                             End If
                         Else
-                            ShowError("Missing argument")
+                            ShowError("Missing argument for -selection")
                         End If
                     Case "-generation"
                         If i + 1 <= args.Length Then
@@ -90,7 +91,7 @@ Module StartupPrompt
                                     MyGenerationType = "cleanup"
                             End Select
                         Else
-                            ShowError("Missing argument")
+                            ShowError("Missing argument for -generation")
                         End If
                 End Select
             Next
@@ -98,6 +99,9 @@ Module StartupPrompt
         End If
         Check()
         Console.WriteLine("Starting generation")
+        ClassWorker.SaveWorldSettingsToFile(ClassWorker.GetWorldSettings, ClassWorker.GetTilesSettings.PathToScriptsFolder & "/settings.xml")
+        ClassWorker.SaveTilesSettingsToFile(ClassWorker.GetTilesSettings, ClassWorker.GetTilesSettings.PathToScriptsFolder & "/tiles_settings.xml")
+        ClassWorker.SaveSelectionToFile(ClassWorker.GetSelection, ClassWorker.GetTilesSettings.PathToScriptsFolder & "/selection.xml")
         MyGenerationWorker = New GenerationWorker
         AddHandler MyGenerationWorker.PropertyChanged, New PropertyChangedEventHandler(AddressOf PropertyChanged)
         MyGenerationWorker.CreateGeneration()

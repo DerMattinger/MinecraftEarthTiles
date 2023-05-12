@@ -205,16 +205,21 @@
                                         <ComboBoxItem Content="90"/>
                                     </ComboBox>
                                     <Label x:Name="lbl_VerticalScale" Content="Vertical Scale: 1 :"/>
-                                    <ComboBox x:Name="cbb_VerticalScale">
+                                    <ComboBox x:Name="cbb_VerticalScale" DropDownClosed="Calculate_Build_Limit">
                                         <ComboBoxItem Content="5"/>
                                         <ComboBoxItem Content="10"/>
+                                        <ComboBoxItem Content="15"/>
+                                        <ComboBoxItem Content="20"/>
                                         <ComboBoxItem Content="25"/>
+                                        <ComboBoxItem Content="30"/>
                                         <ComboBoxItem IsSelected="True" Content="35"/>
                                         <ComboBoxItem Content="50"/>
                                         <ComboBoxItem Content="75"/>
                                         <ComboBoxItem Content="100"/>
                                         <ComboBoxItem Content="200"/>
                                         <ComboBoxItem Content="300"/>
+                                        <ComboBoxItem Content="500"/>
+                                        <ComboBoxItem Content="1000"/>
                                     </ComboBox>
                                 </StackPanel>
                             </GroupBox>
@@ -236,6 +241,26 @@
                                         <ComboBoxItem IsSelected="True" Content="0"/>
                                         <ComboBoxItem Content="1"/>
                                     </ComboBox>
+                                    <Label x:Name="lbl_LowerBuildLimit" Content="Lower Build Limit *"/>
+                                    <ComboBox x:Name="cbb_LowerBuildLimit">
+                                        <ComboBoxItem Content="0"/>
+                                        <ComboBoxItem IsSelected="True" Content="-64"/>
+                                        <ComboBoxItem Content="-128"/>
+                                        <ComboBoxItem Content="-256"/>
+                                        <ComboBoxItem Content="-512"/>
+                                        <ComboBoxItem Content="-1024"/>
+                                        <ComboBoxItem Content="-2032"/>
+                                    </ComboBox>
+                                    <Label x:Name="lbl_UpperBuildLimit" Content="Upper Build Limit *"/>
+                                    <ComboBox x:Name="cbb_UpperBuildLimit">
+                                        <ComboBoxItem Content="256"/>
+                                        <ComboBoxItem IsSelected="True" Content="320"/>
+                                        <ComboBoxItem Content="512"/>
+                                        <ComboBoxItem Content="1024"/>
+                                        <ComboBoxItem Content="1536"/>
+                                        <ComboBoxItem Content="2032"/>
+                                    </ComboBox>
+                                    <TextBlock TextWrapping="Wrap" Foreground="Red" x:Name="lbl_BuildLimitInfo" Text="* Only works with Minecraft 1.18 and 1.19'"/>
                                     <CheckBox x:Name="chb_VanillaPopulation" Content="Populate Map *" IsChecked="false"/>
                                     <TextBlock TextWrapping="Wrap" Foreground="Red" x:Name="lbl_VanillaPopulation_Info" Text="* Only works with Minecraft 1.12, 1.18 and 1.19'"/>
                                 </StackPanel>

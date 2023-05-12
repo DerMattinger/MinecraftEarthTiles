@@ -7,7 +7,8 @@
         mc:Ignorable="d"
         Title="Minecraft Earth Tiles Generation" Height="715" Width="845" MinHeight="200" MinWidth="845" Loaded="Window_Loaded" Closing="window_closing"
         Style="{StaticResource MaterialDesignWindow}"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <DockPanel>
         <Menu DockPanel.Dock="Top" Background="{DynamicResource MaterialDesignToolBarBackground}">
             <MenuItem>
@@ -97,7 +98,7 @@
                 <Label x:Name="lbl_Estimated_Duration" Content="Time left: 0 h and 0 min"/>
             </StackPanel>
         </DockPanel>
-        <DataGrid x:Name="dgr_Tiles" CanUserAddRows="False" AutoGenerateColumns="False" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Hidden" RowHeaderWidth="0">
+        <DataGrid x:Name="dgr_Tiles" CanUserAddRows="False" AutoGenerateColumns="False" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" RowHeaderWidth="0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="Tile" Width="100">
                     <DataGridTemplateColumn.CellTemplate>
@@ -106,21 +107,21 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Progress" Width="180">
+                <DataGridTemplateColumn Header="Progress" Width="200">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <ProgressBar Minimum="0" Maximum="100" Value="{Binding Path=GenerationProgress, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" />
+                            <ProgressBar Foreground="Green" Minimum="0" Maximum="100" Value="{Binding Path=GenerationProgress, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Info" Width="230">
+                <DataGridTemplateColumn Header="Info" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBox Text="{Binding Path=Comment, Mode=OneWay, NotifyOnSourceUpdated=True, UpdateSourceTrigger=PropertyChanged}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Open">
+                <DataGridTemplateColumn Header="Open"  Width="310">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">

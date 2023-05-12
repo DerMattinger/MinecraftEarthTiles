@@ -211,7 +211,8 @@ Public Class StartupWindow
             And Not ClassWorker.GetTilesSettings.PathToScriptsFolder = "" _
             And Not ClassWorker.GetTilesSettings.PathToWorldPainterFolder = "" _
             And (
-            (Not ClassWorker.GetWorldSettings.PathToPBF = "" And ClassWorker.GetWorldSettings.geofabrik = True And ClassWorker.GetTilesSettings.reUsePbfFile = False) _
+            (ClassWorker.GetWorldSettings.PathToPBF <> "" And ClassWorker.GetWorldSettings.geofabrik = True) _
+            Or (ClassWorker.GetWorldSettings.PathToPBF = "" And ClassWorker.GetWorldSettings.geofabrik = False) _
             Or (ClassWorker.GetTilesSettings.reUsePbfFile = True) _
             Or (ClassWorker.GetWorldSettings.reUseOsmFiles = True) _
             Or (ClassWorker.GetWorldSettings.reUseImageFiles = True)
