@@ -7,6 +7,7 @@
     Public bop_biome As String
     Public byg_biome As String
     Public terralith_biome As String
+    Public williamWythers_biome As String
 
     Sub New(name As String, symbol As Int16)
         Me.name = name

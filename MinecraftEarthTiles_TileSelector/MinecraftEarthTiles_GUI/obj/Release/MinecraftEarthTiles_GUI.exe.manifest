@@ -4,7 +4,7 @@
   <description asmv2:iconFile="MyResources\MinecraftEarthTiles.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <application />
   <entryPoint>
-    <assemblyIdentity name="MinecraftEarthTiles_GUI" version="1.4.3.0" language="neutral" processorArchitecture="amd64" />
+    <assemblyIdentity name="MinecraftEarthTiles_GUI" version="1.5.6.0" language="neutral" processorArchitecture="amd64" />
     <commandLine file="MinecraftEarthTiles_GUI.exe" parameters="" />
   </entryPoint>
   <trustInfo>
@@ -91,26 +91,38 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MinecraftEarthTiles_Core.dll" size="241664">
-      <assemblyIdentity name="MinecraftEarthTiles_Core" version="1.4.3.0" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MinecraftEarthTiles_CLI.exe" size="289280">
+      <assemblyIdentity name="MinecraftEarthTiles_CLI" version="1.5.6.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>q9fEYe6FduQjoJhkt1NA6rlyZH9mTUs7/Gb+JKWxHX8=</dsig:DigestValue>
+        <dsig:DigestValue>N3CZiS3FDXSg6nhmu/8DvLTp7ZfzwyiK1R55GJf7wjM=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MinecraftEarthTiles_GUI.exe" size="18525696">
-      <assemblyIdentity name="MinecraftEarthTiles_GUI" version="1.4.3.0" language="neutral" processorArchitecture="amd64" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MinecraftEarthTiles_Core.dll" size="306176">
+      <assemblyIdentity name="MinecraftEarthTiles_Core" version="1.5.6.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>j15i4+U/ttzb0Z6u+pyVcLCtDOPlo9OCur6LKdSjRsw=</dsig:DigestValue>
+        <dsig:DigestValue>Ddh1N3JFf9cy9vnVhPn54ruYXtezl47fyAw71iOHLP8=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MinecraftEarthTiles_GUI.exe" size="18542592">
+      <assemblyIdentity name="MinecraftEarthTiles_GUI" version="1.5.6.0" language="neutral" processorArchitecture="amd64" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>KssgbefcdPUP2ECmOaUwK5kIH5VWXQkzIVAqPYAfkk0=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

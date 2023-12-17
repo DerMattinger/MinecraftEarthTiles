@@ -94,5 +94,110 @@ Namespace My.Resources
                 Return ResourceManager.GetString("basescript", resourceCulture)
             End Get
         End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die 	latDir = tile[0:1]
+        '''	latNumber = float(tile[1:3])
+        '''	longDir = tile[3:4]
+        '''	longNumber = float(tile[4:7])
+        '''
+        '''	if latDir == &quot;N&quot;:
+        '''		yMax = latNumber + 1
+        '''	elif latDir == &quot;S&quot;:
+        '''		yMax = (latNumber - 1) * -1
+        '''	else:
+        '''		yMax = 0
+        '''
+        '''	yMin = yMax - ( 1 * TilesPerMap )
+        '''
+        '''	if longDir == &quot;E&quot;:
+        '''		xMin = longNumber
+        '''	elif longDir == &quot;W&quot;:
+        '''		xMin = longNumber * -1
+        '''	else:
+        '''		xMax = 0
+        '''
+        '''	xMax = xMin + ( 1 * TilesPerMap )
+        '''
+        '''	#create missing folders
+        '''	folder = path + &apos;image_exports/&apos;
+        '''	if not os.path.exists(folder):
+        '''		 [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
+        '''</summary>
+        Friend ReadOnly Property basescript_bathymetry() As String
+            Get
+                Return ResourceManager.GetString("basescript_bathymetry", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die 	latDir = tile[0:1]
+        '''	latNumber = float(tile[1:3])
+        '''	longDir = tile[3:4]
+        '''	longNumber = float(tile[4:7])
+        '''
+        '''	if latDir == &quot;N&quot;:
+        '''		yMax = latNumber + 1
+        '''	elif latDir == &quot;S&quot;:
+        '''		yMax = (latNumber - 1) * -1
+        '''	else:
+        '''		yMax = 0
+        '''
+        '''	yMin = yMax - ( 1 * TilesPerMap )
+        '''
+        '''	if longDir == &quot;E&quot;:
+        '''		xMin = longNumber
+        '''	elif longDir == &quot;W&quot;:
+        '''		xMin = longNumber * -1
+        '''	else:
+        '''		xMax = 0
+        '''
+        '''	xMax = xMin + ( 1 * TilesPerMap )
+        '''
+        '''	#create missing folders
+        '''	folder = path + &apos;image_exports/&apos;
+        '''	if not os.path.exists(folder):
+        '''		 [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
+        '''</summary>
+        Friend ReadOnly Property basescript_heightmap() As String
+            Get
+                Return ResourceManager.GetString("basescript_heightmap", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Sucht eine lokalisierte Zeichenfolge, die 	latDir = tile[0:1]
+        '''	latNumber = float(tile[1:3])
+        '''	longDir = tile[3:4]
+        '''	longNumber = float(tile[4:7])
+        '''
+        '''	if latDir == &quot;N&quot;:
+        '''		yMax = latNumber + 1
+        '''	elif latDir == &quot;S&quot;:
+        '''		yMax = (latNumber - 1) * -1
+        '''	else:
+        '''		yMax = 0
+        '''
+        '''	yMin = yMax - ( 1 * TilesPerMap )
+        '''
+        '''	if longDir == &quot;E&quot;:
+        '''		xMin = longNumber
+        '''	elif longDir == &quot;W&quot;:
+        '''		xMin = longNumber * -1
+        '''	else:
+        '''		xMax = 0
+        '''
+        '''	xMax = xMin + ( 1 * TilesPerMap )
+        '''
+        '''	#create missing folders
+        '''	folder = path + &apos;image_exports/&apos;
+        '''	if not os.path.exists(folder):
+        '''		 [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
+        '''</summary>
+        Friend ReadOnly Property basescript_terrain() As String
+            Get
+                Return ResourceManager.GetString("basescript_terrain", resourceCulture)
+            End Get
+        End Property
     End Module
 End Namespace

@@ -19,3 +19,5 @@ C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\EcoRegionParser\EcoRegionPar
 C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\EcoRegionParser\EcoRegionParser\obj\Debug\ecoregions.exe
 C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\EcoRegionParser\EcoRegionParser\obj\Debug\ecoregions.xml
 C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\EcoRegionParser\EcoRegionParser\obj\Debug\ecoregions.pdb
+C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\EcoRegionParser\EcoRegionParser\obj\Debug\ecoregions.vbproj.AssemblyReference.cache
+C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\EcoRegionParser\EcoRegionParser\obj\Debug\ecoregions.vbproj.SuggestedBindingRedirects.cache

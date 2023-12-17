@@ -1,0 +1,92 @@
+﻿	latDir = tile[0:1]
+	latNumber = float(tile[1:3])
+	longDir = tile[3:4]
+	longNumber = float(tile[4:7])
+
+	if latDir == "N":
+		yMax = latNumber + 1
+	elif latDir == "S":
+		yMax = (latNumber - 1) * -1
+	else:
+		yMax = 0
+
+	yMin = yMax - ( 1 * TilesPerMap )
+
+	if longDir == "E":
+		xMin = longNumber
+	elif longDir == "W":
+		xMin = longNumber * -1
+	else:
+		xMax = 0
+
+	xMax = xMin + ( 1 * TilesPerMap )
+
+	#create missing folders
+	folder = path + 'image_exports/'
+	if not os.path.exists(folder):
+		os.makedirs(folder)
+	folder = path + 'image_exports/' + tile + '/'
+	if not os.path.exists(folder):
+		os.makedirs(folder)
+
+	##################################################################################
+
+	alllayers = []
+	for alllayer in QgsProject.instance().mapLayers().values():
+		alllayers.append(alllayer)
+
+	root = QgsProject.instance().layerTreeRoot()
+	for alllayer in alllayers:
+		node = root.findLayer(alllayer.id())
+		node.setItemVisibilityChecked(Qt.Unchecked)
+
+	layers = []
+	for layer in QgsProject.instance().mapLayers().values():
+		if layer.name().startswith("land_polygons"):
+			layers.append(layer)
+		elif layer.name().startswith("bathymetry_source"):
+			layers.append(layer)
+		elif layer.name().startswith("background_bathymetry"):
+			layers.append(layer)
+		
+	for layer in layers:
+		node = root.findLayer(layer.id())
+		node.setItemVisibilityChecked(Qt.Checked)
+
+	project = QgsProject().instance()
+	layout = QgsPrintLayout(project)
+	layout.initializeDefaults()
+
+	#select all pages and change the first one to the right dimension
+	pages = layout.pageCollection()
+	pages.page(0).setPageSize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+
+	#create a map inside the layout
+	map = QgsLayoutItemMap(layout)
+	map.setRect(0, 0, scale, scale)
+	map.setExtent(QgsRectangle(xMin, yMin, xMax, yMax))
+	map.attemptMove(QgsLayoutPoint(0,0,QgsUnitTypes.LayoutPixels))
+	map.attemptResize(QgsLayoutSize(scale,scale,QgsUnitTypes.LayoutPixels))
+	layout.addLayoutItem(map)
+
+	#create exporter with settings
+	exporter = QgsLayoutExporter(layout)
+	settings = QgsLayoutExporter.ImageExportSettings()
+	settings.imageSize = (QSize(scale,scale))
+
+	#disable Antialiasing
+	context = QgsLayoutRenderContext(layout)
+	context.setFlag(context.FlagAntialiasing, False)
+	settings.flags = context.flags()
+
+	#create missing folders
+	folder = path + 'image_exports/'
+	if not os.path.exists(folder):
+		os.makedirs(folder)
+	folder = path + 'image_exports/' + tile + '/'
+	if not os.path.exists(folder):
+		os.makedirs(folder)
+
+	#create image
+	ret = exporter.exportToImage(path + 'image_exports/' + tile + '/' + tile + '_bathymetry.png', settings)
+	assert ret==0

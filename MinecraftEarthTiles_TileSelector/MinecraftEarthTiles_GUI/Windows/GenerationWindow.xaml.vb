@@ -23,6 +23,7 @@ Public Class GenerationWindow
     Private Sub Window_Loaded(sender As Object, e As RoutedEventArgs)
         InitializeComponent()
         MyGenerationWorker = New GenerationWorker
+        MyGenerationWorker.keepRunning = False
         AddHandler MyGenerationWorker.PropertyChanged, New PropertyChangedEventHandler(AddressOf PropertyChanged)
         MyGenerationWorker.CreateGeneration()
         dgr_Tiles.ItemsSource = MyGenerationWorker.MyGeneration
@@ -84,6 +85,19 @@ Public Class GenerationWindow
 
     Private Sub PropertyChanged(ByVal sender As Object, ByVal e As PropertyChangedEventArgs)
         Select Case e.PropertyName
+            Case "LatestTile"
+                Dispatcher.Invoke(Sub()
+                                      If ClassWorker.GetTilesSettings.autoScroll = True Then
+                                          Dim items As List(Of Generation) = MyGenerationWorker.MyGeneration
+                                          For Each item In items
+                                              If item.TileName = MyGenerationWorker.LatestTile Then
+                                                  dgr_Tiles.SelectedItem = item
+                                                  dgr_Tiles.UpdateLayout()
+                                                  dgr_Tiles.ScrollIntoView(dgr_Tiles.SelectedItem)
+                                              End If
+                                          Next
+                                      End If
+                                  End Sub)
             Case "LatestMessage"
                 Dispatcher.Invoke(Sub()
                                       CalculateDuration()
@@ -153,7 +167,8 @@ Public Class GenerationWindow
                 MyGenerationWorker.TartoolBatchExport(Tile)
                 MyGenerationWorker.GdalBatchExport(Tile)
                 MyGenerationWorker.ImageMagickBatchExport(Tile)
-                MyGenerationWorker.WpScriptBatchExport(Tile)
+                MyGenerationWorker.WpScriptBatchExport(Tile, False)
+                MyGenerationWorker.WpScriptBatchExport(Tile, True)
                 MyGenerationWorker.MinutorRenderExort(Tile)
                 MyGenerationWorker.CleanupBatchExport(Tile)
             End If
@@ -284,6 +299,8 @@ Public Class GenerationWindow
         Try
             MyGenerationWorker.cts.Cancel()
         Catch ex As Exception
+            MyGenerationWorker.WriteLog(ex.Message)
+            MsgBox(ex.Message)
         End Try
         For Each SingleProcess In MyGenerationWorker.processList
             SingleProcess.Kill()
@@ -293,8 +310,70 @@ Public Class GenerationWindow
                 MyGenerationWorker.neuerthread.Abort()
             End If
         Catch ex As Exception
+            MyGenerationWorker.WriteLog(ex.Message)
+            MsgBox(ex.Message)
         End Try
+
+        If ClassWorker.GetTilesSettings.processKilling Then
+            For Each singleProcess In Process.GetProcesses()
+                If singleProcess.ProcessName = "wget" Or singleProcess.ProcessName = "osmfilter" Or singleProcess.ProcessName = "osmconvert" Or singleProcess.ProcessName = "qgis-bin" Or singleProcess.ProcessName = "magick" Or singleProcess.ProcessName = "wpscript" Then
+                    Try
+                        MyGenerationWorker.WriteLog($"{singleProcess.ProcessName}.exe killed")
+                        singleProcess.Kill()
+                    Catch ex As Exception
+                        MyGenerationWorker.WriteLog(ex.Message)
+                        MsgBox(ex.Message)
+                    End Try
+                End If
+            Next
+        End If
+
         Close()
+    End Sub
+
+    Private Sub FormClosing(ByVal sender As System.Object, ByVal e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
+        If MyGenerationWorker.keepRunning = True Then
+            Dim result As DialogResult = MessageBox.Show("There is a generation running. Do you really want to close this window and stop the generation?", "Close Generation", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+            If result = Forms.DialogResult.Yes Or result = Forms.DialogResult.Cancel Then
+                e.Cancel = False
+                MyGenerationWorker.WriteLog("Stop_Click")
+
+                MyGenerationWorker.keepRunning = False
+                Try
+                    MyGenerationWorker.cts.Cancel()
+                Catch ex As Exception
+                    MyGenerationWorker.WriteLog(ex.Message)
+                    MsgBox(ex.Message)
+                End Try
+                For Each SingleProcess In MyGenerationWorker.processList
+                    SingleProcess.Kill()
+                Next
+                Try
+                    If Not MyGenerationWorker.neuerthread Is Nothing Then
+                        MyGenerationWorker.neuerthread.Abort()
+                    End If
+                Catch ex As Exception
+                    MyGenerationWorker.WriteLog(ex.Message)
+                    MsgBox(ex.Message)
+                End Try
+
+                If ClassWorker.GetTilesSettings.processKilling Then
+                    For Each singleProcess In Process.GetProcesses()
+                        If singleProcess.ProcessName = "wget" Or singleProcess.ProcessName = "osmfilter" Or singleProcess.ProcessName = "osmconvert" Or singleProcess.ProcessName = "qgis-bin" Or singleProcess.ProcessName = "magick" Or singleProcess.ProcessName = "wpscript" Then
+                            Try
+                                MyGenerationWorker.WriteLog($"{singleProcess.ProcessName}.exe killed")
+                                singleProcess.Kill()
+                            Catch ex As Exception
+                                MyGenerationWorker.WriteLog(ex.Message)
+                                MsgBox(ex.Message)
+                            End Try
+                        End If
+                    Next
+                End If
+            Else
+                e.Cancel = True
+            End If
+        End If
     End Sub
 
     Private Sub ckb_pause_Checked(sender As Object, e As RoutedEventArgs) Handles ckb_pause.Checked, ckb_pause.Unchecked
@@ -323,12 +402,12 @@ Public Class GenerationWindow
     Private Sub Folder_OSM_Click(sender As Object, e As RoutedEventArgs)
         Dim TileName As String = CType(sender, Controls.Button).Tag.ToString
         If TileName = "Convert pbf" Or TileName = "Combining" Or TileName = "Cleanup" Then
-            If My.Computer.FileSystem.DirectoryExists(ClassWorker.GetTilesSettings.PathToScriptsFolder & "\osm\") Then
-                Process.Start(ClassWorker.GetTilesSettings.PathToScriptsFolder & "\osm\")
+            If My.Computer.FileSystem.DirectoryExists(ClassWorker.GetTilesSettings.PathToTempOSM & "\osm\") Then
+                Process.Start(ClassWorker.GetTilesSettings.PathToTempOSM & "\osm\")
             End If
         Else
-            If My.Computer.FileSystem.DirectoryExists(ClassWorker.GetTilesSettings.PathToScriptsFolder & "\osm\" & TileName & "\") Then
-                Process.Start(ClassWorker.GetTilesSettings.PathToScriptsFolder & "\osm\" & TileName & "\")
+            If My.Computer.FileSystem.DirectoryExists(ClassWorker.GetTilesSettings.PathToTempOSM & "\osm\" & TileName & "\") Then
+                Process.Start(ClassWorker.GetTilesSettings.PathToTempOSM & "\osm\" & TileName & "\")
             End If
         End If
     End Sub
@@ -358,5 +437,6 @@ Public Class GenerationWindow
             End If
         End If
     End Sub
+
 
 End Class

@@ -10,6 +10,16 @@ Module StartupPrompt
     Dim MyGenerationType As String = "full"
 
     Sub Main(args As String())
+        AddHandler AppDomain.CurrentDomain.ProcessExit, AddressOf OnClose
+        AddHandler Console.CancelKeyPress, AddressOf OnClose
+
+        Dim assemblyVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version
+        Dim coreType As Type = ClassWorker.GetTilesSettings.GetType
+        Dim coreVersion = System.Reflection.Assembly.GetAssembly(coreType).GetName.Version
+        Console.WriteLine($"CLI Version: v{assemblyVersion.Major}.{assemblyVersion.Minor}.{assemblyVersion.Build}, Core: v{coreVersion.Major}.{coreVersion.Minor}.{coreVersion.Build}")
+        Console.WriteLine("Copyright © DerMattinger 2020 - 2023")
+        Console.WriteLine("OSM Data: © OpenStreetMap Contributors: https://www.openstreetmap.org/copyright")
+
         If (args.Length = 0) Then
             Console.WriteLine("Missing arguments")
             Console.WriteLine("")
@@ -125,7 +135,8 @@ Module StartupPrompt
                         MyGenerationWorker.TartoolBatchExport(Tile)
                         MyGenerationWorker.GdalBatchExport(Tile)
                         MyGenerationWorker.ImageMagickBatchExport(Tile)
-                        MyGenerationWorker.WpScriptBatchExport(Tile)
+                        MyGenerationWorker.WpScriptBatchExport(Tile, False)
+                        MyGenerationWorker.WpScriptBatchExport(Tile, True)
                         MyGenerationWorker.MinutorRenderExort(Tile)
                         MyGenerationWorker.CleanupBatchExport(Tile)
                     End If
@@ -202,6 +213,42 @@ Module StartupPrompt
                     End If
                 End If
         End Select
+    End Sub
+
+    Sub OnClose(sender As Object, e As EventArgs)
+
+        MyGenerationWorker.WriteLog("Console Closing")
+
+        MyGenerationWorker.keepRunning = False
+        Try
+            MyGenerationWorker.cts.Cancel()
+        Catch ex As Exception
+            MyGenerationWorker.WriteLog(ex.Message)
+        End Try
+        For Each SingleProcess In MyGenerationWorker.processList
+            SingleProcess.Kill()
+        Next
+        Try
+            If Not MyGenerationWorker.neuerthread Is Nothing Then
+                MyGenerationWorker.neuerthread.Abort()
+            End If
+        Catch ex As Exception
+            MyGenerationWorker.WriteLog(ex.Message)
+        End Try
+
+        If ClassWorker.GetTilesSettings.processKilling Then
+            For Each singleProcess In Process.GetProcesses()
+                If singleProcess.ProcessName = "wget" Or singleProcess.ProcessName = "osmfilter" Or singleProcess.ProcessName = "osmconvert" Or singleProcess.ProcessName = "qgis-bin" Or singleProcess.ProcessName = "wpscript" Then
+                    Try
+                        MyGenerationWorker.WriteLog($"{singleProcess.ProcessName}.exe killed")
+                        singleProcess.Kill()
+                    Catch ex As Exception
+                        MyGenerationWorker.WriteLog(ex.Message)
+                    End Try
+                End If
+            Next
+        End If
+
     End Sub
 
 End Module

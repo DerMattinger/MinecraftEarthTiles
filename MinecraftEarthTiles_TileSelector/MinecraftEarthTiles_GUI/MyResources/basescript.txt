@@ -257,10 +257,10 @@
 		node = root.findLayer(alllayer.id())
 		node.setItemVisibilityChecked(Qt.Unchecked)
 
-	#save all layers starting with "water" into a list
+	#save all layers starting with "water" / "water_lakes" (for Major) into a list
 	layers = []
 	for layer in QgsProject.instance().mapLayers().values():
-		if layer.name().startswith("water"):
+		if layer.name().startswith(waterBodies):
 			layers.append(layer)
 		
 	for layer in layers:

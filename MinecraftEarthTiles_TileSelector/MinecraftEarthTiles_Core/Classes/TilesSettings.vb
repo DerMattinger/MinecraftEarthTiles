@@ -3,6 +3,11 @@
     Public PathToScriptsFolder As String
     Public PathToWorldPainterFolder As String
     Public PathToQGIS As String
+    Public PathToTempOSM As String
+    Public PathToQGISProject As String
+    Public PathToQGISProjectBathymetryAddon As String
+    Public PathToQGISProjectTerrainAddon As String
+    Public PathToQGISProjectHeightmapAddon As String
     Public PathToMagick As String
     Public PathToMinutor As String
     Public PathToExport As String
@@ -24,6 +29,9 @@
     Public alertAfterFinish As Boolean
     Public alertMail As String
     Public closeAfterFinish As Boolean
+    Public autoScroll As Boolean
+    Public processKilling As Boolean
+    Public warnOnOverpass As Boolean
 
     ''' <summary>
     ''' Standard values for settings
@@ -55,6 +63,9 @@
         alertAfterFinish = False
         alertMail = ""
         closeAfterFinish = False
+        autoScroll = True
+        processKilling = False
+        warnOnOverpass = False
     End Sub
 
 End Class

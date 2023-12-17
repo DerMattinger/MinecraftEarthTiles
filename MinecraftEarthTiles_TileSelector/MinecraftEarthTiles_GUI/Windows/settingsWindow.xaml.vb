@@ -7,6 +7,7 @@ Imports System.Runtime.InteropServices
 Imports System.Net.Mail
 Imports Microsoft.WindowsAPICodePack.Dialogs
 Imports MinecraftEarthTiles_Core
+Imports System.Net
 
 Public Class SettingsWindow
 
@@ -164,6 +165,81 @@ Public Class SettingsWindow
         Me.Focus()
     End Sub
 
+    Private Sub Btn_PathToOSMTemp_Click(sender As Object, e As RoutedEventArgs)
+        Dim MyFolderBrowserDialog As New CommonOpenFileDialog With {
+            .IsFolderPicker = True,
+            .InitialDirectory = My.Application.Info.DirectoryPath
+        }
+        If MyFolderBrowserDialog.ShowDialog() = CommonFileDialogResult.Ok Then
+            txb_PathToOSMTemp.Text = MyFolderBrowserDialog.FileName
+        End If
+        Me.Focus()
+    End Sub
+
+    Private Sub Btn_PathToQGISProject_Click(sender As Object, e As RoutedEventArgs)
+        Dim MyFolderBrowserDialog As New CommonOpenFileDialog With {
+            .IsFolderPicker = True,
+            .InitialDirectory = My.Application.Info.DirectoryPath
+        }
+        If MyFolderBrowserDialog.ShowDialog() = CommonFileDialogResult.Ok Then
+            If My.Computer.FileSystem.FileExists(MyFolderBrowserDialog.FileName & "\MinecraftEarthTiles.qgz") Then
+                txb_PathToQGISProject.Text = MyFolderBrowserDialog.FileName
+            Else
+                Dim MessageBox As New MessageBoxWindow("MinecraftEarthTiles.qgz not found. Maybe it is in another folder!")
+                MessageBox.ShowDialog()
+            End If
+        End If
+        Me.Focus()
+    End Sub
+
+    Private Sub Btn_PathToQGISProjectBathymetryAddon_Click(sender As Object, e As RoutedEventArgs)
+        Dim MyFolderBrowserDialog As New CommonOpenFileDialog With {
+            .IsFolderPicker = True,
+            .InitialDirectory = My.Application.Info.DirectoryPath
+        }
+        If MyFolderBrowserDialog.ShowDialog() = CommonFileDialogResult.Ok Then
+            If My.Computer.FileSystem.FileExists(MyFolderBrowserDialog.FileName & "\MinecraftEarthTiles_Bathymetry.qgz") Then
+                txb_PathToQGISProjectBathymetryAddon.Text = MyFolderBrowserDialog.FileName
+            Else
+                Dim MessageBox As New MessageBoxWindow("MinecraftEarthTiles_Bathymetry.qgz not found. Maybe it is in another folder!")
+                MessageBox.ShowDialog()
+            End If
+        End If
+        Me.Focus()
+    End Sub
+
+    Private Sub Btn_PathToQGISProjectTerrainAddon_Click(sender As Object, e As RoutedEventArgs)
+        Dim MyFolderBrowserDialog As New CommonOpenFileDialog With {
+            .IsFolderPicker = True,
+            .InitialDirectory = My.Application.Info.DirectoryPath
+        }
+        If MyFolderBrowserDialog.ShowDialog() = CommonFileDialogResult.Ok Then
+            If My.Computer.FileSystem.FileExists(MyFolderBrowserDialog.FileName & "\MinecraftEarthTiles_Terrain.qgz") Then
+                txb_PathToQGISProjectTerrainAddon.Text = MyFolderBrowserDialog.FileName
+            Else
+                Dim MessageBox As New MessageBoxWindow("MinecraftEarthTiles_Terrain.qgz not found. Maybe it is in another folder!")
+                MessageBox.ShowDialog()
+            End If
+        End If
+        Me.Focus()
+    End Sub
+
+    Private Sub Btn_PathToQGISProjectHeightmapAddon_Click(sender As Object, e As RoutedEventArgs)
+        Dim MyFolderBrowserDialog As New CommonOpenFileDialog With {
+            .IsFolderPicker = True,
+            .InitialDirectory = My.Application.Info.DirectoryPath
+        }
+        If MyFolderBrowserDialog.ShowDialog() = CommonFileDialogResult.Ok Then
+            If My.Computer.FileSystem.FileExists(MyFolderBrowserDialog.FileName & "\MinecraftEarthTiles_Heightmap.qgz") Then
+                txb_PathToQGISProjectHeightmapAddon.Text = MyFolderBrowserDialog.FileName
+            Else
+                Dim MessageBox As New MessageBoxWindow("MinecraftEarthTiles_Heightmap.qgz not found. Maybe it is in another folder!")
+                MessageBox.ShowDialog()
+            End If
+        End If
+        Me.Focus()
+    End Sub
+
     Private Sub Btn_PathToQGIS_Click(sender As Object, e As RoutedEventArgs)
         Dim MyFolderBrowserDialog As New CommonOpenFileDialog With {
             .InitialDirectory = "C:\Program Files\",
@@ -294,6 +370,11 @@ Public Class SettingsWindow
         If WorldSettings.PathToExport IsNot Nothing Then
             txb_PathToExport.Text = WorldSettings.PathToExport
         End If
+        txb_PathToOSMTemp.Text = TilesSettings.PathToTempOSM
+        txb_PathToQGISProject.Text = TilesSettings.PathToQGISProject
+        txb_PathToQGISProjectBathymetryAddon.Text = TilesSettings.PathToQGISProjectBathymetryAddon
+        txb_PathToQGISProjectTerrainAddon.Text = TilesSettings.PathToQGISProjectTerrainAddon
+        txb_PathToQGISProjectHeightmapAddon.Text = TilesSettings.PathToQGISProjectHeightmapAddon
         If Not WorldSettings.WorldName = "" Then
             txb_WorldName.Text = RemoveIllegalFileNameChars(WorldSettings.WorldName)
         Else
@@ -308,10 +389,6 @@ Public Class SettingsWindow
         If WorldSettings.VerticalScale = "5" Or WorldSettings.VerticalScale = "10" Or WorldSettings.VerticalScale = "15" Or WorldSettings.VerticalScale = "20" Or WorldSettings.VerticalScale = "25" Or WorldSettings.VerticalScale = "30" Or WorldSettings.VerticalScale = "35" Or WorldSettings.VerticalScale = "50" Or WorldSettings.VerticalScale = "75" Or WorldSettings.VerticalScale = "100" Or WorldSettings.VerticalScale = "200" Or WorldSettings.VerticalScale = "300" Or WorldSettings.VerticalScale = "500" Or WorldSettings.VerticalScale = "1000" Then
             cbb_VerticalScale.SelectedValue = WorldSettings.VerticalScale
             cbb_VerticalScale.Text = WorldSettings.VerticalScale
-            If WorldSettings.TilesPerMap <> "1" And (WorldSettings.VerticalScale = "5" Or WorldSettings.VerticalScale = "10" Or WorldSettings.VerticalScale = "15" Or WorldSettings.VerticalScale = "20" Or WorldSettings.VerticalScale = "25" Or WorldSettings.VerticalScale = "30") Then
-                cbb_VerticalScale.SelectedValue = "35"
-                cbb_VerticalScale.Text = "35"
-            End If
         End If
 
         If WorldSettings.Terrain = "Standard" Or WorldSettings.Terrain = "Custom" Then
@@ -324,12 +401,12 @@ Public Class SettingsWindow
             cbb_TilesPerMap.Text = WorldSettings.TilesPerMap
         End If
 
-        If WorldSettings.MapVersion = "1.12" Or WorldSettings.MapVersion = "1.16" Or WorldSettings.MapVersion = "1.17" Or WorldSettings.MapVersion = "1.18" Or WorldSettings.MapVersion = "1.19" Then
+        If WorldSettings.MapVersion = "1.12" Or WorldSettings.MapVersion = "1.16" Or WorldSettings.MapVersion = "1.17" Or WorldSettings.MapVersion = "1.18" Or WorldSettings.MapVersion = "1.19" Or WorldSettings.MapVersion = "1.20" Then
             cbb_MapVersion.SelectedValue = WorldSettings.MapVersion
             cbb_MapVersion.Text = WorldSettings.MapVersion
         End If
 
-        If WorldSettings.MapVersion = "1.12" Or WorldSettings.MapVersion = "1.18" Or WorldSettings.MapVersion = "1.19" Then
+        If WorldSettings.MapVersion = "1.12" Or WorldSettings.MapVersion = "1.18" Or WorldSettings.MapVersion = "1.19" Or WorldSettings.MapVersion = "1.20" Then
             chb_VanillaPopulation.IsEnabled = True
         Else
             chb_VanillaPopulation.IsEnabled = False
@@ -340,7 +417,8 @@ Public Class SettingsWindow
         cbb_UpperBuildLimit.Text = WorldSettings.upperBuildLimit
         cbb_UpperBuildLimit.SelectedItem = WorldSettings.upperBuildLimit
 
-        If Not cbb_MapVersion.Text = "1.18" And Not cbb_MapVersion.Text = "1.19" Then
+        If cbb_MapVersion.Text = "1.18" Or Not cbb_MapVersion.Text = "1.19" Or Not cbb_MapVersion.Text = "1.20" Then
+        Else
             cbb_LowerBuildLimit.IsEnabled = False
             cbb_LowerBuildLimit.SelectedItem = "0"
             cbb_LowerBuildLimit.Text = "0"
@@ -350,6 +428,7 @@ Public Class SettingsWindow
         End If
 
         chb_Borders.IsChecked = WorldSettings.bordersBoolean
+        chb_stateBorders.IsChecked = WorldSettings.stateBorders
 
         If WorldSettings.borders = "2000bc" Or WorldSettings.borders = "1000bc" Or WorldSettings.borders = "500bc" Or WorldSettings.borders = "323bc" Or WorldSettings.borders = "200bc" Or WorldSettings.borders = "1bc" Or WorldSettings.borders = "400" Or WorldSettings.borders = "600" Or WorldSettings.borders = "800" Or WorldSettings.borders = "1000" Or WorldSettings.borders = "1279" Or WorldSettings.borders = "1482" Or WorldSettings.borders = "1530" Or WorldSettings.borders = "1650" Or WorldSettings.borders = "1715" Or WorldSettings.borders = "1783" Or WorldSettings.borders = "1815" Or WorldSettings.borders = "1880" Or WorldSettings.borders = "1914" Or WorldSettings.borders = "1920" Or WorldSettings.borders = "1938" Or WorldSettings.borders = "1945" Or WorldSettings.borders = "1994" Or WorldSettings.borders = "Current" Then
             cbb_Borders.SelectedValue = WorldSettings.borders
@@ -360,9 +439,10 @@ Public Class SettingsWindow
 
         chb_geofabrik.IsChecked = WorldSettings.geofabrik
 
+        chb_OfflineHeightmap.IsChecked = WorldSettings.offlineHeightmap
         chb_Bathymetry.IsChecked = WorldSettings.bathymetry
 
-        If WorldSettings.TerrainSource = "Offline Terrain (high res)" Or WorldSettings.TerrainSource = "Offline Terrain (low res)" Or WorldSettings.TerrainSource = "Arcgis" Or WorldSettings.TerrainSource = "Google" Or WorldSettings.TerrainSource = "Bing" Then
+        If WorldSettings.TerrainSource = "High Quality Offline Terrain (Addon)" Or WorldSettings.TerrainSource = "Low Quality Offline Terrain" Or WorldSettings.TerrainSource = "Arcgis" Or WorldSettings.TerrainSource = "Google" Or WorldSettings.TerrainSource = "Bing" Then
             cbb_TerrainSource.SelectedValue = WorldSettings.TerrainSource
             cbb_TerrainSource.Text = WorldSettings.TerrainSource
         End If
@@ -421,7 +501,14 @@ Public Class SettingsWindow
             cbb_Rivers.Text = "Major"
         End If
 
-        If WorldSettings.MapVersion = "1.12" Or WorldSettings.MapVersion = "1.18" Or WorldSettings.MapVersion = "1.19" Then
+        If WorldSettings.waterBodies = "All" Or WorldSettings.waterBodies = "Major" Then
+            cbb_waterBodies.SelectedValue = WorldSettings.waterBodies
+            cbb_waterBodies.Text = WorldSettings.waterBodies
+        End If
+
+        chb_fullEarthGeneration.IsChecked = WorldSettings.generateFullEarth
+
+        If WorldSettings.MapVersion = "1.12" Or WorldSettings.MapVersion = "1.18" Or WorldSettings.MapVersion = "1.19" Or WorldSettings.MapVersion = "1.20" Then
             chb_VanillaPopulation.IsChecked = WorldSettings.vanillaPopulation
         Else
             chb_VanillaPopulation.IsChecked = False
@@ -496,6 +583,12 @@ Public Class SettingsWindow
             chb_CmdPause.IsChecked = WorldSettings.continueGeneration
         End If
 
+        chb_warnOnOverpass.IsChecked = TilesSettings.warnOnOverpass
+
+        chb_autoScroll.IsChecked = TilesSettings.autoScroll
+
+        chb_processKilling.IsChecked = TilesSettings.processKilling
+
         chb_closeAfterFinish.IsChecked = TilesSettings.closeAfterFinish
 
         txb_Proxy.Text = TilesSettings.Proxy
@@ -531,6 +624,8 @@ Public Class SettingsWindow
 
         chb_terralith.IsChecked = WorldSettings.mod_Terralith
 
+        chb_williamWythers.IsChecked = WorldSettings.mod_WilliamWythers
+
         chb_create.IsChecked = WorldSettings.mod_Create
 
         txb_custom_layers.Text = WorldSettings.custom_layers
@@ -562,11 +657,14 @@ Public Class SettingsWindow
         LocalWorldSettings.upperBuildLimit = cbb_UpperBuildLimit.Text
         LocalWorldSettings.TilesPerMap = cbb_TilesPerMap.Text
         LocalWorldSettings.Terrain = cbb_TerrainMapping.Text
+        LocalWorldSettings.generateFullEarth = CBool(chb_fullEarthGeneration.IsChecked)
         LocalWorldSettings.MapVersion = cbb_MapVersion.Text
         LocalWorldSettings.bordersBoolean = CBool(chb_Borders.IsChecked)
+        LocalWorldSettings.stateBorders = CBool(chb_stateBorders.IsChecked)
         LocalWorldSettings.borders = cbb_Borders.Text
         LocalWorldSettings.Heightmap_Error_Correction = CBool(chb_HeightmapErrorCorrection.IsChecked)
         LocalWorldSettings.geofabrik = CBool(chb_geofabrik.IsChecked)
+        LocalWorldSettings.offlineHeightmap = CBool(chb_OfflineHeightmap.IsChecked)
         LocalWorldSettings.bathymetry = CBool(chb_Bathymetry.IsChecked)
         LocalWorldSettings.TerrainSource = cbb_TerrainSource.Text
         LocalWorldSettings.biomeSource = cbb_BiomeSource.Text
@@ -589,12 +687,14 @@ Public Class SettingsWindow
         LocalWorldSettings.shrubs = CBool(chb_shrubs.IsChecked)
         LocalWorldSettings.crops = CBool(chb_crops.IsChecked)
         LocalWorldSettings.rivers = cbb_Rivers.Text
+        LocalWorldSettings.waterBodies = cbb_waterBodies.Text
         LocalWorldSettings.vanillaPopulation = CBool(chb_VanillaPopulation.IsChecked)
         LocalWorldSettings.mapOffset = cbb_MapOffset.Text
         LocalWorldSettings.OverpassURL = txb_OsmURL.Text
         LocalWorldSettings.mod_BOP = CBool(chb_bop.IsChecked)
         LocalWorldSettings.mod_BYG = CBool(chb_byg.IsChecked)
         LocalWorldSettings.mod_Terralith = CBool(chb_terralith.IsChecked)
+        LocalWorldSettings.mod_WilliamWythers = CBool(chb_williamWythers.IsChecked)
         LocalWorldSettings.mod_Create = CBool(chb_create.IsChecked)
         LocalWorldSettings.custom_layers = txb_custom_layers.Text
         LocalWorldSettings.terrainModifier = Convert.ToInt16(sld_TerrainModifier.Value)
@@ -612,6 +712,21 @@ Public Class SettingsWindow
         End If
         If Directory.Exists(txb_PathToQGIS.Text) Then
             LocalTilesSettings.PathToQGIS = txb_PathToQGIS.Text
+        End If
+        If Not txb_PathToOSMTemp.Text = "" AndAlso Directory.Exists(txb_PathToOSMTemp.Text) Then
+            LocalTilesSettings.PathToTempOSM = txb_PathToOSMTemp.Text
+        End If
+        If Not txb_PathToQGISProject.Text = "" AndAlso Directory.Exists(txb_PathToQGISProject.Text) Then
+            LocalTilesSettings.PathToQGISProject = txb_PathToQGISProject.Text
+        End If
+        If Not txb_PathToQGISProjectBathymetryAddon.Text = "" AndAlso Directory.Exists(txb_PathToQGISProjectBathymetryAddon.Text) Then
+            LocalTilesSettings.PathToQGISProjectBathymetryAddon = txb_PathToQGISProjectBathymetryAddon.Text
+        End If
+        If Not txb_PathToQGISProjectTerrainAddon.Text = "" AndAlso Directory.Exists(txb_PathToQGISProjectTerrainAddon.Text) Then
+            LocalTilesSettings.PathToQGISProjectTerrainAddon = txb_PathToQGISProjectTerrainAddon.Text
+        End If
+        If Not txb_PathToQGISProjectHeightmapAddon.Text = "" AndAlso Directory.Exists(txb_PathToQGISProjectHeightmapAddon.Text) Then
+            LocalTilesSettings.PathToQGISProjectHeightmapAddon = txb_PathToQGISProjectHeightmapAddon.Text
         End If
         If File.Exists(txb_PathToMagick.Text) Then
             LocalTilesSettings.PathToMagick = txb_PathToMagick.Text
@@ -636,6 +751,9 @@ Public Class SettingsWindow
         LocalTilesSettings.cmdVisibility = CBool(chb_CmdVisibility.IsChecked)
         LocalTilesSettings.cmdPause = CBool(chb_CmdPause.IsChecked)
         LocalTilesSettings.continueGeneration = CBool(chb_continue.IsChecked)
+        LocalTilesSettings.warnOnOverpass = CBool(chb_warnOnOverpass.IsChecked)
+        LocalTilesSettings.autoScroll = CBool(chb_autoScroll.IsChecked)
+        LocalTilesSettings.processKilling = CBool(chb_processKilling.IsChecked)
         LocalTilesSettings.closeAfterFinish = CBool(chb_closeAfterFinish.IsChecked)
         LocalTilesSettings.Proxy = txb_Proxy.Text
         If StartupWindow.MyVersion = "Full" Then
@@ -687,22 +805,10 @@ Public Class SettingsWindow
                 End If
             End If
         End If
-
-        If Not cbb_TilesPerMap.Text = "1" Then
-            For Each item As ComboBoxItem In cbb_VerticalScale.Items
-                If item.Content.ToString = "5" Or item.Content.ToString = "10" Or item.Content.ToString = "15" Or item.Content.ToString = "20" Or item.Content.ToString = "25" Or item.Content.ToString = "30" Then
-                    item.IsEnabled = False
-                End If
-            Next
-        Else
-            For Each item As ComboBoxItem In cbb_VerticalScale.Items
-                item.IsEnabled = True
-            Next
-        End If
     End Sub
 
     Private Sub Calculate_Build_Limit()
-        If cbb_MapVersion.Text = "1.18" Or cbb_MapVersion.Text = "1.19" Then
+        If cbb_MapVersion.Text = "1.18" Or cbb_MapVersion.Text = "1.19" Or cbb_MapVersion.Text = "1.20" Then
             If cbb_VerticalScale.Text = "5" Or cbb_VerticalScale.Text = "10" Or cbb_VerticalScale.Text = "15" Or cbb_VerticalScale.Text = "20" Or cbb_VerticalScale.Text = "25" Or cbb_VerticalScale.Text = "30" Then
                 cbb_UpperBuildLimit.Text = "2032"
                 cbb_UpperBuildLimit.SelectedItem = "2032"
@@ -723,13 +829,13 @@ Public Class SettingsWindow
     End Function
 
     Private Sub cbb_MapVersion_DropDownClosed(sender As Object, e As EventArgs) Handles cbb_MapVersion.DropDownClosed
-        If cbb_MapVersion.Text = "1.12" Or cbb_MapVersion.Text = "1.18" Or cbb_MapVersion.Text = "1.19" Then
+        If cbb_MapVersion.Text = "1.12" Or cbb_MapVersion.Text = "1.18" Or cbb_MapVersion.Text = "1.19" Or cbb_MapVersion.Text = "1.20" Then
             chb_VanillaPopulation.IsEnabled = True
         Else
             chb_VanillaPopulation.IsEnabled = False
             chb_VanillaPopulation.IsChecked = False
         End If
-        If cbb_MapVersion.Text = "1.18" Or cbb_MapVersion.Text = "1.19" Then
+        If cbb_MapVersion.Text = "1.18" Or cbb_MapVersion.Text = "1.19" Or cbb_MapVersion.Text = "1.20" Then
             cbb_LowerBuildLimit.SelectedItem = "-64"
             cbb_LowerBuildLimit.Text = "-64"
             cbb_LowerBuildLimit.IsEnabled = True
@@ -754,16 +860,59 @@ Public Class SettingsWindow
     Private Sub chb_bop_clicked()
         chb_byg.IsChecked = False
         chb_terralith.IsChecked = False
+        chb_williamWythers.IsChecked = False
     End Sub
 
     Private Sub chb_byg_clicked()
         chb_bop.IsChecked = False
         chb_terralith.IsChecked = False
+        chb_williamWythers.IsChecked = False
     End Sub
 
     Private Sub chb_terralith_clicked()
         chb_bop.IsChecked = False
         chb_byg.IsChecked = False
+        chb_williamWythers.IsChecked = False
+    End Sub
+
+    Private Sub chb_williamWythers_clicked()
+        chb_bop.IsChecked = False
+        chb_byg.IsChecked = False
+        chb_terralith.IsChecked = False
+    End Sub
+
+    Private Sub ArcGis_Test_Click()
+        Try
+            Dim request As HttpWebRequest = DirectCast(WebRequest.Create("https://server.arcgisonline.com/arcgis/rest/services"), HttpWebRequest)
+            Dim response As HttpWebResponse = DirectCast(request.GetResponse(), HttpWebResponse)
+            Dim statusCode As HttpStatusCode = response.StatusCode
+            If statusCode = 200 Then
+                MessageBox.Show("ArcGIS is working. You can use the ArcGIS ""Terrain Source"" without any problems.")
+            End If
+            response.Close()
+        Catch Ex As WebException
+            MessageBox.Show("ArcGIS isn't working. You should not use the ArcGIS ""Terrain Source"" to avoid problems with the generated map. " & Ex.Message)
+        End Try
+    End Sub
+
+    Private Sub mod_BOP_Click()
+        Process.Start("https://www.curseforge.com/minecraft/mc-mods/biomes-o-plenty")
+    End Sub
+
+    Private Sub mod_BYG_Click()
+        Process.Start("https://www.curseforge.com/minecraft/mc-mods/oh-the-biomes-youll-go")
+    End Sub
+
+    Private Sub mod_Terralith_Click()
+        Process.Start("https://www.curseforge.com/minecraft/mc-mods/terralith")
+    End Sub
+
+    Private Sub mod_WilliamWythers_Click()
+        Process.Start("https://www.curseforge.com/minecraft/mc-mods/expanded-ecosphere")
+    End Sub
+
+    Private Sub mod_Create_Click()
+        Process.Start("https://www.curseforge.com/minecraft/mc-mods/create")
     End Sub
 
 #End Region

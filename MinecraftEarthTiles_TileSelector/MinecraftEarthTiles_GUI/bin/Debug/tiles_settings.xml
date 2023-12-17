@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TilesSettings>
+  <version>1.4.6</version>
+  <PathToScriptsFolder>C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\bin\Debug</PathToScriptsFolder>
+  <PathToWorldPainterFolder />
+  <PathToQGIS />
+  <PathToMagick />
+  <PathToMinutor />
+  <PathToExport />
+  <Theme>Dark</Theme>
+  <Proxy />
+  <keepPbfFile>true</keepPbfFile>
+  <reUsePbfFile>false</reUsePbfFile>
+  <keepOsmFiles>true</keepOsmFiles>
+  <reUseOsmFiles>false</reUseOsmFiles>
+  <keepImageFiles>true</keepImageFiles>
+  <reUseImageFiles>false</reUseImageFiles>
+  <keepWorldPainterFiles>true</keepWorldPainterFiles>
+  <minutor>true</minutor>
+  <NumberOfCores>2</NumberOfCores>
+  <ParallelWorldPainterGenerations>true</ParallelWorldPainterGenerations>
+  <cmdVisibility>false</cmdVisibility>
+  <cmdPause>false</cmdPause>
+  <continueGeneration>false</continueGeneration>
+  <alertAfterFinish>false</alertAfterFinish>
+  <alertMail />
+  <closeAfterFinish>false</closeAfterFinish>
+  <autoScroll>true</autoScroll>
+  <processKilling>false</processKilling>
+  <warnOnOverpass>false</warnOnOverpass>
+</TilesSettings>

@@ -1,0 +1,67 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+MinecraftEarthTiles_Core
+</name>
+</assembly>
+<members>
+<member name="T:MinecraftEarthTiles_Core.My.Resources.Resources">
+<summary>
+  Eine stark typisierte Ressourcenklasse zum Suchen von lokalisierten Zeichenfolgen usw.
+</summary>
+</member>
+<member name="P:MinecraftEarthTiles_Core.My.Resources.Resources.ResourceManager">
+<summary>
+  Gibt die zwischengespeicherte ResourceManager-Instanz zurück, die von dieser Klasse verwendet wird.
+</summary>
+</member>
+<member name="P:MinecraftEarthTiles_Core.My.Resources.Resources.Culture">
+<summary>
+  Überschreibt die CurrentUICulture-Eigenschaft des aktuellen Threads für alle
+  Ressourcenzuordnungen, die diese stark typisierte Ressourcenklasse verwenden.
+</summary>
+</member>
+<member name="P:MinecraftEarthTiles_Core.My.Resources.Resources.basescript">
+<summary>
+  Sucht eine lokalisierte Zeichenfolge, die 	latDir = tile[0:1]
+	latNumber = float(tile[1:3])
+	longDir = tile[3:4]
+	longNumber = float(tile[4:7])
+
+	if latDir == &quot;N&quot;:
+		yMax = latNumber + 1
+	elif latDir == &quot;S&quot;:
+		yMax = (latNumber - 1) * -1
+	else:
+		yMax = 0
+
+	yMin = yMax - ( 1 * TilesPerMap )
+
+	if longDir == &quot;E&quot;:
+		xMin = longNumber
+	elif longDir == &quot;W&quot;:
+		xMin = longNumber * -1
+	else:
+		xMax = 0
+
+	xMax = xMin + ( 1 * TilesPerMap )
+
+	#create missing folders
+	folder = path + &apos;image_exports/&apos;
+	if not os.path.exists(folder):
+		 [Rest der Zeichenfolge wurde abgeschnitten]&quot;; ähnelt.
+</summary>
+</member>
+<member name="M:MinecraftEarthTiles_Core.Settings.#ctor">
+ <summary>
+ Standard values for settings
+ </summary>
+</member>
+<member name="M:MinecraftEarthTiles_Core.TilesSettings.#ctor">
+ <summary>
+ Standard values for settings
+ </summary>
+</member>
+</members>
+</doc>

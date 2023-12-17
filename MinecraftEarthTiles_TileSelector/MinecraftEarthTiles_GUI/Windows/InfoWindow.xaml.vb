@@ -18,7 +18,7 @@ Public Class InfoWindow
         ElseIf StartupWindow.MyVersion = "Demo" Then
             txb_version.Text = $"Demo Version, GUI: v{assemblyVersion.Major}.{assemblyVersion.Minor}.{assemblyVersion.Build}, Core: v{coreVersion.Major}.{coreVersion.Minor}.{coreVersion.Build}"
         End If
-        txb_copyright.Text = "Copyright © 2020 - 2023 by MattiBorchers"
+        txb_copyright.Text = "Copyright © DerMattinger 2020 - 2023"
         txb_osm.Text = "OSM Data: ©️ OpenStreetMap Contributors" & Environment.NewLine & "https://www.openstreetmap.org/copyright"
         ApplyTheme()
     End Sub

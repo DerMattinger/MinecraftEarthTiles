@@ -4,7 +4,7 @@
   <description asmv2:iconFile="MyResources\MinecraftEarthTiles.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
   <application />
   <entryPoint>
-    <assemblyIdentity name="MinecraftEarthTiles_GUI" version="1.4.3.0" language="neutral" processorArchitecture="amd64" />
+    <assemblyIdentity name="MinecraftEarthTiles_GUI" version="1.4.6.0" language="neutral" processorArchitecture="amd64" />
     <commandLine file="MinecraftEarthTiles_GUI.exe" parameters="" />
   </entryPoint>
   <trustInfo>
@@ -91,26 +91,26 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MinecraftEarthTiles_Core.dll" size="241664">
-      <assemblyIdentity name="MinecraftEarthTiles_Core" version="1.4.3.0" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MinecraftEarthTiles_Core.dll" size="272896">
+      <assemblyIdentity name="MinecraftEarthTiles_Core" version="1.4.6.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>q9fEYe6FduQjoJhkt1NA6rlyZH9mTUs7/Gb+JKWxHX8=</dsig:DigestValue>
+        <dsig:DigestValue>jkv3s6XYH8RLXvETfcvjI9zIHOnrZLtJMjQfFK527dc=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MinecraftEarthTiles_GUI.exe" size="18550272">
-      <assemblyIdentity name="MinecraftEarthTiles_GUI" version="1.4.3.0" language="neutral" processorArchitecture="amd64" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MinecraftEarthTiles_GUI.exe" size="18555904">
+      <assemblyIdentity name="MinecraftEarthTiles_GUI" version="1.4.6.0" language="neutral" processorArchitecture="amd64" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>KuEwzRobUMd8R1e+968HHoR7hWKfzAbArMrLhXR0vhI=</dsig:DigestValue>
+        <dsig:DigestValue>a9rvgLyyIvGXBopBv0xsVFQxCeuXGDD10KiJIV11y+o=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

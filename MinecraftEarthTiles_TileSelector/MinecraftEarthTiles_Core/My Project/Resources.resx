@@ -121,4 +121,13 @@
   <data name="basescript" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\MyResources\basescript.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="basescript_bathymetry" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\MyResources\basescript_bathymetry.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="basescript_heightmap" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\MyResources\basescript_heightmap.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="basescript_terrain" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\MyResources\basescript_terrain.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
 </root>

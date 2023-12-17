@@ -11,7 +11,9 @@ Public Class Settings
     Public Heightmap_Error_Correction As Boolean
     Public bordersBoolean As Boolean
     Public borders As String
+    Public stateBorders As Boolean
     Public geofabrik As Boolean
+    Public offlineHeightmap As Boolean
     Public bathymetry As Boolean
     Public TerrainSource As String
     Public biomeSource As String
@@ -30,10 +32,12 @@ Public Class Settings
     Public animalSpawner As Boolean
     Public riversBoolean As Boolean
     Public rivers As String
+    Public waterBodies As String
     Public streams As Boolean
     Public volcanos As Boolean
     Public shrubs As Boolean
     Public crops As Boolean
+    Public generateFullEarth As Boolean
     Public MapVersion As String
     Public mapOffset As String
     Public lowerBuildLimit As String
@@ -42,6 +46,7 @@ Public Class Settings
     Public mod_BOP As Boolean
     Public mod_BYG As Boolean
     Public mod_Terralith As Boolean
+    Public mod_WilliamWythers As Boolean
     Public mod_Create As Boolean
     Public custom_layers As String
     Public terrainModifier As Integer
@@ -149,6 +154,7 @@ Public Class Settings
         Terrain = "Standard"
         Heightmap_Error_Correction = True
         geofabrik = True
+        offlineHeightmap = False
         bathymetry = True
         TerrainSource = "Argcis"
         biomeSource = "Terrestrial Ecoregions (WWF)"
@@ -160,6 +166,7 @@ Public Class Settings
         netherite = True
         bordersBoolean = True
         borders = "Current"
+        stateBorders = False
         farms = True
         meadows = True
         quarrys = True
@@ -173,7 +180,8 @@ Public Class Settings
         volcanos = True
         shrubs = True
         crops = True
-        MapVersion = "1.19"
+        generateFullEarth = False
+        MapVersion = "1.20"
         mapOffset = "0"
         lowerBuildLimit = "-64"
         upperBuildLimit = "320"
@@ -182,6 +190,7 @@ Public Class Settings
         mod_BYG = False
         mod_Terralith = False
         mod_Create = False
+        mod_WilliamWythers = False
         custom_layers = ""
         terrainModifier = 0
         oreModifier = 8

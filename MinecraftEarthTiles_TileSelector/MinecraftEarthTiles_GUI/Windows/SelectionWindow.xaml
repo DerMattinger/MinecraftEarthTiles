@@ -109,6 +109,8 @@
                         <TextBlock>Clear Selection</TextBlock>
                     </StackPanel>
                 </Button>
+                <Grid Height="25px"/>
+                <TextBlock TextWrapping="Wrap" Margin="5">Click on one corner and then Shift+Click the opposite corner to select all Tiles between that area.</TextBlock>
             </StackPanel>
             <ScrollViewer Grid.Column="1" x:Name="ScrollViewer" PanningMode="Both" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" Style="{DynamicResource MaterialDesignScrollViewer}">
                 <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">

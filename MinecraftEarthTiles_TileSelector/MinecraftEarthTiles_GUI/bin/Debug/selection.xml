@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Selection>
+  <FullTileList>
+    <string>N39E000</string>
+  </FullTileList>
+  <TilesList>
+    <string>N39E000</string>
+  </TilesList>
+  <SpawnTile>N39E000</SpawnTile>
+  <VoidBarrier>0</VoidBarrier>
+  <VoidTiles>0</VoidTiles>
+</Selection>

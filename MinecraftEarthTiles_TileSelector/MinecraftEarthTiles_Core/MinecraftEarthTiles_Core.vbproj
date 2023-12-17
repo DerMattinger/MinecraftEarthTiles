@@ -114,5 +114,14 @@
   <ItemGroup>
     <Resource Include="MyResources\basescript.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="MyResources\basescript_terrain.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="MyResources\basescript_bathymetry.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="MyResources\basescript_heightmap.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

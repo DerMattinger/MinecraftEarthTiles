@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:MinecraftEarthTiles_GUI"
         x:Class="SettingsWindow"
         mc:Ignorable="d"
-        Title="Minecraft Earth Tiles Settings" Width="620" Height="500" MinWidth="620" MinHeight="400" Loaded="Window_Loaded"
+        Title="Minecraft Earth Tiles Settings" Width="620" Height="450" MinWidth="620" MinHeight="400" Loaded="Window_Loaded"
         Style="{StaticResource MaterialDesignWindow}"
         WindowStartupLocation="CenterScreen">
     <DockPanel>
@@ -131,6 +131,31 @@
                                         <Button DockPanel.Dock="Right" x:Name="btn_PathToPBF" Content="..." Click="Btn_PathToPBF_Click"/>
                                         <TextBox x:Name="txb_PathToPBF" IsReadOnly="True" />
                                     </DockPanel>
+                                    <Label x:Name="lbl_PathToOSMTemp" Content="Path for temporary osm files"/>
+                                    <DockPanel>
+                                        <Button DockPanel.Dock="Right" x:Name="btn_PathToOSMTemp" Content="..." Click="Btn_PathToOSMTemp_Click"/>
+                                        <TextBox x:Name="txb_PathToOSMTemp" IsReadOnly="True" />
+                                    </DockPanel>
+                                    <Label x:Name="lbl_PathToQGISProject" Content="Path where &quot;MinecraftEarthTiles.qgz&quot; is located"/>
+                                    <DockPanel>
+                                        <Button DockPanel.Dock="Right" x:Name="btn_PathToQGISProject" Content="..." Click="Btn_PathToQGISProject_Click"/>
+                                        <TextBox x:Name="txb_PathToQGISProject" IsReadOnly="True" />
+                                    </DockPanel>
+                                    <Label x:Name="lbl_PathToQGISProjectBathymetryAddon" Content="Path where &quot;MinecraftEarthTiles__Bathymetry.qgz&quot; is located"/>
+                                    <DockPanel>
+                                        <Button DockPanel.Dock="Right" x:Name="btn_PathToQGISProjectBathymetryAddon" Content="..." Click="Btn_PathToQGISProjectBathymetryAddon_Click"/>
+                                        <TextBox x:Name="txb_PathToQGISProjectBathymetryAddon" IsReadOnly="True" />
+                                    </DockPanel>
+                                    <Label x:Name="lbl_PathToQGISProjectTerrainAddon" Content="Path where &quot;MinecraftEarthTiles__Terrain.qgz&quot; is located"/>
+                                    <DockPanel>
+                                        <Button DockPanel.Dock="Right" x:Name="btn_PathToQGISProjectTerrainAddon" Content="..." Click="Btn_PathToQGISProjectTerrainAddon_Click"/>
+                                        <TextBox x:Name="txb_PathToQGISProjectTerrainAddon" IsReadOnly="True" />
+                                    </DockPanel>
+                                    <Label x:Name="lbl_PathToQGISProjectHeightmapAddon" Content="Path where &quot;MinecraftEarthTiles__Heightmap&quot; is located"/>
+                                    <DockPanel>
+                                        <Button DockPanel.Dock="Right" x:Name="btn_PathToQGISProjectHeightmapAddon" Content="..." Click="Btn_PathToQGISProjectHeightmapAddon_Click"/>
+                                        <TextBox x:Name="txb_PathToQGISProjectHeightmapAddon" IsReadOnly="True" />
+                                    </DockPanel>
                                     <Label x:Name="lbl_PathToExport" Content="Export folder"/>
                                     <DockPanel>
                                         <Button DockPanel.Dock="Right" x:Name="btn_PathToExport" Content="..." Click="Btn_PathToExport_Click"/>
@@ -230,8 +255,9 @@
                                         <ComboBoxItem Content="1.12"/>
                                         <ComboBoxItem Content="1.16"/>
                                         <ComboBoxItem Content="1.17"/>
-                                        <ComboBoxItem IsSelected="True" Content="1.18"/>
+                                        <ComboBoxItem Content="1.18"/>
                                         <ComboBoxItem Content="1.19"/>
+                                        <ComboBoxItem IsSelected="True" Content="1.20"/>
                                     </ComboBox>
                                     <Label x:Name="lbl_WorldName" Content="World name"/>
                                     <TextBox x:Name="txb_WorldName"/>
@@ -260,9 +286,9 @@
                                         <ComboBoxItem Content="1536"/>
                                         <ComboBoxItem Content="2032"/>
                                     </ComboBox>
-                                    <TextBlock TextWrapping="Wrap" Foreground="Red" x:Name="lbl_BuildLimitInfo" Text="* Only works with Minecraft 1.18 and 1.19'"/>
+                                    <TextBlock TextWrapping="Wrap" Foreground="Red" x:Name="lbl_BuildLimitInfo" Text="* Only works with Minecraft 1.18+'"/>
                                     <CheckBox x:Name="chb_VanillaPopulation" Content="Populate Map *" IsChecked="false"/>
-                                    <TextBlock TextWrapping="Wrap" Foreground="Red" x:Name="lbl_VanillaPopulation_Info" Text="* Only works with Minecraft 1.12, 1.18 and 1.19'"/>
+                                    <TextBlock TextWrapping="Wrap" Foreground="Red" x:Name="lbl_VanillaPopulation_Info" Text="* Only works with Minecraft 1.12 and 1.18+'"/>
                                 </StackPanel>
                             </GroupBox>
                         </StackPanel>
@@ -274,7 +300,8 @@
                             <GroupBox Header="Heightmap" Margin="10">
                                 <StackPanel>
                                     <CheckBox x:Name="chb_HeightmapErrorCorrection" Content="Heightmap Error Correction" IsChecked="True" />
-                                    <CheckBox x:Name="chb_Bathymetry" Content="Bathymetry" IsChecked="True"/>
+                                    <CheckBox x:Name="chb_OfflineHeightmap" Content="High Quality heightmaps (Addon)" IsChecked="False"/>
+                                    <CheckBox x:Name="chb_Bathymetry" Content="Bathymetry (Addon)" IsChecked="True"/>
                                 </StackPanel>
                             </GroupBox>
                             <GroupBox Header="Terrain" Margin="10">
@@ -285,13 +312,20 @@
                                         <ComboBoxItem Content="Custom"/>
                                     </ComboBox>
                                     <Label x:Name="lbl_TerrainSource" Content="Terrain Source"/>
-                                    <ComboBox x:Name="cbb_TerrainSource">
-                                        <ComboBoxItem Content="Offline Terrain (high res)"/>
-                                        <ComboBoxItem Content="Offline Terrain (low res)"/>
-                                        <ComboBoxItem IsSelected="True" Content="Arcgis"/>
-                                        <ComboBoxItem Content="Google"/>
-                                        <ComboBoxItem Content="Bing"/>
-                                    </ComboBox>
+                                        <ComboBox x:Name="cbb_TerrainSource">
+                                            <ComboBoxItem Content="High Quality Offline Terrain (Addon)"/>
+                                            <ComboBoxItem Content="Low Quality Offline Terrain"/>
+                                            <ComboBoxItem IsSelected="True" Content="Arcgis"/>
+                                            <ComboBoxItem Content="Google"/>
+                                            <ComboBoxItem Content="Bing"/>
+                                        </ComboBox>
+                                        <Button Margin="10" x:Name="btn_ArcGis_Test" Click="ArcGis_Test_Click">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Web" VerticalAlignment="Center"/>
+                                            <TextBlock>Test ArcGIS Access</TextBlock>
+                                        </StackPanel>
+                                    </Button>
+
                                     <Label x:Name="lbl_TerrainModifier" Content="Terrain Modifier"/>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
@@ -337,6 +371,11 @@
                                         <ComboBoxItem Content="Major"/>
                                         <ComboBoxItem IsSelected="True" Content="Major + Minor"/>
                                     </ComboBox>
+                                    <Label x:Name="lbl_waterBodies" Content="Water Bodies Amount"/>
+                                    <ComboBox x:Name="cbb_waterBodies">
+                                        <ComboBoxItem Content="All"/>
+                                        <ComboBoxItem IsSelected="True" Content="Major"/>
+                                    </ComboBox>
                                     <CheckBox x:Name="chb_Borders" Content="Borders" IsChecked="True"/>
                                     <Label x:Name="lbl_BorderYear" Content="Border Year"/>
                                     <ComboBox x:Name="cbb_Borders">
@@ -365,6 +404,7 @@
                                         <ComboBoxItem Content="1000bc"/>
                                         <ComboBoxItem Content="2000bc"/>
                                     </ComboBox>
+                                    <CheckBox x:Name="chb_stateBorders" Content="State Borders" IsChecked="False"/>
                                     <CheckBox x:Name="chb_buildings" Content="Urban Groundcover" IsChecked="False"/>
                                     <CheckBox x:Name="chb_highways" Content="Highways" IsChecked="True"/>
                                     <CheckBox x:Name="chb_streets" Content="Normal Streets" IsChecked="True"/>
@@ -429,6 +469,8 @@
                             </GroupBox>
                             <GroupBox Header="Generation" Margin="10">
                                 <StackPanel>
+                                    <CheckBox x:Name="chb_fullEarthGeneration" Content="Generation of the complete Earth *" IsChecked="False"/>
+                                    <TextBlock TextWrapping="Wrap" Foreground="Red" Text="* This will speed up the process and reduce the needed disk space when generating a full Earth Map or a map that uses a complete pbf file."/>
                                     <Label x:Name="lbl_NumberOfCores" Content="Number of parallel generations"/>
                                     <ComboBox x:Name="cbb_NumberOfCores">
                                         <ComboBoxItem Content="1"/>
@@ -452,13 +494,17 @@
                                     <CheckBox x:Name="chb_CmdVisibility" Content="Show cmd prompt during generation" IsChecked="False"/>
                                     <CheckBox x:Name="chb_CmdPause" Content="Pause cmd after each step *" IsChecked="False"/>
                                     <TextBlock TextWrapping="Wrap" Foreground="Red" Text="* Warning, this will not be a continuous generation. You have to close each cmd window manually."/>
+                                    <CheckBox x:Name="chb_autoScroll" Content="Automatically scroll during generation" IsChecked="False"/>
                                     <CheckBox x:Name="chb_continue" Content="Continue, even if some Tiles fail" IsChecked="False"/>
+                                    <CheckBox x:Name="chb_warnOnOverpass" Content="Notify user, when data from the Overpass-API is empty *" IsChecked="False"/>
+                                    <TextBlock TextWrapping="Wrap" Foreground="Red" Text="* Warning: This will help user identify problems with the Overpass-API. On the other side it notifies the user when a Tile, for example in the ocean, has absolutly no osm data."/>
+                                    <CheckBox x:Name="chb_processKilling" Content="Kill all relevant processes when stopping the generation *" IsChecked="False"/>
+                                    <TextBlock x:Name="txb_alertchb_processKilling" TextWrapping="Wrap" Foreground="Red" Text="* Warning, this can cause unexpected behaviour. Processes with the names 'wget', 'osmconvert', 'osmfilter', 'qwgis-bin', 'magick' or 'wpscript' will get killed." />
                                     <CheckBox x:Name="chb_closeAfterFinish" Content="Close the application after generation" IsChecked="False"/>
                                     <CheckBox x:Name="chb_alertAfterFinish" Content="Send Alert after generation" IsChecked="False"/>
-                                    <Label x:Name="lbl_AlertMail" Content="Mail Address"/>
-                                    <TextBox x:Name="txb_AlertMail"/>
-                                    <TextBlock x:Name="txb_AlertMailFullVersion" TextWrapping="Wrap" Foreground="Red" Text="" />
-
+                                    <Label x:Name="lbl_alertMail" Content="Mail Address"/>
+                                    <TextBox x:Name="txb_alertMail"/>
+                                    <TextBlock x:Name="txb_alertMailFullVersion" TextWrapping="Wrap" Foreground="Red" Text="" />
                                 </StackPanel>
                             </GroupBox>
                             <GroupBox Header="Various" Margin="10">
@@ -478,15 +524,21 @@
                         <StackPanel>
                             <GroupBox Header="Modded Biomes" Margin="10">
                                 <StackPanel>
-                                    <CheckBox x:Name="chb_bop" Content="Biomes O' Plenty Biomes *" IsChecked="false" Checked="chb_bop_clicked"/>
-                                    <CheckBox x:Name="chb_byg" Content="Oh the Biomes You'll Go Biomes *" IsChecked="false" Checked="chb_byg_clicked"/>
-                                    <CheckBox x:Name="chb_terralith" Content="Terralith 2.0 Biomes *" IsChecked="false" Checked="chb_terralith_clicked"/>
+                                    <CheckBox x:Name="chb_bop" Content="&quot;Biomes O' Plenty&quot; Biomes *" IsChecked="false" Checked="chb_bop_clicked"/>
+                                    <Button x:Name="btn_bop_website" Margin="10" Content="Visit &quot;Biomes O' Plenty&quot; Mod Website" Click="mod_BOP_Click"/>
+                                    <CheckBox x:Name="chb_byg" Content="&quot;Oh the Biomes You'll Go&quot; Biomes *" IsChecked="false" Checked="chb_byg_clicked"/>
+                                    <Button x:Name="btn_byg_website" Margin="10" Content="Visit &quot;Oh the Biomes You'll Go&quot; Mod Website" Click="mod_BYG_Click"/>
+                                    <CheckBox x:Name="chb_terralith" Content="&quot;Terralith 2.0&quot; Biomes *" IsChecked="false" Checked="chb_terralith_clicked"/>
+                                    <Button x:Name="btn_terralith_website" Margin="10" Content="Visit &quot;Terralith 2.0&quot; Mod Website" Click="mod_Terralith_Click"/>
+                                    <CheckBox x:Name="chb_williamWythers" Content="&quot;William Wythers' Expanded Ecosphere&quot; Biomes *" IsChecked="false" Checked="chb_williamWythers_clicked"/>
+                                    <Button x:Name="btn_williamWythers_website" Margin="10" Content="Visit &quot;William Wythers&quot; Mod Website" Click="mod_williamWythers_Click"/>
                                     <TextBlock TextWrapping="Wrap" Foreground="Red" x:Name="lbl_modded_biomes_warning" Text="* Warning: For custom biomes you will need the specific Mod or Datapack and you need to select 'Terrestrial Ecoregions (WWF)' as the Biome Source."/>
                                 </StackPanel>
                             </GroupBox>
                             <GroupBox Header="Modded Ores" Margin="10">
                                 <StackPanel>
-                                    <CheckBox x:Name="chb_create" Content="Create Mod Ores *" IsChecked="false"/>
+                                    <CheckBox x:Name="chb_create" Content="&quot;Create&quot; Ores *" IsChecked="false"/>
+                                    <Button x:Name="btn_create_website" Margin="10" Content="Visit &quot;Create&quot; Mod Website" Click="mod_Create_Click"/>
                                     <TextBlock TextWrapping="Wrap" Foreground="Red" x:Name="lbl_modded_ores_warning" Text="* Warning: For custom ores you will need the specific Mod or Datapack." />
                                 </StackPanel>
                             </GroupBox>

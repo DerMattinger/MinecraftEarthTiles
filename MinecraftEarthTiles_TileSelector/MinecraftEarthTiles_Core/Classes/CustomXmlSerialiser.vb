@@ -66,14 +66,6 @@ Public Class CustomXmlSerialiser
             MyWorldSettings.BlocksPerTile = 512
         End If
 
-        If MyWorldSettings.VerticalScale = "5" Or MyWorldSettings.VerticalScale = "10" Or MyWorldSettings.VerticalScale = "15" Or MyWorldSettings.VerticalScale = "20" Or MyWorldSettings.VerticalScale = "25" Or MyWorldSettings.VerticalScale = "30" Or MyWorldSettings.VerticalScale = "35" Or MyWorldSettings.VerticalScale = "50" Or MyWorldSettings.VerticalScale = "75" Or MyWorldSettings.VerticalScale = "100" Or MyWorldSettings.VerticalScale = "200" Or MyWorldSettings.VerticalScale = "300" Or MyWorldSettings.VerticalScale = "500" Or MyWorldSettings.VerticalScale = "1000" Then
-            If MyWorldSettings.TilesPerMap <> "1" And (MyWorldSettings.VerticalScale = "5" Or MyWorldSettings.VerticalScale = "15" Or MyWorldSettings.VerticalScale = "20" Or MyWorldSettings.VerticalScale = "25" Or MyWorldSettings.VerticalScale = "30") Then
-                MyWorldSettings.VerticalScale = "35"
-            End If
-        Else
-            MyWorldSettings.VerticalScale = "35"
-        End If
-
         If Not MyWorldSettings.Terrain = "Standard" And Not MyWorldSettings.Terrain = "Custom" Then
             MyWorldSettings.Terrain = "Standard"
         End If
@@ -82,11 +74,11 @@ Public Class CustomXmlSerialiser
             MyWorldSettings.TilesPerMap = 1
         End If
 
-        If Not MyWorldSettings.MapVersion = "1.12" And Not MyWorldSettings.MapVersion = "1.16" And Not MyWorldSettings.MapVersion = "1.17" And Not MyWorldSettings.MapVersion = "1.18" And Not MyWorldSettings.MapVersion = "1.19" Then
-            MyWorldSettings.MapVersion = "1.19"
+        If Not MyWorldSettings.MapVersion = "1.12" And Not MyWorldSettings.MapVersion = "1.16" And Not MyWorldSettings.MapVersion = "1.17" And Not MyWorldSettings.MapVersion = "1.18" And Not MyWorldSettings.MapVersion = "1.19" And Not MyWorldSettings.MapVersion = "1.20" Then
+            MyWorldSettings.MapVersion = "1.20"
         End If
 
-        If Not MyWorldSettings.MapVersion = "1.12" And Not MyWorldSettings.MapVersion = "1.18" And Not MyWorldSettings.MapVersion = "1.19" Then
+        If Not MyWorldSettings.MapVersion = "1.12" And Not MyWorldSettings.MapVersion = "1.18" And Not MyWorldSettings.MapVersion = "1.19" And Not MyWorldSettings.MapVersion = "1.20" Then
             MyWorldSettings.vanillaPopulation = False
         End If
 
@@ -102,7 +94,7 @@ Public Class CustomXmlSerialiser
             MyWorldSettings.borders = "Current"
         End If
 
-        If Not MyWorldSettings.TerrainSource = "Offline Terrain (high res)" And Not MyWorldSettings.TerrainSource = "Offline Terrain (low res)" And Not MyWorldSettings.TerrainSource = "Arcgis" And Not MyWorldSettings.TerrainSource = "Google" And Not MyWorldSettings.TerrainSource = "Bing" Then
+        If Not MyWorldSettings.TerrainSource = "High Quality Offline Terrain (Addon)" And Not MyWorldSettings.TerrainSource = "Low Quality Offline Terrain" And Not MyWorldSettings.TerrainSource = "Arcgis" And Not MyWorldSettings.TerrainSource = "Google" And Not MyWorldSettings.TerrainSource = "Bing" Then
             MyWorldSettings.TerrainSource = "Arcgis"
         End If
 
@@ -122,8 +114,15 @@ Public Class CustomXmlSerialiser
         If MyWorldSettings.rivers = "major" Then
             MyWorldSettings.rivers = "Major"
         End If
+        If MyWorldSettings.rivers = "major" Then
+            MyWorldSettings.rivers = "Major"
+        End If
         If Not MyWorldSettings.rivers = "All (small)" And Not MyWorldSettings.rivers = "All (medium)" And Not MyWorldSettings.rivers = "All (large)" And Not MyWorldSettings.rivers = "Major" And Not MyWorldSettings.rivers = "Major + Minor" Then
             MyWorldSettings.rivers = "Major"
+        End If
+
+        If Not MyWorldSettings.waterBodies = "All" And Not MyWorldSettings.rivers = "Major" Then
+            MyWorldSettings.waterBodies = "Major"
         End If
 
         If Not MyWorldSettings.mapOffset = "-1" And Not MyWorldSettings.mapOffset = "0" And Not MyWorldSettings.mapOffset = "1" Then
@@ -166,6 +165,46 @@ Public Class CustomXmlSerialiser
 
         If Not Directory.Exists(MyTilesSettings.PathToQGIS) Then
             MyTilesSettings.PathToQGIS = ""
+        End If
+
+        If Not Directory.Exists(MyTilesSettings.PathToTempOSM) Then
+            MyTilesSettings.PathToTempOSM = ""
+        End If
+
+        If MyTilesSettings.PathToTempOSM = "" Then
+            MyTilesSettings.PathToTempOSM = MyTilesSettings.PathToScriptsFolder
+        End If
+
+        If Not Directory.Exists(MyTilesSettings.PathToQGISProject) Then
+            MyTilesSettings.PathToQGISProject = ""
+        End If
+
+        If MyTilesSettings.PathToQGISProject = "" Then
+            MyTilesSettings.PathToQGISProject = MyTilesSettings.PathToScriptsFolder & "\QGIS"
+        End If
+
+        If Not Directory.Exists(MyTilesSettings.PathToQGISProjectBathymetryAddon) Then
+            MyTilesSettings.PathToQGISProjectBathymetryAddon = ""
+        End If
+
+        If MyTilesSettings.PathToQGISProjectBathymetryAddon = "" Then
+            MyTilesSettings.PathToQGISProjectBathymetryAddon = MyTilesSettings.PathToScriptsFolder & "\QGIS"
+        End If
+
+        If Not Directory.Exists(MyTilesSettings.PathToQGISProjectTerrainAddon) Then
+            MyTilesSettings.PathToQGISProjectTerrainAddon = ""
+        End If
+
+        If MyTilesSettings.PathToQGISProjectTerrainAddon = "" Then
+            MyTilesSettings.PathToQGISProjectTerrainAddon = MyTilesSettings.PathToScriptsFolder & "\QGIS"
+        End If
+
+        If Not Directory.Exists(MyTilesSettings.PathToQGISProjectHeightmapAddon) Then
+            MyTilesSettings.PathToQGISProjectHeightmapAddon = ""
+        End If
+
+        If MyTilesSettings.PathToQGISProjectHeightmapAddon = "" Then
+            MyTilesSettings.PathToQGISProjectHeightmapAddon = MyTilesSettings.PathToScriptsFolder & "\QGIS"
         End If
 
         If Not File.Exists(MyTilesSettings.PathToMagick) Then

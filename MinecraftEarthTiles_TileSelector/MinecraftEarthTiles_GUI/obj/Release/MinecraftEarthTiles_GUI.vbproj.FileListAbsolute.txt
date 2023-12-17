@@ -31,7 +31,6 @@ C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSele
 C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\bin\Release\MinecraftEarthTiles_Core.pdb
 C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\bin\Release\MinecraftEarthTiles_Core.xml
 C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\obj\Release\MinecraftEarthTiles_GUI.vbproj.AssemblyReference.cache
-C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\obj\Release\MinecraftEarthTiles_GUI.vbproj.SuggestedBindingRedirects.cache
 C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\obj\Release\CustomButtons.baml
 C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\obj\Release\Windows\GenerationWindow.baml
 C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\obj\Release\Classes\GeneratedImagePreview.g.vb
@@ -63,3 +62,7 @@ C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSele
 C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\obj\Release\MinecraftEarthTiles_GUI.exe
 C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\obj\Release\MinecraftEarthTiles_GUI.xml
 C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\obj\Release\MinecraftEarthTiles_GUI.pdb
+C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\bin\Release\MinecraftEarthTiles_CLI.exe
+C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\bin\Release\MinecraftEarthTiles_CLI.pdb
+C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\bin\Release\MinecraftEarthTiles_CLI.xml
+C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\bin\Release\MinecraftEarthTiles_CLI.exe.config

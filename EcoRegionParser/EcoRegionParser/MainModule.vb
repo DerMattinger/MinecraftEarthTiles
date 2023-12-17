@@ -50,6 +50,7 @@ Module MainModule
                     ecoRegion.bop_biome = fields(2)
                     ecoRegion.byg_biome = fields(3)
                     ecoRegion.terralith_biome = fields(4)
+                    ecoRegion.williamWythers_biome = fields(5)
                 End If
             Next
         End While
@@ -147,6 +148,32 @@ Module MainModule
                     Console.WriteLine("    eco_terralith = eco_terralith.fromColour(" & ecoRegion.color & ").toLevel(BIOME_" & ecoRegion.terralith_biome & ") //" & ecoRegion.name)
                 Else
                     Console.WriteLine("    .fromColour(" & ecoRegion.color & ").toLevel(BIOME_" & ecoRegion.terralith_biome & ") //" & ecoRegion.name)
+                End If
+                counter += 1
+            End If
+        Next
+        Console.WriteLine("    .go();")
+        Console.WriteLine("  }")
+        Console.WriteLine("   ")
+
+        Console.WriteLine("  if ( mod_williamWythers  === ""True"" ) {")
+        counter = 1
+        For Each ecoRegion In listOfEcoRegions
+            If ecoRegion.Equals(listOfEcoRegions.First) Then
+                Console.WriteLine("   var eco_williamWythers = wp.applyHeightMap(ecoRegionImage)")
+                Console.WriteLine("    .toWorld(world)")
+                Console.WriteLine("    .shift(shiftLongitute, shiftLatitude)")
+                Console.WriteLine("    .applyToLayer(biomesLayer);")
+                Console.WriteLine("    ")
+            End If
+            If ecoRegion.williamWythers_biome IsNot Nothing AndAlso ecoRegion.williamWythers_biome <> "" Then
+                If counter Mod 64 = 0 AndAlso Not ecoRegion.Equals(listOfEcoRegions.Last) Then
+                    Console.WriteLine("    .fromColour(" & ecoRegion.color & ").toLevel(BIOME_" & ecoRegion.williamWythers_biome & "); //" & ecoRegion.name)
+                    Console.WriteLine("    ")
+                ElseIf (counter - 1) Mod 64 = 0 Then
+                    Console.WriteLine("    eco_williamWythers = eco_williamWythers.fromColour(" & ecoRegion.color & ").toLevel(BIOME_" & ecoRegion.williamWythers_biome & ") //" & ecoRegion.name)
+                Else
+                    Console.WriteLine("    .fromColour(" & ecoRegion.color & ").toLevel(BIOME_" & ecoRegion.williamWythers_biome & ") //" & ecoRegion.name)
                 End If
                 counter += 1
             End If

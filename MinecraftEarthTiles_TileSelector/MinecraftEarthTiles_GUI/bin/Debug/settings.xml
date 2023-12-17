@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Settings>
+  <PathToPBF />
+  <OverpassURL />
+  <WorldName>yakopedalanabeemveto</WorldName>
+  <BlocksPerTile>1536</BlocksPerTile>
+  <TilesPerMap>10</TilesPerMap>
+  <VerticalScale>75</VerticalScale>
+  <Terrain>Standard</Terrain>
+  <Heightmap_Error_Correction>true</Heightmap_Error_Correction>
+  <bordersBoolean>false</bordersBoolean>
+  <borders>Current</borders>
+  <geofabrik>false</geofabrik>
+  <bathymetry>true</bathymetry>
+  <TerrainSource>Arcgis</TerrainSource>
+  <biomeSource>Terrestrial Ecoregions (WWF)</biomeSource>
+  <highways>false</highways>
+  <streets>false</streets>
+  <small_streets>false</small_streets>
+  <buildings>false</buildings>
+  <ores>true</ores>
+  <netherite>false</netherite>
+  <farms>false</farms>
+  <meadows>false</meadows>
+  <quarrys>false</quarrys>
+  <forests>false</forests>
+  <aerodrome>false</aerodrome>
+  <mobSpawner>true</mobSpawner>
+  <animalSpawner>true</animalSpawner>
+  <riversBoolean>false</riversBoolean>
+  <rivers>Major + Minor</rivers>
+  <streams>false</streams>
+  <volcanos>true</volcanos>
+  <shrubs>false</shrubs>
+  <crops>false</crops>
+  <MapVersion>1.19</MapVersion>
+  <mapOffset>0</mapOffset>
+  <lowerBuildLimit>-64</lowerBuildLimit>
+  <upperBuildLimit>320</upperBuildLimit>
+  <vanillaPopulation>true</vanillaPopulation>
+  <mod_BOP>false</mod_BOP>
+  <mod_BYG>false</mod_BYG>
+  <mod_Terralith>true</mod_Terralith>
+  <mod_Create>false</mod_Create>
+  <custom_layers />
+  <terrainModifier>1</terrainModifier>
+  <oreModifier>8</oreModifier>
+</Settings>
