@@ -764,6 +764,17 @@ Public Class GenerationWorker
                                 Threading.Thread.Sleep(10000)
                             End While
 
+                            If keepRunning And keepRunningLocal And Not My.Computer.FileSystem.FileExists($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\image_exports\{Tile.TileName}\heightmap\{Tile.TileName}_exported.png") Then
+                                Tile.Comment = "Error " & Tile.TileName & " Heightmap Not found"
+                                WriteLog(Tile.Comment, Tile.TileName)
+                                LatestMessage = Tile.TileName & ": " & Tile.Comment
+                                If Not ClassWorker.MyTilesSettings.continueGeneration Then
+                                    keepRunning = False
+                                End If
+                                keepRunningLocal = False
+                                Return
+                            End If
+
                             If keepRunning And keepRunningLocal Then
                                 ImageMagickBatchExport(Tile.TileName)
                                 ImageMagickGeneration(Tile, keepRunningLocal, currentParallelProcess, currentParallelProcessInfo)
@@ -1469,6 +1480,17 @@ Public Class GenerationWorker
                                 If keepRunning And keepRunningLocal Then
                                     GdalBatchExport(Tile.TileName)
                                     GdalGeneration(Tile, keepRunningLocal, currentParallelProcess, currentParallelProcessInfo)
+                                End If
+
+                                If keepRunning And keepRunningLocal And Not My.Computer.FileSystem.FileExists($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\image_exports\{Tile.TileName}\heightmap\{Tile.TileName}_exported.png") Then
+                                    Tile.Comment = "Error " & Tile.TileName & " Heightmap Not found"
+                                    WriteLog(Tile.Comment, Tile.TileName)
+                                    LatestMessage = Tile.TileName & ": " & Tile.Comment
+                                    If Not ClassWorker.MyTilesSettings.continueGeneration Then
+                                        keepRunning = False
+                                    End If
+                                    keepRunningLocal = False
+                                    Return
                                 End If
 
                                 While pause = True

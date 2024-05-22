@@ -62,7 +62,3 @@ C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSele
 C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\obj\Release\MinecraftEarthTiles_GUI.exe
 C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\obj\Release\MinecraftEarthTiles_GUI.xml
 C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\obj\Release\MinecraftEarthTiles_GUI.pdb
-C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\bin\Release\MinecraftEarthTiles_CLI.exe
-C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\bin\Release\MinecraftEarthTiles_CLI.pdb
-C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\bin\Release\MinecraftEarthTiles_CLI.xml
-C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\bin\Release\MinecraftEarthTiles_CLI.exe.config
