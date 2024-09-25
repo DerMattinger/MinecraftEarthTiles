@@ -6,7 +6,7 @@
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:local="clr-namespace:MinecraftEarthTiles_GUI"
     mc:Ignorable="d"
-    Title="Minecraft Earth Tiles Settings" Width="350" Height="250" MinWidth="350" MinHeight="250" Loaded="Window_Loaded"
+    Title="Minecraft Earth Tiles Settings" Width="350" Height="260" MinWidth="350" MinHeight="260" Loaded="Window_Loaded"
     Style="{StaticResource MaterialDesignWindow}"
     WindowStartupLocation="CenterScreen">
     <DockPanel>

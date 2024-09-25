@@ -10,9 +10,9 @@ Imports System.Runtime.InteropServices
 
 <Assembly: AssemblyTitle("MinecraftEarthTiles_CLI")>
 <Assembly: AssemblyDescription("")>
-<Assembly: AssemblyCompany("")>
+<Assembly: AssemblyCompany("MattingerSoftwareSolution")>
 <Assembly: AssemblyProduct("MinecraftEarthTiles_CLI")>
-<Assembly: AssemblyCopyright("Copyright © DerMattinger 2020 - 2023")>
+<Assembly: AssemblyCopyright("Copyright © MattingerSoftwareSolution 2020 - 2024")>
 <Assembly: AssemblyTrademark("")>
 
 <Assembly: ComVisible(False)>
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' indem Sie "*" wie unten gezeigt eingeben:
 ' <Assembly: AssemblyVersion("1.0.*")>
 
-<Assembly: AssemblyVersion("1.5.6.0")>
-<Assembly: AssemblyFileVersion("1.5.6.0")>
+<Assembly: AssemblyVersion("2.0.0.0")>
+<Assembly: AssemblyFileVersion("2.0.0.0")>

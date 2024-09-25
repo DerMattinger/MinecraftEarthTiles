@@ -596,20 +596,12 @@ Public Class SettingsWindow
             txb_Proxy.Text = WorldSettings.Proxy
         End If
 
-        If StartupWindow.MyVersion = "Full" Then
-            chb_alertAfterFinish.IsChecked = TilesSettings.alertAfterFinish
-            Try
-                Dim localMail As New MailAddress(TilesSettings.alertMail)
-                txb_AlertMail.Text = localMail.Address
-            Catch ex As Exception
-            End Try
-        Else
-            chb_alertAfterFinish.IsChecked = False
-            chb_alertAfterFinish.IsEnabled = False
-            txb_AlertMail.Text = ""
-            txb_AlertMail.IsEnabled = False
-            txb_AlertMailFullVersion.Text = "Alerts are only available in the Full version."
-        End If
+        chb_alertAfterFinish.IsChecked = TilesSettings.alertAfterFinish
+        Try
+            Dim localMail As New MailAddress(TilesSettings.alertMail)
+            txb_AlertMail.Text = localMail.Address
+        Catch ex As Exception
+        End Try
 
         If WorldSettings.mapOffset = "-1" Or WorldSettings.mapOffset = "0" Or WorldSettings.mapOffset = "1" Then
             cbb_MapOffset.SelectedValue = WorldSettings.mapOffset
@@ -756,21 +748,14 @@ Public Class SettingsWindow
         LocalTilesSettings.processKilling = CBool(chb_processKilling.IsChecked)
         LocalTilesSettings.closeAfterFinish = CBool(chb_closeAfterFinish.IsChecked)
         LocalTilesSettings.Proxy = txb_Proxy.Text
-        If StartupWindow.MyVersion = "Full" Then
-            LocalTilesSettings.alertAfterFinish = CBool(chb_alertAfterFinish.IsChecked)
-            Try
-                Dim localMail As New MailAddress(txb_AlertMail.Text)
-                LocalTilesSettings.alertMail = localMail.Address
-            Catch ex As Exception
-            End Try
-        Else
-            LocalTilesSettings.alertAfterFinish = False
-            LocalTilesSettings.alertMail = ""
-        End If
-
+        LocalTilesSettings.alertAfterFinish = CBool(chb_alertAfterFinish.IsChecked)
+        Try
+            Dim localMail As New MailAddress(txb_alertMail.Text)
+            LocalTilesSettings.alertMail = localMail.Address
+        Catch ex As Exception
+        End Try
         Dim assemblyVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version
         LocalTilesSettings.version = $"{assemblyVersion.Major}.{assemblyVersion.Minor}.{assemblyVersion.Build}"
-
         Return LocalTilesSettings
     End Function
 

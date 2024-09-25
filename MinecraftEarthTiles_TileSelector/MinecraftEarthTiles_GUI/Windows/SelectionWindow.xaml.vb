@@ -606,20 +606,11 @@ Public Class SelectionWindow
         Next
 
         txb_Corners.Text = xMin & " " & yMin & " " & xMax & " " & yMax
+        btn_Save_Selection.IsEnabled = True
+        btnSaveClose.IsEnabled = True
+        btnSave.IsEnabled = True
+        txb_toManyTiles.Text = ""
 
-        If StartupWindow.MyVersion = "Demo" Then
-            If TilesList.Count > 25 Then
-                btn_Save_Selection.IsEnabled = False
-                btnSaveClose.IsEnabled = False
-                btnSave.IsEnabled = False
-                txb_toManyTiles.Text = "You can only select 25 Tiles in the Demo."
-            Else
-                btn_Save_Selection.IsEnabled = True
-                btnSaveClose.IsEnabled = True
-                btnSave.IsEnabled = True
-                txb_toManyTiles.Text = ""
-            End If
-        End If
     End Sub
 
 #End Region

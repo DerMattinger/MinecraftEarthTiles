@@ -4,6 +4,11 @@
   <PathToScriptsFolder>C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\bin\Release</PathToScriptsFolder>
   <PathToWorldPainterFolder />
   <PathToQGIS />
+  <PathToTempOSM>C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\bin\Release</PathToTempOSM>
+  <PathToQGISProject>C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\bin\Release\QGIS</PathToQGISProject>
+  <PathToQGISProjectBathymetryAddon>C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\bin\Release\QGIS</PathToQGISProjectBathymetryAddon>
+  <PathToQGISProjectTerrainAddon>C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\bin\Release\QGIS</PathToQGISProjectTerrainAddon>
+  <PathToQGISProjectHeightmapAddon>C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_GUI\bin\Release\QGIS</PathToQGISProjectHeightmapAddon>
   <PathToMagick />
   <PathToMinutor />
   <PathToExport />
@@ -25,4 +30,7 @@
   <alertAfterFinish>false</alertAfterFinish>
   <alertMail />
   <closeAfterFinish>false</closeAfterFinish>
+  <autoScroll>true</autoScroll>
+  <processKilling>false</processKilling>
+  <warnOnOverpass>false</warnOnOverpass>
 </TilesSettings>

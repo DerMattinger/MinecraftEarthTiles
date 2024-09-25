@@ -70,11 +70,7 @@ Public Class StartupWindow
         If File.Exists(My.Application.Info.DirectoryPath & "\selection.xml") Then
             Try
                 Dim LocalSelection = ClassWorker.LoadSelectionFromFile(My.Application.Info.DirectoryPath & "\selection.xml")
-                If MyVersion = "Demo" And LocalSelection.TilesList.Count > 25 Then
-                    ClassWorker.SetSelection(New Selection)
-                Else
-                    ClassWorker.SetSelection(ClassWorker.LoadSelectionFromFile(My.Application.Info.DirectoryPath & "\selection.xml"))
-                End If
+                ClassWorker.SetSelection(ClassWorker.LoadSelectionFromFile(My.Application.Info.DirectoryPath & "\selection.xml"))
             Catch ex As Exception
                 Dim MessageBox As New MessageBoxWindow(ex.Message)
                 MessageBox.ShowDialog()

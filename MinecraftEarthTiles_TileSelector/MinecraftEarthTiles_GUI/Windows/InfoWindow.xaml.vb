@@ -13,12 +13,8 @@ Public Class InfoWindow
         Dim assemblyVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version
         Dim coreType As Type = ClassWorker.GetTilesSettings.GetType
         Dim coreVersion = System.Reflection.Assembly.GetAssembly(coreType).GetName.Version
-        If StartupWindow.MyVersion = "Full" Then
-            txb_version.Text = $"Full Version, GUI: v{assemblyVersion.Major}.{assemblyVersion.Minor}.{assemblyVersion.Build}, Core: v{coreVersion.Major}.{coreVersion.Minor}.{coreVersion.Build}"
-        ElseIf StartupWindow.MyVersion = "Demo" Then
-            txb_version.Text = $"Demo Version, GUI: v{assemblyVersion.Major}.{assemblyVersion.Minor}.{assemblyVersion.Build}, Core: v{coreVersion.Major}.{coreVersion.Minor}.{coreVersion.Build}"
-        End If
-        txb_copyright.Text = "Copyright © DerMattinger 2020 - 2023"
+        txb_version.Text = $"GUI: v{assemblyVersion.Major}.{assemblyVersion.Minor}.{assemblyVersion.Build}, Core: v{coreVersion.Major}.{coreVersion.Minor}.{coreVersion.Build}"
+        txb_copyright.Text = "Copyright © MattingerSoftwareSolution 2020 - 2024" & Environment.NewLine & "https://github.com/DerMattinger/MinecraftEarthTiles"
         txb_osm.Text = "OSM Data: ©️ OpenStreetMap Contributors" & Environment.NewLine & "https://www.openstreetmap.org/copyright"
         ApplyTheme()
     End Sub

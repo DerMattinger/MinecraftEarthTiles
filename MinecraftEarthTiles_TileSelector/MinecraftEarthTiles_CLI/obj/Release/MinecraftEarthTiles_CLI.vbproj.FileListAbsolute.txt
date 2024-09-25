@@ -12,5 +12,5 @@ C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSele
 C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_CLI\obj\Release\MinecraftEarthTiles_CLI.pdb
 C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_CLI\bin\Release\MinecraftEarthTiles_Core.dll
 C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_CLI\bin\Release\MinecraftEarthTiles_Core.pdb
-C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_CLI\obj\Release\MinecraftEarthTiles_CLI.vbproj.CopyComplete
 C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_CLI\bin\Release\MinecraftEarthTiles_Core.xml
+C:\Users\matze\Documents\GitHub\MinecraftEarthTiles\MinecraftEarthTiles_TileSelector\MinecraftEarthTiles_CLI\obj\Release\Minecraf.F566022A.Up2Date
