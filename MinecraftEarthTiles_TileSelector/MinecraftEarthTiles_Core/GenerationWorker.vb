@@ -3828,7 +3828,7 @@ Public Class GenerationWorker
             End If
 
             Dim depth As String = "255"
-            If ClassWorker.MyTilesSettings.version = "1.18" Or ClassWorker.MyWorldSettings.MapVersion = "1.19" Then
+            If ClassWorker.MyTilesSettings.version = "1.18" Or ClassWorker.MyWorldSettings.MapVersion = "1.19" Or ClassWorker.MyTilesSettings.version = "1.20" Then
                 depth = "319"
             End If
 
