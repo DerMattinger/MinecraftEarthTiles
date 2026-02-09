@@ -1,0 +1,11 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "MinecraftEarthTiles_GUI\\MinecraftEarthTiles_GUI.vbproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

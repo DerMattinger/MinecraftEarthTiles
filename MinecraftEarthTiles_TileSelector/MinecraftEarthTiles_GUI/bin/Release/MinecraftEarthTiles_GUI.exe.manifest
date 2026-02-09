@@ -103,14 +103,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MinecraftEarthTiles_Core.dll" size="306688">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MinecraftEarthTiles_Core.dll" size="307200">
       <assemblyIdentity name="MinecraftEarthTiles_Core" version="2.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>qlqkPDYxJ7pqQnaKcf6cF3H4EyhJeaLfuoN7ZMHzMmI=</dsig:DigestValue>
+        <dsig:DigestValue>2tkCG8GtaXZMhXMnNqxHyLBg7tYjhsCVhKMxv03nfZk=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -122,7 +122,7 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>uDpJLLtDWH2p45KAtxh3Jklu03m/FG58HQFiTQOdTvA=</dsig:DigestValue>
+        <dsig:DigestValue>1VbgnMapjFaEFIgTvflL/9/27wzFNOd/ivX9QlNbJnk=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

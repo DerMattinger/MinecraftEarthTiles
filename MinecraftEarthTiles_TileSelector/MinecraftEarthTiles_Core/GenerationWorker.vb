@@ -1209,7 +1209,7 @@ Public Class GenerationWorker
 
                                 If ClassWorker.MyWorldSettings.geofabrik = True And ClassWorker.MyTilesSettings.reUseOsmFiles = False And ClassWorker.MyTilesSettings.reUseImageFiles = False Then
                                     If Not My.Computer.FileSystem.FileExists($"{ClassWorker.MyTilesSettings.PathToTempOSM}\osm\output.o5m") Then
-                                        Tile.Comment = "Error Could Not find output.o5m file"
+                                        Tile.Comment = "Error: Could Not find output.o5m file"
                                         WriteLog(Tile.Comment, Tile.TileName)
                                         LatestMessage = Tile.TileName & ": " & Tile.Comment
                                         keepRunning = False
@@ -1917,6 +1917,8 @@ Public Class GenerationWorker
     End Sub
 
     Public Sub QgisGeneration(ByRef Tile As Generation, ByRef keepRunningLocal As Boolean, ByRef currentParallelProcess As Process, ByRef currentParallelProcessInfo As ProcessStartInfo)
+        CreateFilesAndFolders(Tile.TileName)
+
         If System.IO.File.Exists($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\QGIS\QGIS3\profiles\Default\qgis.db") Then
             System.IO.File.Delete($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\QGIS\QGIS3\profiles\Default\qgis.db")
         End If
@@ -2038,6 +2040,7 @@ Public Class GenerationWorker
     End Sub
 
     Public Sub ImageMagickGeneration(ByRef Tile As Generation, ByRef keepRunningLocal As Boolean, ByRef currentParallelProcess As Process, ByRef currentParallelProcessInfo As ProcessStartInfo)
+        CreateFilesAndFolders(Tile.TileName)
 
         If My.Computer.FileSystem.FileExists($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\batchfiles\{Tile.TileName}\5-log-magick.bat") Then
             Tile.Comment = "Processing images"
@@ -3544,6 +3547,9 @@ Public Class GenerationWorker
             WriteTilesVariablesToBatch(ScriptBatchFile, Tile)
             WriteCustomTextToBatch(ScriptBatchFile, BatchFileName.ImageMagickGeneration, "Before")
 
+            ScriptBatchFile.WriteLine($"if not exist ""%PathToScriptsFolder%\image_exports"" mkdir ""%PathToScriptsFolder%\image_exports""")
+            ScriptBatchFile.WriteLine($"if not exist ""%PathToScriptsFolder%\image_exports\%Tile%"" mkdir ""%PathToScriptsFolder%\image_exports\%Tile%""")
+
             Dim NumberOfResize = "( +clone -resize 50%% )"
             Dim NumberOfResizeWater = "( +clone -filter Gaussian -resize 50%% -morphology Dilate Gaussian )"
             Dim TilesSize As Double = CType(ClassWorker.MyWorldSettings.BlocksPerTile, Double)
@@ -4135,75 +4141,6 @@ Public Class GenerationWorker
         End If
     End Sub
 
-    Private Sub CreateFilesAndFolders(Optional Tile As String = "")
-
-        If Not Directory.Exists($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\batchfiles\") Then
-            Directory.CreateDirectory($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\batchfiles\")
-        End If
-
-        If Not Tile = "" Then
-            If Not Directory.Exists($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\batchfiles\{Tile}\") Then
-                Directory.CreateDirectory($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\batchfiles\{Tile}\")
-            End If
-        End If
-
-        If Not Directory.Exists($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\render\") Then
-            Directory.CreateDirectory($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\render\")
-        End If
-
-        If Not Directory.Exists($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\python\") Then
-            Directory.CreateDirectory($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\python\")
-        End If
-
-        If Not Directory.Exists($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\logs\") Then
-            Directory.CreateDirectory($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\logs\")
-        End If
-        If Not Directory.Exists($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\custombatchfiles\") Then
-            Directory.CreateDirectory($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\custombatchfiles\")
-        End If
-
-        Dim custombatchFiles As New List(Of String) From {
-"BeforeOsmbatGenerationPrepare",
-"AfterOsmbatGenerationPrepare",
-"BeforeOsmbatGeneration",
-"AfterOsmbatGeneration",
-"BeforeQgisRepairGeneration",
-"AfterQgisRepairGeneration",
-"BeforeQgisGeneration",
-"AfterQgisGeneration",
-"BeforeTartoolGeneration",
-"AfterTartoolGeneration",
-"BeforeGdalGeneration",
-"AfterGdalGeneration",
-"BeforeImageMagickGeneration",
-"AfterImageMagickGeneration",
-"BeforeWpScripütGeneration",
-"AfterWpScripütGeneration",
-"BeforeVoidScriptGeneration",
-"AfterVoidScriptGeneration",
-"BeforeMinutorGeneration",
-"AfterMinutorGeneration",
-"BeforeCleanupGeneration",
-"AfterCleanupGeneration",
-"BeforeCombineGeneration",
-"AfterCombineGeneration",
-"BeforeMinutorFinalGeneration",
-"AfterMinutorFinalGeneration",
-"BeforeCleanupFinalGeneration",
-"AfterCleanupFinalGeneration"
-}
-        For Each custombatchFile In custombatchFiles
-            If Not File.Exists($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\custombatchfiles\{custombatchFile}.txt") Then
-                Dim ScriptBatchFile As StreamWriter
-                ScriptBatchFile = My.Computer.FileSystem.OpenTextFileWriter($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\custombatchfiles\{custombatchFile}.txt", False, System.Text.Encoding.ASCII)
-                ScriptBatchFile.WriteLine("REM In this part you can manipulate the batch scripts by using the files in the ""custombatchfiles"" folder.")
-                ScriptBatchFile.WriteLine("REM You can use all variables from the settings. Take a look at the generated batch files to see all names for the variables.")
-                ScriptBatchFile.WriteLine()
-                ScriptBatchFile.Close()
-            End If
-        Next
-
-    End Sub
 
     Private Function CalcScale() As Double
         Return 36768000 / (CType(ClassWorker.MyWorldSettings.BlocksPerTile, Int32) * (360 / CType(ClassWorker.MyWorldSettings.TilesPerMap, Int32)))
@@ -4226,4 +4163,85 @@ Public Class GenerationWorker
         End Try
     End Function
 
+    Private Sub CreateFilesAndFolders(Optional Tile As String = "")
+
+        If Not Directory.Exists($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\batchfiles\") Then
+            Directory.CreateDirectory($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\batchfiles\")
+        End If
+
+        If Not Directory.Exists($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\image_exports\") Then
+            Directory.CreateDirectory($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\image_exports\")
+        End If
+
+        If Not Tile = "" Then
+            If Not Directory.Exists($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\batchfiles\{Tile}\") Then
+                Directory.CreateDirectory($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\batchfiles\{Tile}\")
+            End If
+
+            ' Create image_exports directory for this tile
+            If Not Directory.Exists($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\image_exports\{Tile}\") Then
+                Directory.CreateDirectory($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\image_exports\{Tile}\")
+            End If
+
+            ' Create heightmap subdirectory for this tile
+            If Not Directory.Exists($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\image_exports\{Tile}\heightmap\") Then
+                Directory.CreateDirectory($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\image_exports\{Tile}\heightmap\")
+            End If
+        End If
+
+        If Not Directory.Exists($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\render\") Then
+            Directory.CreateDirectory($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\render\")
+        End If
+
+        If Not Directory.Exists($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\python\") Then
+            Directory.CreateDirectory($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\python\")
+        End If
+
+        If Not Directory.Exists($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\logs\") Then
+            Directory.CreateDirectory($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\logs\")
+        End If
+        If Not Directory.Exists($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\custombatchfiles\") Then
+            Directory.CreateDirectory($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\custombatchfiles\")
+        End If
+
+        Dim custombatchFiles As New List(Of String) From {
+            "BeforeOsmbatGenerationPrepare",
+            "AfterOsmbatGenerationPrepare",
+            "BeforeOsmbatGeneration",
+            "AfterOsmbatGeneration",
+            "BeforeQgisRepairGeneration",
+            "AfterQgisRepairGeneration",
+            "BeforeQgisGeneration",
+            "AfterQgisGeneration",
+            "BeforeTartoolGeneration",
+            "AfterTartoolGeneration",
+            "BeforeGdalGeneration",
+            "AfterGdalGeneration",
+            "BeforeImageMagickGeneration",
+            "AfterImageMagickGeneration",
+            "BeforeWpScripütGeneration",
+            "AfterWpScripütGeneration",
+            "BeforeVoidScriptGeneration",
+            "AfterVoidScriptGeneration",
+            "BeforeMinutorGeneration",
+            "AfterMinutorGeneration",
+            "BeforeCleanupGeneration",
+            "AfterCleanupGeneration",
+            "BeforeMinutorFinalGeneration",
+            "AfterMinutorFinalGeneration",
+            "BeforeCleanupFinalGeneration",
+            "AfterCleanupFinalGeneration"
+        }
+        For Each custombatchFile In custombatchFiles
+            If Not File.Exists($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\custombatchfiles\{custombatchFile}.txt") Then
+                Dim ScriptBatchFile As StreamWriter
+                ScriptBatchFile = My.Computer.FileSystem.OpenTextFileWriter($"{ClassWorker.MyTilesSettings.PathToScriptsFolder}\custombatchfiles\{custombatchFile}.txt", False, System.Text.Encoding.ASCII)
+                ScriptBatchFile.WriteLine("REM In this part you can manipulate the batch scripts by using the files in the ""custombatchfiles"" folder.")
+                ScriptBatchFile.WriteLine("REM You can use all variables from the settings. Take a look at the generated batch files to see all names for the variables.")
+                ScriptBatchFile.WriteLine()
+                ScriptBatchFile.Close()
+            End If
+        Next
+
+    End Sub
 End Class
